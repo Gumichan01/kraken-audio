@@ -1,0 +1,4 @@
+* ven. sep 23, 2016  13:30
+** A faire:
+   - Spécification fonctionnelle (que doit faire l'application)
+   - Planning (diagramme de Gantt)
