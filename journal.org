@@ -2,3 +2,6 @@
 ** A faire:
    - Spécification fonctionnelle (que doit faire l'application)
    - Planning (diagramme de Gantt)
+
+Ven  7 oct 2016 11:52:45 CEST
+	- A FAIRE : spécifier le projet de diffusion/écoute/mélange de sources sonores sur mobile
