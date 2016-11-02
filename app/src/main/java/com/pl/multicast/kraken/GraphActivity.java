@@ -5,18 +5,23 @@ import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
+
+/**
+ * @// TODO: 02/11/2016
+ * The left drawer fragment must listen to the future MusicStreamReceiver and MusicStreamSender.
+ * MusicStreamReceiver is the class responsible of receiving data from another device using WI-FI Direct™
+ * MusicStreamSender is the class responsible of sending data from another device using WI-FI Direct™
+ *
+ * So, the left navigation drawer will be an observer of MusicStreamReceiver
+ * and the right navigation drawer will be an observer of MusicStreamSender
+ * */
 
 public class GraphActivity extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -24,33 +29,38 @@ public class GraphActivity extends Activity
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
-    private NavigationDrawerFragment mNavigationDrawerFragment;
-    private NavigationDrawerFragment mNavigationDrawerFragment2;
+    private NavigationDrawerFragment navigationSenders;
+    private NavigationDrawerFragment navigationReceivers;
 
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence mTitle;
+    private String username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_graph);
 
-        mNavigationDrawerFragment = (NavigationDrawerFragment)
+        // Fragment creation
+        navigationSenders = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
 
-        mNavigationDrawerFragment2 = (NavigationDrawerFragment)
+        navigationReceivers = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawerR);
 
+        // Set the attributes
         mTitle = getTitle();
+        /// @// TODO: 02/11/2016 Set the username (Retrieve it from the main activity)
 
-        // Set up the drawer.
-        mNavigationDrawerFragment.setUp(
+        // Set up the drawer (left side)
+        navigationSenders.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
-        mNavigationDrawerFragment2.setUp(
+        // Set up the drawer (right side)
+        navigationReceivers.setUp(
                 R.id.navigation_drawerR,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
     }
@@ -88,7 +98,7 @@ public class GraphActivity extends Activity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (!mNavigationDrawerFragment.isDrawerOpen()) {
+        if (!navigationSenders.isDrawerOpen()) {
             // Only show items in the action bar relevant to this screen
             // if the drawer is not showing. Otherwise, let the drawer
             // decide what to show in the action bar.
