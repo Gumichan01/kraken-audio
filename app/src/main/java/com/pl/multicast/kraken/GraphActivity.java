@@ -25,6 +25,7 @@ public class GraphActivity extends Activity
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
     private NavigationDrawerFragment mNavigationDrawerFragment;
+    private NavigationDrawerFragment mNavigationDrawerFragment2;
 
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
@@ -38,11 +39,19 @@ public class GraphActivity extends Activity
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
+
+        mNavigationDrawerFragment2 = (NavigationDrawerFragment)
+                getFragmentManager().findFragmentById(R.id.navigation_drawerR);
+
         mTitle = getTitle();
 
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
+                (DrawerLayout) findViewById(R.id.drawer_layout));
+
+        mNavigationDrawerFragment2.setUp(
+                R.id.navigation_drawerR,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
     }
 
