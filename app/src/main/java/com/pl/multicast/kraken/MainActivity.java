@@ -1,12 +1,16 @@
 package com.pl.multicast.kraken;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 
 public class MainActivity extends Activity {
+
+    public static final String USRNAME = "USRNAME";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +43,14 @@ public class MainActivity extends Activity {
 
     public void mix(View v)
     {
-        /// @// TODO: 02/11/2016 Launch GraphActivity sending the username 
+        /// @// TODO: 02/11/2016 Launch GraphActivity sending the username
+
+        Intent intent = new Intent(this, GraphActivity.class);
+
+        EditText tv = (EditText) findViewById(R.id.usr);
+        String s = tv.getText().toString();
+
+        intent.putExtra(USRNAME, s.isEmpty() ? "Jane Doe" : s);
+        startActivity(intent);
     }
 }
