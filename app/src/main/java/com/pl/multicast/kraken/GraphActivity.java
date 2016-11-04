@@ -80,7 +80,7 @@ public class GraphActivity extends Activity
         if(wifip2p != null)
             chan = wifip2p.initialize(this, getMainLooper(), null);
         else
-            Toast.makeText(this, "Wifi-direct is not activated", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Wifi-direct not available", Toast.LENGTH_SHORT).show();
 
         // Changes in the Wifi P2P status
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
