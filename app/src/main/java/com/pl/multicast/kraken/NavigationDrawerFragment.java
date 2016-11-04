@@ -101,7 +101,7 @@ public class NavigationDrawerFragment extends Fragment {
                 getActionBar().getThemedContext(),
                 android.R.layout.simple_list_item_activated_2,
                 android.R.id.text1,
-                new String[]{"No deveice"}));
+                new String[]{"No device"}));
 
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
         return mDrawerListView;
