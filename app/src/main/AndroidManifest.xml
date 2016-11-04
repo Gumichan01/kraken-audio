@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.pl.multicast.kraken" >
 
+    <!-- /// @// TODO: 04/11/2016 Set up application permissions (Wifi-Direct) -->
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
