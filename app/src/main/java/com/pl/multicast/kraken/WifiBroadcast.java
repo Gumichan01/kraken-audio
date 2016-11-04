@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.util.Log;
-import android.widget.Toast;
 
 /**
  * Created by Luxon on 04/11/2016.
@@ -31,26 +30,22 @@ public class WifiBroadcast extends BroadcastReceiver {
 
             int state = intent.getIntExtra(WifiP2pManager.EXTRA_WIFI_STATE, -1);
 
-            if (state == WifiP2pManager.WIFI_P2P_STATE_ENABLED){
+            if (state == WifiP2pManager.WIFI_P2P_STATE_ENABLED) {
 
-                Log.i("WIFI-DIRECT_STATUS","Wi-Fi P2P is activated");
+                Log.i("WIFI-DIRECT_STATUS", "Wi-Fi P2P is activated");
+            } else if (state == WifiP2pManager.WIFI_P2P_STATE_DISABLED) {
+
+                Log.i("WIFI-DIRECT_STATUS", "Wi-Fi P2P is not activated");
             }
-            else if (state == WifiP2pManager.WIFI_P2P_STATE_DISABLED){
+        } else if (WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION.equals(action)) {
 
-                Log.i("WIFI-DIRECT_STATUS","Wi-Fi P2P is not activated");
-            }
-        }
-        else if(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION.equals(action)){
+            Log.i("WIFI-DIRECT_STATUS", "Peer list changed");
+        } else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
 
-            Log.i("WIFI-DIRECT_STATUS","Peer list changed");
-        }
-        else if(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)){
+            Log.i("WIFI-DIRECT_STATUS", "Connection state changed");
+        } else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
 
-            Log.i("WIFI-DIRECT_STATUS","Connection state changed");
-        }
-        else if(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)){
-
-            Log.i("WIFI-DIRECT_STATUS","Connection state changed");
+            Log.i("WIFI-DIRECT_STATUS", "Connection state changed");
         }
 
     }

@@ -41,8 +41,7 @@ public class MainActivity extends Activity {
     }
 
 
-    public void mix(View v)
-    {
+    public void mix(View v) {
         Intent intent = new Intent(this, GraphActivity.class);
 
         EditText tv = (EditText) findViewById(R.id.usr);

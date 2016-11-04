@@ -2,8 +2,6 @@ package com.pl.multicast.kraken;
 
 import android.net.wifi.p2p.WifiP2pManager;
 
-import java.util.Observable;
-
 /**
  * Created by Luxon on 04/11/2016.
  * <p/>

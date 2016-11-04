@@ -30,6 +30,7 @@ import android.widget.Toast;
 public class GraphActivity extends Activity
         implements NavDrawer.NavigationDrawerCallbacks {
 
+    private final IntentFilter intentFilter = new IntentFilter();
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
@@ -37,9 +38,6 @@ public class GraphActivity extends Activity
     private NavDrawer navigationReceivers;
     private MusicStreamSender msSender;
     private MusicStreamReceiver msReceiver;
-
-    private final IntentFilter intentFilter = new IntentFilter();
-
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
@@ -77,7 +75,7 @@ public class GraphActivity extends Activity
         WifiP2pManager.Channel chan = null;
         WifiP2pManager wifip2p = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
 
-        if(wifip2p != null)
+        if (wifip2p != null)
             chan = wifip2p.initialize(this, getMainLooper(), null);
         else
             Toast.makeText(this, "Wifi-direct not available", Toast.LENGTH_SHORT).show();

@@ -11,15 +11,14 @@ public class MusicStream extends Observable {
 
     protected WifiBroadcast wifi;
 
-    MusicStream(NavDrawer nav, WifiP2pManager wp2p, WifiP2pManager.Channel ch){
+    MusicStream(NavDrawer nav, WifiP2pManager wp2p, WifiP2pManager.Channel ch) {
         super();
         addObserver(nav);
 
         wifi = new WifiBroadcast(wp2p, ch);
     }
 
-    public WifiBroadcast getWiFi()
-    {
+    public WifiBroadcast getWiFi() {
         return wifi;
     }
 }

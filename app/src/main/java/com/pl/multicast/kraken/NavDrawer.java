@@ -1,16 +1,16 @@
 package com.pl.multicast.kraken;
 
 
-import android.app.Activity;
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.Fragment;
-import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,7 +22,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import java.util.Objects;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -31,7 +30,7 @@ import java.util.Observer;
  * See the <a href="https://developer.android.com/design/patterns/navigation-drawer.html#Interaction">
  * design guidelines</a> for a complete explanation of the behaviors implemented here.
  */
-public class NavDrawer extends Fragment implements Observer{
+public class NavDrawer extends Fragment implements Observer {
 
     /**
      * Remember the position of the selected item.
@@ -118,14 +117,13 @@ public class NavDrawer extends Fragment implements Observer{
 
     /// Be notified that MusicStreamer has been added/removed
     @Override
-    public void update(Observable o, Object arg){
+    public void update(Observable o, Object arg) {
 
         /// @// TODO: 04/11/2016 Add/remove the music streamer into the list
     }
 
     /// Update the content of the fragment for each connected device
-    public void updateContent(String [] content)
-    {
+    public void updateContent(String[] content) {
         mDrawerListView.setAdapter(new ArrayAdapter<String>(
                 getActionBar().getThemedContext(),
                 android.R.layout.simple_list_item_activated_2,
