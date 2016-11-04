@@ -43,8 +43,6 @@ public class MainActivity extends Activity {
 
     public void mix(View v)
     {
-        /// @// TODO: 02/11/2016 Launch GraphActivity sending the username
-
         Intent intent = new Intent(this, GraphActivity.class);
 
         EditText tv = (EditText) findViewById(R.id.usr);

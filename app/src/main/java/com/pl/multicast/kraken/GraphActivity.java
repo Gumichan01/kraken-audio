@@ -1,28 +1,27 @@
 package com.pl.multicast.kraken;
 
-import android.app.Activity;
-
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.support.v4.widget.DrawerLayout;
 
 /**
  * @// TODO: 02/11/2016
  * The left drawer fragment must listen to the future MusicStreamReceiver and MusicStreamSender.
  * MusicStreamReceiver is the class responsible of receiving data from another device using WI-FI Direct™
  * MusicStreamSender is the class responsible of sending data from another device using WI-FI Direct™
- *
+ * <p/>
  * So, the left navigation drawer will be an observer of MusicStreamReceiver
  * and the right navigation drawer will be an observer of MusicStreamSender
- * */
+ */
 
 public class GraphActivity extends Activity
         implements NavDrawer.NavigationDrawerCallbacks {
@@ -32,6 +31,8 @@ public class GraphActivity extends Activity
      */
     private NavDrawer navigationSenders;
     private NavDrawer navigationReceivers;
+    private MusicStreamSender sender;
+    private MusicStreamReceiver receiver;
 
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
@@ -64,6 +65,8 @@ public class GraphActivity extends Activity
         navigationReceivers.setUp(
                 R.id.navigation_drawerR,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+
+        /// @// TODO: 04/11/2016 Set up the broadcast receiver and the Peer-to-Peer manager (P2P)
     }
 
     @Override
@@ -79,12 +82,6 @@ public class GraphActivity extends Activity
         switch (number) {
             case 1:
                 mTitle = username;
-                break;
-            case 2:
-                mTitle = "Alice@phone42";
-                break;
-            case 3:
-                mTitle = "Luno@check64";
                 break;
         }
     }
@@ -135,6 +132,9 @@ public class GraphActivity extends Activity
          */
         private static final String ARG_SECTION_NUMBER = "section_number";
 
+        public PlaceholderFragment() {
+        }
+
         /**
          * Returns a new instance of this fragment for the given section
          * number.
@@ -145,9 +145,6 @@ public class GraphActivity extends Activity
             args.putInt(ARG_SECTION_NUMBER, sectionNumber);
             fragment.setArguments(args);
             return fragment;
-        }
-
-        public PlaceholderFragment() {
         }
 
         @Override
