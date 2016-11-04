@@ -4,6 +4,8 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.IntentFilter;
+import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
@@ -31,8 +33,10 @@ public class GraphActivity extends Activity
      */
     private NavDrawer navigationSenders;
     private NavDrawer navigationReceivers;
-    private MusicStreamSender sender;
-    private MusicStreamReceiver receiver;
+    private MusicStreamSender msSender;
+    private MusicStreamReceiver msReceiver;
+
+    private final IntentFilter intentFilter = new IntentFilter();
 
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
@@ -67,6 +71,17 @@ public class GraphActivity extends Activity
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
         /// @// TODO: 04/11/2016 Set up the broadcast receiver and the Peer-to-Peer manager (P2P)
+
+        // Changes in the Wifi P2P status
+        intentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
+        // Changes in the list of available peers
+        intentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
+        // Changes in Wi-FI P2P connecivity
+        intentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
+        // Changes in device's details
+        intentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
+
+        msSender = new MusicStreamSender(navigationSenders);
     }
 
     @Override
