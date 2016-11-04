@@ -1,5 +1,7 @@
 package com.pl.multicast.kraken;
 
+import android.net.wifi.p2p.WifiP2pManager;
+
 import java.util.Observable;
 
 /**
@@ -8,13 +10,12 @@ import java.util.Observable;
 public class MusicStream extends Observable {
 
     protected WifiBroadcast wifi;
-    protected GraphActivity graph;
 
-    MusicStream(NavDrawer nav, GraphActivity ga){
+    MusicStream(NavDrawer nav, WifiP2pManager wp2p, WifiP2pManager.Channel ch){
         super();
         addObserver(nav);
 
-        wifi = new WifiBroadcast(ga);
+        wifi = new WifiBroadcast(wp2p, ch);
     }
 
     public WifiBroadcast getWiFi()
