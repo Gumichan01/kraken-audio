@@ -11,15 +11,15 @@ import java.util.Observable;
  *  @// TODO: 04/11/2016 For each found device update every observers (this assume that the observers have been added)
  *
  */
-public class MusicStreamSender extends Observable {
+public class MusicStreamSender extends MusicStream {
 
     private WifiBroadcast wifi;
 
 
     public MusicStreamSender(NavDrawer nav){
 
+        super();
         /// @// TODO: 04/11/2016 Add the navigation drawer to the list of observers
         /// @// TODO: 04/11/2016 Create the WiFiBroadcast
     }
-
 }

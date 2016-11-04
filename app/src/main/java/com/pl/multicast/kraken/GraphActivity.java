@@ -84,6 +84,7 @@ public class GraphActivity extends Activity
         msSender = new MusicStreamSender(navigationSenders);
     }
 
+
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
