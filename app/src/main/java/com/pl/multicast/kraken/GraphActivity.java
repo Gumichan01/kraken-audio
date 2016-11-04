@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -26,13 +25,13 @@ import android.support.v4.widget.DrawerLayout;
  * */
 
 public class GraphActivity extends Activity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+        implements NavDrawer.NavigationDrawerCallbacks {
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
-    private NavigationDrawerFragment navigationSenders;
-    private NavigationDrawerFragment navigationReceivers;
+    private NavDrawer navigationSenders;
+    private NavDrawer navigationReceivers;
 
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
@@ -46,10 +45,10 @@ public class GraphActivity extends Activity
         setContentView(R.layout.activity_graph);
 
         // Fragment creation
-        navigationSenders = (NavigationDrawerFragment)
+        navigationSenders = (NavDrawer)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
 
-        navigationReceivers = (NavigationDrawerFragment)
+        navigationReceivers = (NavDrawer)
                 getFragmentManager().findFragmentById(R.id.navigation_drawerR);
 
         // Set the attributes

@@ -19,13 +19,13 @@
     <fragment android:id="@+id/navigation_drawer"
         android:layout_width="@dimen/navigation_drawer_width" android:layout_height="match_parent"
         android:layout_gravity="left"
-        android:name="com.pl.multicast.kraken.NavigationDrawerFragment"
+        android:name="com.pl.multicast.kraken.NavDrawer"
         tools:layout="@layout/fragment_navigation_drawer" />
 
     <fragment android:id="@+id/navigation_drawerR"
         android:layout_width="@dimen/navigation_drawer_width" android:layout_height="match_parent"
         android:layout_gravity="right"
-        android:name="com.pl.multicast.kraken.NavigationDrawerFragment"
+        android:name="com.pl.multicast.kraken.NavDrawer"
         tools:layout="@layout/fragment_navigation_drawer" />
 
 </android.support.v4.widget.DrawerLayout>
