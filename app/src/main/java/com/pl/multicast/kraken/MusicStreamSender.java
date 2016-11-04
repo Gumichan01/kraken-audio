@@ -16,9 +16,9 @@ public class MusicStreamSender extends MusicStream {
     private WifiBroadcast wifi;
 
 
-    public MusicStreamSender(NavDrawer nav){
+    public MusicStreamSender(NavDrawer nav, GraphActivity ga){
 
-        super(nav);
+        super(nav,ga);
         /// @// TODO: 04/11/2016 Add the navigation drawer to the list of observers
         /// @// TODO: 04/11/2016 Create the WiFiBroadcast
     }

@@ -8,12 +8,13 @@ import java.util.Observable;
 public class MusicStream extends Observable {
 
     protected WifiBroadcast wifi;
+    protected GraphActivity graph;
 
-    MusicStream(NavDrawer nav){
+    MusicStream(NavDrawer nav, GraphActivity ga){
         super();
         addObserver(nav);
 
-        wifi = new WifiBroadcast();
+        wifi = new WifiBroadcast(ga);
     }
 
     public WifiBroadcast getWiFi()
