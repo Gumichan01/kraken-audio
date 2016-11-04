@@ -22,12 +22,16 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.util.Objects;
+import java.util.Observable;
+import java.util.Observer;
+
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
  * See the <a href="https://developer.android.com/design/patterns/navigation-drawer.html#Interaction">
  * design guidelines</a> for a complete explanation of the behaviors implemented here.
  */
-public class NavDrawer extends Fragment {
+public class NavDrawer extends Fragment implements Observer{
 
     /**
      * Remember the position of the selected item.
@@ -111,6 +115,12 @@ public class NavDrawer extends Fragment {
         return mDrawerLayout != null && mDrawerLayout.isDrawerOpen(mFragmentContainerView);
     }
 
+
+    /// Be notified that MusicStreamer has been added/removed
+    void update(Observable o, Object arg){
+
+        /// @// TODO: 04/11/2016 Add/remove the music streamer into the list
+    }
 
     /// Update the content of the fragment for each connected device
     public void updateContent(String [] content)
