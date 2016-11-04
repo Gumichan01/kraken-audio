@@ -1,5 +1,7 @@
 package com.pl.multicast.kraken;
 
+import android.net.wifi.p2p.WifiP2pManager;
+
 import java.util.Observable;
 
 /**
@@ -13,13 +15,9 @@ import java.util.Observable;
  */
 public class MusicStreamReceiver extends MusicStream {
 
-    public MusicStreamReceiver(NavDrawer nav, GraphActivity ga) {
+    public MusicStreamReceiver(NavDrawer nav, WifiP2pManager wp2p, WifiP2pManager.Channel ch) {
 
-        super(nav,ga);
-        /// @// TODO: 04/11/2016 Add the navigation drawer to the list of observers
-        /// @// TODO: 04/11/2016 Create the WiFiBroadcast
-
-
+        super(nav, wp2p, ch);
     }
 
 }

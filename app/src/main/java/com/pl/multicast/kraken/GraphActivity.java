@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Context;
 import android.content.IntentFilter;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Build;
@@ -14,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 /**
  * @// TODO: 02/11/2016
@@ -72,6 +74,14 @@ public class GraphActivity extends Activity
 
         /// @// TODO: 04/11/2016 Set up the broadcast receiver and the Peer-to-Peer manager (P2P)
 
+        WifiP2pManager.Channel chan = null;
+        WifiP2pManager wifip2p = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
+
+        if(wifip2p != null)
+            chan = wifip2p.initialize(this, getMainLooper(), null);
+        else
+            Toast.makeText(this, "Wifi-direct is not activated", Toast.LENGTH_SHORT).show();
+
         // Changes in the Wifi P2P status
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
         // Changes in the list of available peers
@@ -81,7 +91,7 @@ public class GraphActivity extends Activity
         // Changes in device's details
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
 
-        msSender = new MusicStreamSender(navigationSenders,this);
+        msSender = new MusicStreamSender(navigationSenders, wifip2p, chan);
     }
 
 
