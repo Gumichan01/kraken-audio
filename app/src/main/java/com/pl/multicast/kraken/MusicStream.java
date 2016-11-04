@@ -9,8 +9,11 @@ public class MusicStream extends Observable {
 
     protected WifiBroadcast wifi;
 
-    MusicStream(){
+    MusicStream(NavDrawer nav){
         super();
+        addObserver(nav);
+
+        wifi = new WifiBroadcast();
     }
 
     public WifiBroadcast getWiFi()

@@ -18,7 +18,7 @@ public class MusicStreamSender extends MusicStream {
 
     public MusicStreamSender(NavDrawer nav){
 
-        super();
+        super(nav);
         /// @// TODO: 04/11/2016 Add the navigation drawer to the list of observers
         /// @// TODO: 04/11/2016 Create the WiFiBroadcast
     }
