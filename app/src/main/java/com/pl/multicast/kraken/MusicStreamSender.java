@@ -16,7 +16,7 @@ public class MusicStreamSender extends Observable {
     private WifiBroadcast wifi;
 
 
-    public MusicStreamReceiver(NavDrawer nav){
+    public MusicStreamSender(NavDrawer nav){
 
         /// @// TODO: 04/11/2016 Add the navigation drawer to the list of observers
         /// @// TODO: 04/11/2016 Create the WiFiBroadcast

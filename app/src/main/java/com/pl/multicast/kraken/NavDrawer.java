@@ -117,7 +117,8 @@ public class NavDrawer extends Fragment implements Observer{
 
 
     /// Be notified that MusicStreamer has been added/removed
-    void update(Observable o, Object arg){
+    @Override
+    public void update(Observable o, Object arg){
 
         /// @// TODO: 04/11/2016 Add/remove the music streamer into the list
     }
