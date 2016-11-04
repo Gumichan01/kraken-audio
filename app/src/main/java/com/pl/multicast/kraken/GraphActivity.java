@@ -5,6 +5,8 @@ import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -51,8 +53,8 @@ public class GraphActivity extends Activity
                 getFragmentManager().findFragmentById(R.id.navigation_drawerR);
 
         // Set the attributes
-        mTitle = getTitle();
-        /// @// TODO: 02/11/2016 Set the username (Retrieve it from the main activity)
+        username = getIntent().getStringExtra(MainActivity.USRNAME) + "@" + Build.MODEL;
+        mTitle = username;
 
         // Set up the drawer (left side)
         navigationSenders.setUp(
@@ -77,7 +79,7 @@ public class GraphActivity extends Activity
     public void onSectionAttached(int number) {
         switch (number) {
             case 1:
-                mTitle = "Francois@toto21";
+                mTitle = username;
                 break;
             case 2:
                 mTitle = "Alice@phone42";
