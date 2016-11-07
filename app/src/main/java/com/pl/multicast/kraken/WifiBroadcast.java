@@ -14,21 +14,24 @@ public class WifiBroadcast extends BroadcastReceiver {
 
     private WifiP2pManager p2p;
     private WifiP2pManager.Channel chan;
+    private GraphActivity graph;
 
-    public WifiBroadcast(WifiP2pManager wp2p, WifiP2pManager.Channel ch) {
+    public WifiBroadcast(WifiP2pManager wp2p, WifiP2pManager.Channel ch, GraphActivity g) {
         super();
 
         p2p = wp2p;
         chan = ch;
+        graph = g;
 
-        p2p.discoverPeers(chan, new WifiP2pManager.ActionListener(){
+        p2p.discoverPeers(chan, new WifiP2pManager.ActionListener() {
             @Override
-            public void onSuccess(){
-                Log.i("activity","SUCCESS");
+            public void onSuccess() {
+                Log.i("WIFI-DIRECT_STATUS", "SUCCESS");
             }
+
             @Override
-            public void onFailure(int reasonCode){
-                Log.i("activity","FAIL");
+            public void onFailure(int reasonCode) {
+                Log.i("WIFI-DIRECT_STATUS", "FAIL");
             }
         });
     }
@@ -45,6 +48,7 @@ public class WifiBroadcast extends BroadcastReceiver {
             if (state == WifiP2pManager.WIFI_P2P_STATE_ENABLED) {
 
                 Log.i("WIFI-DIRECT_STATUS", "Wi-Fi P2P is activated");
+
             } else if (state == WifiP2pManager.WIFI_P2P_STATE_DISABLED) {
 
                 Log.i("WIFI-DIRECT_STATUS", "Wi-Fi P2P is not activated");

@@ -43,6 +43,7 @@ public class GraphActivity extends Activity
      */
     private CharSequence mTitle;
     private String username;
+    private WifiBroadcast wifiReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +81,8 @@ public class GraphActivity extends Activity
         else
             Toast.makeText(this, "Wifi-direct not available", Toast.LENGTH_SHORT).show();
 
+        wifiReceiver = new WifiBroadcast(wifip2p,chan, this);
+
         // Changes in the Wifi P2P status
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
         // Changes in the list of available peers
@@ -89,9 +92,24 @@ public class GraphActivity extends Activity
         // Changes in device's details
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
 
-        msSender = new MusicStreamSender(navigationSenders, wifip2p, chan);
+        msSender = new MusicStreamSender(navigationSenders, wifiReceiver);
+        // Do the same thing with msReceiver
     }
 
+
+    @Override
+    public void onResume(){
+
+        super.onResume();
+        registerReceiver(wifiReceiver,intentFilter);
+    }
+
+    @Override
+    public void onPause(){
+
+        super.onPause();
+        unregisterReceiver(wifiReceiver);
+    }
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {

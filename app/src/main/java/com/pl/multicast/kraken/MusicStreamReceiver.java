@@ -13,9 +13,9 @@ import android.net.wifi.p2p.WifiP2pManager;
  */
 public class MusicStreamReceiver extends MusicStream {
 
-    public MusicStreamReceiver(NavDrawer nav, WifiP2pManager wp2p, WifiP2pManager.Channel ch) {
+    public MusicStreamReceiver(NavDrawer nav, WifiBroadcast wb) {
 
-        super(nav, wp2p, ch);
+        super(nav, wb);
     }
 
 }
