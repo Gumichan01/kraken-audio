@@ -3,6 +3,8 @@ package com.pl.multicast.kraken;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.net.wifi.p2p.WifiP2pDevice;
+import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.util.Log;
 
@@ -59,9 +61,16 @@ public class WifiBroadcast extends BroadcastReceiver {
         } else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
 
             Log.i("WIFI-DIRECT_STATUS", "Connection state changed");
+
+
         } else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
 
-            Log.i("WIFI-DIRECT_STATUS", "Connection state changed");
+            Log.i("WIFI-DIRECT_STATUS", "Device");
+            WifiP2pDevice wd = (WifiP2pDevice) intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_DEVICE);
+
+            if(wd != null)
+                Log.i("WIFI-DIRECT_STATUS",wd.deviceName + " " + wd.deviceAddress);
+            /// @// TODO: 07/11/2016 Send the result to the activity (mac address)
         }
 
     }

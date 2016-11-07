@@ -10,6 +10,7 @@ import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -101,7 +102,8 @@ public class GraphActivity extends Activity
     public void onResume(){
 
         super.onResume();
-        registerReceiver(wifiReceiver,intentFilter);
+        registerReceiver(wifiReceiver, intentFilter);
+        Log.i("WIFI-DIRECT_STATUS", "resume");
     }
 
     @Override
@@ -109,6 +111,7 @@ public class GraphActivity extends Activity
 
         super.onPause();
         unregisterReceiver(wifiReceiver);
+        Log.i("WIFI-DIRECT_STATUS", "pause");
     }
 
     @Override
