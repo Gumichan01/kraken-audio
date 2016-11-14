@@ -16,6 +16,7 @@ import android.widget.Toast;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -46,9 +47,16 @@ public class WifiBroadcast extends BroadcastReceiver implements WifiP2pManager.C
 
                 if (peers.isEmpty())
                     Log.i(TAG, "No peers");
-                else
+                else{
                     Log.i(TAG, "You have " + peers.size() + " peers");
 
+                    Iterator it = peers.iterator();
+
+                    while(it.hasNext()){
+
+                        Log.i(TAG, ((WifiP2pDevice) it.next()).toString());
+                    }
+                }
             }
         };
 
@@ -90,7 +98,6 @@ public class WifiBroadcast extends BroadcastReceiver implements WifiP2pManager.C
                 p2p.requestPeers(chan, plisten);
 
             Log.i(TAG, "Peer list changed");
-
 
         } else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
 
@@ -153,6 +160,7 @@ public class WifiBroadcast extends BroadcastReceiver implements WifiP2pManager.C
         // After the group negotiation, we can determine the group owner.
         if (info.groupFormed && info.isGroupOwner) {
 
+            Log.i(TAG, "group formed and owner OK");
             /// Serveur
             // Do whatever tasks are specific to the group owner.
             // One common case is creating a server thread and accepting
@@ -160,6 +168,7 @@ public class WifiBroadcast extends BroadcastReceiver implements WifiP2pManager.C
 
         } else if (info.groupFormed) {
 
+            Log.i(TAG, "group formed OK");
             /// Client
             // The other device acts as the client. In this case,
             // you'll want to create a client thread that connects to the group
