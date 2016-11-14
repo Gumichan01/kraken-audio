@@ -82,12 +82,16 @@ public class WifiBroadcast extends BroadcastReceiver {
 
                 Log.i(TAG, "Wi-Fi P2P is not activated");
             }
+
+
         } else if (WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION.equals(action)) {
 
             if (p2p != null)
                 p2p.requestPeers(chan, plisten);
 
             Log.i(TAG, "Peer list changed");
+
+
         } else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
 
             Log.i(TAG, "Connection state changed");
@@ -119,7 +123,7 @@ public class WifiBroadcast extends BroadcastReceiver {
     // Connection to a device
     public void connect() {
 
-        // for this example, we just test the connection with the fisrt device
+        // for this example, we just test the connection with the first device
         WifiP2pDevice device = (WifiP2pDevice) peers.get(0);
 
         WifiP2pConfig p2pconfig = new WifiP2pConfig();
