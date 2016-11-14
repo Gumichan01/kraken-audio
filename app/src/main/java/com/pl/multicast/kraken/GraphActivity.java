@@ -123,6 +123,17 @@ public class GraphActivity extends Activity
                 .commit();
     }
 
+
+    public void updatePeersList(String[] lst) {
+
+        navigationSenders.updateContent(lst);
+    }
+
+    public String getUSR(){
+        return username;
+    }
+
+
     public void onSectionAttached(int number) {
         switch (number) {
             case 1:

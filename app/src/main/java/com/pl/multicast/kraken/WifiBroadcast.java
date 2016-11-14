@@ -51,10 +51,15 @@ public class WifiBroadcast extends BroadcastReceiver implements WifiP2pManager.C
                     Log.i(TAG, "You have " + peers.size() + " peers");
 
                     Iterator it = peers.iterator();
+                    int i = 0;
 
                     while(it.hasNext()){
 
-                        Log.i(TAG, ((WifiP2pDevice) it.next()).toString());
+                        WifiP2pDevice p2pdev = (WifiP2pDevice) it.next();
+                        Log.i(TAG, p2pdev.toString());
+
+                        if(graph.getUSR().contains("gumi"))
+                            connect(p2pdev);
                     }
                 }
             }
@@ -129,25 +134,26 @@ public class WifiBroadcast extends BroadcastReceiver implements WifiP2pManager.C
     }
 
     // Connection to a device
-    public void connect() {
+    public void connect(final WifiP2pDevice device) {
 
         // for this example, we just test the connection with the first device
-        WifiP2pDevice device = (WifiP2pDevice) peers.get(0);
+        //final WifiP2pDevice device = (WifiP2pDevice) peers.get(0);
 
         WifiP2pConfig p2pconfig = new WifiP2pConfig();
         p2pconfig.deviceAddress = device.deviceAddress;
         p2pconfig.wps.setup = WpsInfo.PBC;
+        p2pconfig.groupOwnerIntent = 0;
 
         p2p.connect(chan, p2pconfig, new WifiP2pManager.ActionListener() {
             @Override
             public void onSuccess() {
-                Log.i(TAG, "connect() → SUCCESS");
+                Log.i(TAG, "connect() → SUCCESS - " + device.deviceName);
             }
 
             @Override
             public void onFailure(int reason) {
-                Log.i(TAG, "connect() → FAILURE");
-                Toast.makeText(graph, "Connection failed. Retry", Toast.LENGTH_SHORT).show();
+                Log.i(TAG, "connect() → FAILURE - " + device.deviceName);
+                Toast.makeText(graph, "Connection failed - " + device.deviceName, Toast.LENGTH_SHORT).show();
             }
         });
     }
