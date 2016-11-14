@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * Created by Luxon on 04/11/2016.
  */
-public class WifiBroadcast extends BroadcastReceiver {
+public class WifiBroadcast extends BroadcastReceiver implements WifiP2pManager.ConnectionInfoListener {
 
     public static final String TAG = "WIFI-DIRECT_STATUS";
     private WifiP2pManager p2p;
@@ -103,6 +103,7 @@ public class WifiBroadcast extends BroadcastReceiver {
                 if(netInfo.isConnected()){
 
                     Log.i(TAG, "CONNECTED");
+                    p2p.requestConnectionInfo(chan,this);
                 }
                 else {
                     Log.i(TAG, "NOT CONNECTED");
