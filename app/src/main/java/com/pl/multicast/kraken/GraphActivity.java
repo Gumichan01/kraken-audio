@@ -6,6 +6,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.IntentFilter;
+import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,6 +18,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @// TODO: 02/11/2016
@@ -123,10 +127,24 @@ public class GraphActivity extends Activity
                 .commit();
     }
 
+    /// @// TODO: 14/11/2016 List WifiP2pDevice  → save that in the activity
+    public void update(List devlist) {
 
-    public void updatePeersList(String[] lst) {
+        List<WifiP2pDevice> devl = devlist;
+        ArrayList<String> devnames = new ArrayList<>();
 
-        navigationSenders.updateContent(lst);
+        for(WifiP2pDevice d: devl) {
+            devnames.add(d.deviceName);
+        }
+
+        Object [] o = devnames.toArray();
+        String [] s = new String[o.length];
+
+        for(int i = 0; i < o.length; i++){
+            s[i] = (String) o[i];
+        }
+
+        navigationSenders.updateContent(s);
     }
 
     public String getUSR(){

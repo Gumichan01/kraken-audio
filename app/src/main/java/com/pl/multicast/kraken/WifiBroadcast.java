@@ -51,16 +51,13 @@ public class WifiBroadcast extends BroadcastReceiver implements WifiP2pManager.C
                     Log.i(TAG, "You have " + peers.size() + " peers");
 
                     Iterator it = peers.iterator();
-                    int i = 0;
 
                     while(it.hasNext()){
 
                         WifiP2pDevice p2pdev = (WifiP2pDevice) it.next();
                         Log.i(TAG, p2pdev.toString());
-
-                        if(graph.getUSR().contains("gumi"))
-                            connect(p2pdev);
                     }
+                    graph.update(peers);
                 }
             }
         };
