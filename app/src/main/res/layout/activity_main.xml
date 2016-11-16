@@ -27,7 +27,7 @@
             android:id="@+id/usr"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="name"
+            android:hint="Put your name herre"
             android:imeOptions="actionNext"
             android:inputType="text"
             android:lines="1" />
