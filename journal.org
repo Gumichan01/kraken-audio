@@ -1,7 +1,16 @@
+* <2016-10-21>
+** Faire:
+   - une première spec fonctionnelle raisonnable
+** A faire:
+   - revoir la spécification pour généraliser la notion de noeud.
+   - revoir l'interface pour uniformiser la visualisation d'un noeud
+     (qu'il appartienne ou pas à l'utilisateur)
+   - prototype
+
 * ven. sep 23, 2016  13:30
 ** A faire:
    - Spécification fonctionnelle (que doit faire l'application)
    - Planning (diagramme de Gantt)
 
-Ven  7 oct 2016 11:52:45 CEST
+* Ven  7 oct 2016 11:52:45 CEST
 	- A FAIRE : spécifier le projet de diffusion/écoute/mélange de sources sonores sur mobile
