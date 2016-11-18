@@ -1,3 +1,11 @@
+* <2016-11-18>
+** Fait:
+   - changé la spécification de l'UI
+** A faire:
+   - Réseau : client/serveur où le serveur est annuaire des noeuds et des groupes
+   - UI : une première mouture
+   - Comment connaître les noeuds écoutés par un noeud donné?
+   - Serveur déployé via docker
 * <2016-10-21>
 ** Faire:
    - une première spec fonctionnelle raisonnable
