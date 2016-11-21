@@ -26,8 +26,61 @@
 
 - Créer un groupe
 - Rejoindre un groupe
-- Supprimer un groupe
+- Avoir la liste des groupes
+- (Supprimer un groupe)
 - Quitter un groupe
 
 
 > Remarques
+
+ - Syntaxe requêtes **client**:
+
+Création groupe:
+
+    CGRP nom_groupe ip_addr port
+
+Avoir la liste des groupes:
+
+    GRPLIST
+
+Avoir la liste des appareils:
+
+    DEVLIST
+
+Rejoindre un groupe spécifique:
+
+    JGRP nom_groupe ip port
+
+Quitter un groupe:
+
+    QGRP
+
+ - Syntaxe réponse **serveur**.
+
+Après la création d'un groupe (si ok):
+
+    GRPOK
+
+Envoi de la liste de groupes:
+
+    GRPL nombre_de_groupe
+    ...
+    GRPDATA nom_groupe nombre_appareils
+    ...
+    EOT
+
+Après l'ajout d'un appareil dans un groupe (si OK).
+
+    GRPADDED
+    // Puis envoi de la liste des appareils dans le groupe
+    DEVL nombre_appareils
+    ...
+    DEVDATA ip port
+    ...
+    EOT
+
+Quand le téléphone quitte le groupe:
+
+    GRPQUIT
+
+Puis fermeture de la connexion (côté serveur).
