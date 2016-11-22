@@ -14,12 +14,14 @@
 
 ## Communication ##
 
+### Specification ###
+
 > Serveur
 
 - Gérer un annuaire d'appareils (nom, adresse IP, numéro de port)
 - Création de groupe
 - Intégrer un appareil dans un groupe
-- Enlever un appareil d'un groupe
+- (Enlever un appareil d'un groupe) → pour l'instant on ne met pas, on verra si besoin.
 - Envoyer les informations d'un/plusieurs appareil(s) au client
 
 > Client
@@ -27,60 +29,80 @@
 - Créer un groupe
 - Rejoindre un groupe
 - Avoir la liste des groupes
-- (Supprimer un groupe)
+- (Supprimer un groupe) → pour l'instant on ne met pas, on verra si besoin.
 - Quitter un groupe
 
 
-> Remarques
+### Syntaxe des requetes ###
 
- - Syntaxe requêtes **client**:
+ - Syntaxe requêtes du **client**:
 
 Création groupe:
 
     CGRP nom_groupe ip_addr port
+    /// CGRP : Create GRouP
+    /*
+    NB: *ip_addr* et *port* correspondent respectivement à l'adresse IP
+    et au n° de port de l'appareil.
+    */
 
 Avoir la liste des groupes:
 
-    GRPLIST
+    GRPL    /// GRPL : GRouP List
 
 Avoir la liste des appareils:
 
-    DEVLIST
+    DEVL    /// DEVL: Device List
 
 Rejoindre un groupe spécifique:
 
-    JGRP nom_groupe ip port
+    JGRP nom_groupe ip_addr port
+    /// JGRP : Join GRouP
+    /*
+    NB: *ip* et *port* correspondent respectivement à l'adresse IP
+    et au n° de port de l'appareil.
+    */
 
 Quitter un groupe:
 
-    QGRP
+    QGRP    /// QGRP : Quit GRouP
+
+Fermer la connexion:
+
+    EOCO    /// EOCO : End Of COnnexion
 
  - Syntaxe réponse **serveur**.
 
 Après la création d'un groupe (si ok):
 
-    GRPOK
+    GCOK    /// GCOK: Group Creation OK
 
 Envoi de la liste de groupes:
 
     GRPL nombre_de_groupe
     ...
-    GRPDATA nom_groupe nombre_appareils
+    GDAT nom_groupe nombre_appareils
     ...
-    EOT
+    EOTR
+    /*
+        GRPL : GRouP List
+        GDAT : Group DATa
+        EOTR : EndOf TRansmission
+    */
 
 Après l'ajout d'un appareil dans un groupe (si OK).
 
-    GRPADDED
-    // Puis envoi de la liste des appareils dans le groupe
-    DEVL nombre_appareils
-    ...
-    DEVDATA ip port
-    ...
-    EOT
+    GJOK    /// GRPJ: GRouP Join OK
+
+Après l'ajout d'un appareil dans un groupe (si echec).
+
+    GJKO    /// GJKO : GRouP Join KO
 
 Quand le téléphone quitte le groupe:
 
-    GRPQUIT
+    QACK    /// Quit ACKnowledgment
+    /* Puis fermeture de la connexion (côté serveur). */
 
-Puis fermeture de la connexion (côté serveur).
+Quand le téléphone ferme le connexion:
+
+    /// Pas d'envoi, le serveur ferme juste le socket
