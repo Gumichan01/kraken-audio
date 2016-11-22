@@ -131,4 +131,4 @@ Quand le téléphone ferme le connexion:
     * Son numéro de port
 
 ---
-[1]: https://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html
+[1]: https://docs.oracle.com/javase/7/docs/api/java/util/Hashtable.html
