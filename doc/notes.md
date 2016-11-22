@@ -112,12 +112,12 @@ Quand le téléphone ferme le connexion:
 
  - Un serveur a plusieurs groupes de diffusions.
  - Un groupe de diffusion a plusieurs appareils (téléphones, tablettes, ...).
- - Les groupes du serveur seront stockés dans une [HashMap][1], de la manière suivante :
+ - Les groupes du serveur seront stockés dans une [Hashtable][1], de la manière suivante :
 
 
     Hashtable<String,GroupInfo>
 
- - Les appareils dans un groupe donné seront aussi dans une [HashMap][1]
+ - Les appareils dans un groupe donné seront aussi dans une [Hashtable][1]
 
  - Chaque groupe contient :
     * Un nom
