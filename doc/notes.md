@@ -115,19 +115,18 @@ Quand le téléphone ferme le connexion:
  - Les groupes du serveur seront stockés dans une [HashMap][1], de la manière suivante :
 
 
-    Hashmap<String,GroupInfo>
+    Hashtable<String,GroupInfo>
 
  - Les appareils dans un groupe donné seront aussi dans une [HashMap][1]
 
-Un groupe contient:
+ - Chaque groupe contient :
+    * Un nom
+    * L'annuaire des appareils défini de la manière suivante :
 
-- Un nom
-- L'annuaire des appareils défini de la manière suivante :
 
+    Hashtable<String,DeviveData>
 
-    Hashmap<String,DeviveData>
-
-- Chaque appareil est définie par:
+- Chaque appareil est définie par :
     * Son adreese IP
     * Son numéro de port
 
