@@ -39,7 +39,7 @@
 
 Création groupe:
 
-    CGRP nom_groupe ip_addr port
+    CGRP nom_groupe nom_appareil ip_addr port
     /// CGRP : Create GRouP
     /*
     NB: *ip_addr* et *port* correspondent respectivement à l'adresse IP
@@ -50,13 +50,13 @@ Avoir la liste des groupes:
 
     GRPL    /// GRPL : GRouP List
 
-Avoir la liste des appareils:
+Avoir la liste des appareils d'un groupe donné:
 
-    DEVL    /// DEVL: Device List
+    DEVL nom_groupe    /// DEVL: Device List
 
 Rejoindre un groupe spécifique:
 
-    JGRP nom_groupe ip_addr port
+    JGRP nom_groupe nom_appareil ip_addr port
     /// JGRP : Join GRouP
     /*
     NB: *ip* et *port* correspondent respectivement à l'adresse IP
@@ -106,3 +106,30 @@ Quand le téléphone quitte le groupe:
 Quand le téléphone ferme le connexion:
 
     /// Pas d'envoi, le serveur ferme juste le socket
+
+
+### Implémentation ###
+
+ - Un serveur a plusieurs groupes de diffusions.
+ - Un groupe de diffusion a plusieurs appareils (téléphones, tablettes, ...).
+ - Les groupes du serveur seront stockés dans une [HashMap][1], de la manière suivante :
+
+
+    Hashmap<String,GroupInfo>
+
+ - Les appareils dans un groupe donné seront aussi dans une [HashMap][1]
+
+Un groupe contient:
+
+- Un nom
+- L'annuaire des appareils défini de la manière suivante :
+
+
+    Hashmap<String,DeviveData>
+
+- Chaque appareil est définie par:
+    * Son adreese IP
+    * Son numéro de port
+
+---
+[1]: https://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html
