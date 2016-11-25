@@ -4,20 +4,16 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.Context;
 import android.content.IntentFilter;
 import android.net.wifi.p2p.WifiP2pDevice;
-import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +44,6 @@ public class GraphActivity extends Activity
      */
     private CharSequence mTitle;
     private String username;
-    private WifiBroadcast wifiReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,46 +71,21 @@ public class GraphActivity extends Activity
                 R.id.navigation_drawerR,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
-        /// @// TODO: 04/11/2016 Set up the broadcast receiver and the Peer-to-Peer manager (P2P)
-
-        WifiP2pManager.Channel chan = null;
-        WifiP2pManager wifip2p = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
-
-        if (wifip2p != null)
-            chan = wifip2p.initialize(this, getMainLooper(), null);
-        else
-            Toast.makeText(this, "Wifi-direct not available", Toast.LENGTH_SHORT).show();
-
-        wifiReceiver = new WifiBroadcast(wifip2p,chan, this);
-
-        // Changes in the Wifi P2P status
-        intentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
-        // Changes in the list of available peers
-        intentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
-        // Changes in Wi-FI P2P connecivity
-        intentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
-        // Changes in device's details
-        intentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
-
-        msSender = new MusicStreamSender(navigationSenders, wifiReceiver);
-        // Do the same thing with msReceiver
+        navigationSenders.updateContent(new String[]{"toto08@48f1", "bob@I78b5"});
+        navigationReceivers.updateContent(new String[]{"Alice8@2408", "David@n1t0p9"});
     }
 
 
     @Override
-    public void onResume(){
+    public void onResume() {
 
         super.onResume();
-        registerReceiver(wifiReceiver, intentFilter);
-        Log.i("WIFI-DIRECT_STATUS", "resume");
     }
 
     @Override
-    public void onPause(){
+    public void onPause() {
 
         super.onPause();
-        unregisterReceiver(wifiReceiver);
-        Log.i("WIFI-DIRECT_STATUS", "pause");
     }
 
     @Override
@@ -133,21 +103,21 @@ public class GraphActivity extends Activity
         List<WifiP2pDevice> devl = devlist;
         ArrayList<String> devnames = new ArrayList<>();
 
-        for(WifiP2pDevice d: devl) {
+        for (WifiP2pDevice d : devl) {
             devnames.add(d.deviceName);
         }
 
-        Object [] o = devnames.toArray();
-        String [] s = new String[o.length];
+        Object[] o = devnames.toArray();
+        String[] s = new String[o.length];
 
-        for(int i = 0; i < o.length; i++){
+        for (int i = 0; i < o.length; i++) {
             s[i] = (String) o[i];
         }
 
         navigationSenders.updateContent(s);
     }
 
-    public String getUSR(){
+    public String getUSR() {
         return username;
     }
 
