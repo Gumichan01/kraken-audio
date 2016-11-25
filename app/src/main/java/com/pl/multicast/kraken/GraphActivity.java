@@ -28,8 +28,6 @@ public class GraphActivity extends Activity
      */
     private NavDrawer navigationSenders;
     private NavDrawer navigationReceivers;
-    private MusicStreamSender msSender;
-    private MusicStreamReceiver msReceiver;
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
@@ -62,8 +60,23 @@ public class GraphActivity extends Activity
                 R.id.navigation_drawerR,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
-        navigationSenders.updateContent(new String[]{"toto08@48f1", "bob@I78b5"});
-        navigationReceivers.updateContent(new String[]{"Alice8@2408", "David@n1t0p9"});
+        if(!username.equals("toto08@48f1") && !username.equals("bob@I78b5")
+            && !username.equals("Alice8@2408") && !username.equals("David@n1t0p9")){
+
+            navigationSenders.updateContent(new String[]{username,"toto08@48f1", "bob@I78b5"});
+            navigationReceivers.updateContent(new String[]{username,"Alice8@2408", "David@n1t0p9"});
+        }
+
+        if(username.equals("toto08@48f1")){
+            navigationSenders.updateContent(new String[]{username});
+            navigationReceivers.updateContent(new String[]{username,"Jane Doe@GT-I8190N"});
+        }
+
+        if(username.equals("Alice8@2408")){
+            navigationSenders.updateContent(new String[]{username,"Jane Doe@GT-I8190N"});
+            navigationReceivers.updateContent(new String[]{username});
+        }
+
     }
 
 
@@ -117,6 +130,14 @@ public class GraphActivity extends Activity
         switch (number) {
             case 1:
                 mTitle = username;
+                break;
+
+            case 2:
+                mTitle = "toto08@48f1";
+                break;
+
+            case 3:
+                mTitle = "bob@I75b5";
                 break;
         }
     }
