@@ -18,15 +18,6 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @// TODO: 02/11/2016
- * The left drawer fragment must listen to the future MusicStreamReceiver and MusicStreamSender.
- * MusicStreamReceiver is the class responsible of receiving data from another device using WI-FI Direct™
- * MusicStreamSender is the class responsible of sending data from another device using WI-FI Direct™
- * <p/>
- * So, the left navigation drawer will be an observer of MusicStreamReceiver
- * and the right navigation drawer will be an observer of MusicStreamSender
- */
 
 public class GraphActivity extends Activity
         implements NavDrawer.NavigationDrawerCallbacks {
