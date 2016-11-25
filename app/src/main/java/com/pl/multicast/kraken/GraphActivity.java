@@ -23,6 +23,7 @@ public class GraphActivity extends Activity
         implements NavDrawer.NavigationDrawerCallbacks {
 
     private final IntentFilter intentFilter = new IntentFilter();
+    private int state = 0;
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
@@ -31,7 +32,7 @@ public class GraphActivity extends Activity
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
-    private CharSequence mTitle;
+    private String mTitle;
     private String username;
 
     @Override
@@ -60,23 +61,9 @@ public class GraphActivity extends Activity
                 R.id.navigation_drawerR,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
-        if(!username.equals("toto08@48f1") && !username.equals("bob@I78b5")
-            && !username.equals("Alice8@2408") && !username.equals("David@n1t0p9")){
 
-            navigationSenders.updateContent(new String[]{username,"toto08@48f1", "bob@I78b5"});
-            navigationReceivers.updateContent(new String[]{username,"Alice8@2408", "David@n1t0p9"});
-        }
-
-        if(username.equals("toto08@48f1")){
-            navigationSenders.updateContent(new String[]{username});
-            navigationReceivers.updateContent(new String[]{username,"Jane Doe@GT-I8190N"});
-        }
-
-        if(username.equals("Alice8@2408")){
-            navigationSenders.updateContent(new String[]{username,"Jane Doe@GT-I8190N"});
-            navigationReceivers.updateContent(new String[]{username});
-        }
-
+        navigationSenders.updateContent(new String[]{username, "toto08@48f1", "bob@I78b5"});
+        navigationReceivers.updateContent(new String[]{username, "Alice8@2408", "David@n1t0p9"});
     }
 
 
@@ -126,20 +113,49 @@ public class GraphActivity extends Activity
     }
 
 
+    public void updateActivity(){
+
+        if(!mTitle.equals("toto08@48f1") && !mTitle.equals("bob@I78b5")
+                && !mTitle.equals("Alice8@2408") && !mTitle.equals("David@n1t0p9")){
+
+            navigationSenders.updateContent(new String[]{mTitle,"toto08@48f1", "bob@I78b5"});
+            navigationReceivers.updateContent(new String[]{mTitle,"Alice8@2408", "David@n1t0p9"});
+        }
+
+        if(mTitle.equals("toto08@48f1")){
+            navigationSenders.updateContent(new String[]{mTitle});
+            navigationReceivers.updateContent(new String[]{mTitle,"Jane Doe@GT-I8190N"});
+        }
+
+        if(mTitle.equals("Alice8@2408")){
+            navigationSenders.updateContent(new String[]{mTitle,"Jane Doe@GT-I8190N"});
+            navigationReceivers.updateContent(new String[]{mTitle});
+        }
+
+    }
+
     public void onSectionAttached(int number) {
+
         switch (number) {
             case 1:
                 mTitle = username;
                 break;
 
             case 2:
-                mTitle = "toto08@48f1";
+                if(mTitle.equals(username))
+                    mTitle = "toto08@48f1";
+                else
+                    mTitle = username;
                 break;
 
             case 3:
-                mTitle = "bob@I75b5";
+                if(mTitle.equals(username))
+                    mTitle = "bob@I78b5";
+                else
+                    mTitle = username;
                 break;
         }
+        updateActivity();
     }
 
     public void restoreActionBar() {
