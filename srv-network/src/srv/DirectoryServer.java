@@ -1,15 +1,55 @@
 package srv;
 
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.Hashtable;
 import java.util.Iterator;
 
 public class DirectoryServer {
 
+	private static final int BUFFER_SIZE = 1024;
+
+	ServerSocket srvsock;
+	char [] buffer;
 	private Hashtable<String, GroupInfo> groups;
 
 	public DirectoryServer() {
 		groups = new Hashtable<String, GroupInfo>();
+		srvsock = null;
 	}
+
+
+	public void launch(){
+
+		try {
+
+			srvsock = new ServerSocket(0);
+			buffer = new char [BUFFER_SIZE];
+
+			System.out.println("Server @" +
+							  srvsock.getInetAddress().getHostAddress() +
+							  " " + srvsock.getLocalPort());
+
+			while(true){
+
+				Socket socket = srvsock.accept();
+
+				if(socket == null){
+					srvsock.close();
+					break;
+				}
+
+				// Create a thread that handle the connection
+			}
+
+		} catch (IOException e) {
+
+			e.printStackTrace();
+			System.exit(-1);
+		}
+	}
+
 
 	public boolean newGroup(String name) {
 
