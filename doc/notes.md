@@ -44,7 +44,7 @@ Création groupe:
     /*
     NB: *ip_addr* et *port* correspondent respectivement à l'adresse IP
     et au n° de port de l'appareil.
-    */
+    \*/
 
 Avoir la liste des groupes:
 
@@ -61,7 +61,7 @@ Rejoindre un groupe spécifique:
     /*
     NB: *ip* et *port* correspondent respectivement à l'adresse IP
     et au n° de port de l'appareil.
-    */
+    \*/
 
 Quitter un groupe:
 
@@ -88,7 +88,7 @@ Envoi de la liste de groupes:
         GRPL : GRouP List
         GDAT : Group DATa
         EOTR : EndOf TRansmission
-    */
+    \*/
 
 Après l'ajout d'un appareil dans un groupe (si OK).
 
@@ -101,7 +101,7 @@ Après l'ajout d'un appareil dans un groupe (si echec).
 Quand le téléphone quitte le groupe:
 
     QACK    /// Quit ACKnowledgment
-    /* Puis fermeture de la connexion (côté serveur). */
+    /* Puis fermeture de la connexion (côté serveur). \*/
 
 Quand le téléphone ferme le connexion:
 
