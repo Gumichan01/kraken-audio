@@ -41,6 +41,7 @@ public class DirectoryServer {
 				}
 
 				// Create a thread that handle the connection
+				new Thread(new RunClient(socket)).start();
 			}
 
 		} catch (IOException e) {
