@@ -22,7 +22,7 @@ public class DeviceData {
 
 	public String toString() {
 
-		return "" + ipaddr + ":" + port;
+		return "" + ipaddr + " " + port;
 	}
 
 }

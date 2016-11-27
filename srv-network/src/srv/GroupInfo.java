@@ -2,7 +2,6 @@ package srv;
 
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.Set;
 
 public class GroupInfo {
 
@@ -84,9 +83,9 @@ public class GroupInfo {
 
 		ginfo.addDevice("Gumichan01@GT-8189N", new DeviceData("192.168.25.1",
 				2408));
-		ginfo.addDevice("Miku@GT-24N", new DeviceData("192.168.25.2", 2408));
-		ginfo.addDevice("trool@shit", new DeviceData("192.168.25.3", 2408));
-		ginfo.addDevice("Luka@I-8601t", new DeviceData("192.168.25.4", 2408));
+		ginfo.addDevice("Miku@GT-24N", new DeviceData("192.168.25.2", 2409));
+		ginfo.addDevice("trool@shit", new DeviceData("192.168.25.3", 2407));
+		ginfo.addDevice("Luka@I-8601t", new DeviceData("192.168.25.4", 2406));
 
 		Iterator<String> it = ginfo.getIterator();
 		System.out.println(ginfo.getName() + " - Devices");
