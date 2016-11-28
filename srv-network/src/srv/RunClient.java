@@ -24,13 +24,13 @@ public class RunClient implements Runnable {
 		socket = client;
 
 		try {
-			
+
 			socket.setSoTimeout(SRV_TIMEOUT);
-			
+
 			reader = new BufferedReader(new InputStreamReader(
 					socket.getInputStream()));
 			writer = new PrintWriter(socket.getOutputStream());
-			
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -72,20 +72,22 @@ public class RunClient implements Runnable {
 
 				if (parser.isWellParsed()) {
 
-					System.out.println("SUCCESS");
-					System.out.println(parser.getHeader());
+					// System.out.println("SUCCESS");
+					// System.out.println(parser.getHeader());
 
 					if (parser.getHeader().equals(MessageParser.CLIENT_CGRP)) {
 
-						System.out.println("SUCCESS OK");
+						// System.out.println("SUCCESS Group creation");
 
 						srv.newGroup(parser.getGroup());
 						srv.getGroup(parser.getGroup()).addDevice(
 								parser.getDevice(),
 								new DeviceData(parser.getIPaddr(), parser
 										.getPort()));
-
-						/// TODO Remove this block
+					
+					} else if (parser.getHeader().equals(MessageParser.CLIENT_GRPL)) {
+						
+						// / TODO Remove this block
 						Iterator<String> it = srv.getIterator();
 						System.out.println("Groups");
 						System.out.println(srv.nbGroups() + " groups");
@@ -103,9 +105,9 @@ public class RunClient implements Runnable {
 							}
 
 						}
-						/// TODO Remove this block end
+						// / TODO Remove this block end
 					}
-
+					
 				} else {
 					System.out.println("FAIL");
 					closeConnection();
@@ -114,13 +116,15 @@ public class RunClient implements Runnable {
 
 			} catch (SocketTimeoutException ste) {
 
-				ste.printStackTrace();
 				closeConnection();
 				go = false;
-			
+
 			} catch (IOException e) {
 
 				e.printStackTrace();
+			} finally {
+				
+				parser = null;
 			}
 		}
 	}

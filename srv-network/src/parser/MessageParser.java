@@ -49,6 +49,9 @@ public class MessageParser {
 
 		if (header.equals(CLIENT_CGRP))
 			parseCGRP();
+
+		else if (header.equals(CLIENT_GRPL))
+			parseGRPL();
 		else
 			well_parsed = false;
 	}
@@ -69,6 +72,11 @@ public class MessageParser {
 			well_parsed = true;
 		}
 
+	}
+	
+	private void parseGRPL() {
+		
+		well_parsed = true;
 	}
 
 	public boolean isWellParsed() {
