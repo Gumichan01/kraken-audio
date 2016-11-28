@@ -95,7 +95,7 @@ public class RunClient implements Runnable {
 
 						while (it.hasNext()) {
 
-							writer.write(MessageParser.SRV_GDAT
+							writer.write(MessageParser.SRV_GDAT + " "
 									+ srv.getGroup(it.next()).toString()
 									+ MessageParser.EOL);
 							writer.flush();
@@ -107,10 +107,46 @@ public class RunClient implements Runnable {
 					} else if (parser.getHeader().equals(
 							MessageParser.CLIENT_DEVL)) {
 
+						GroupInfo g = srv.getGroup(parser.getGroup());
+
+						if (g == null) {
+
+							writer.write(MessageParser.SRV_FAIL
+									+ MessageParser.EOL);
+							writer.flush();
+
+						} else {
+
+							Iterator<String> it = g.getIterator();
+
+							while (it.hasNext()) {
+
+								String dname = it.next();
+
+								writer.write(MessageParser.SRV_DDAT + " "
+										+ dname + " "
+										+ g.getDevice(dname).toString()
+										+ MessageParser.EOL);
+								writer.flush();
+							}
+
+							writer.write(MessageParser.SRV_EOTR
+									+ MessageParser.EOL);
+							writer.flush();
+						}
+
 					} else if (parser.getHeader().equals(
 							MessageParser.CLIENT_JGRP)) {
 
-						if (srv.getGroup(parser.getGroup()).addDevice(
+						GroupInfo g = srv.getGroup(parser.getGroup());
+
+						if (g == null) {
+
+							writer.write(MessageParser.SRV_FAIL
+									+ MessageParser.EOL);
+							writer.flush();
+
+						} else if (g.addDevice(
 								parser.getDevice(),
 								new DeviceData(parser.getIPaddr(), parser
 										.getPort()))) {
