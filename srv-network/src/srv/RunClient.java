@@ -101,105 +101,129 @@ public class RunClient implements Runnable {
 
 		if (parser.getHeader().equals(MessageParser.CLIENT_CGRP)) {
 
-			srv.newGroup(parser.getGroup());
-
-			if (srv.getGroup(parser.getGroup()).addDevice(parser.getDevice(),
-					new DeviceData(parser.getIPaddr(), parser.getPort()))) {
-
-				writer.write(MessageParser.SRV_GCOK + MessageParser.EOL);
-				writer.flush();
-
-			} else {
-
-				writer.write(MessageParser.SRV_FAIL + MessageParser.EOL);
-				writer.flush();
-			}
+			groupCreationResponse();
 
 		} else if (parser.getHeader().equals(MessageParser.CLIENT_GRPL)) {
 
-			Iterator<String> it = srv.getIterator();
+			groupListResponse();
+
+		} else if (parser.getHeader().equals(MessageParser.CLIENT_DEVL)) {
+
+			deviceListResponse();
+
+		} else if (parser.getHeader().equals(MessageParser.CLIENT_JGRP)) {
+
+			joinGroupResponse();
+
+		} else if (parser.getHeader().equals(MessageParser.CLIENT_QGRP)) {
+
+			quitGroupResponse();
+
+		} else if (parser.getHeader().equals(MessageParser.CLIENT_EOCO)) {
+
+			closeConnection();
+		}
+	}
+
+	private void groupCreationResponse() {
+
+		srv.newGroup(parser.getGroup());
+
+		if (srv.getGroup(parser.getGroup()).addDevice(parser.getDevice(),
+				new DeviceData(parser.getIPaddr(), parser.getPort()))) {
+
+			writer.write(MessageParser.SRV_GCOK + MessageParser.EOL);
+			writer.flush();
+
+		} else {
+
+			writer.write(MessageParser.SRV_FAIL + MessageParser.EOL);
+			writer.flush();
+		}
+	}
+
+	private void groupListResponse() {
+
+		Iterator<String> it = srv.getIterator();
+
+		while (it.hasNext()) {
+
+			writer.write(MessageParser.SRV_GDAT + " "
+					+ srv.getGroup(it.next()).toString() + MessageParser.EOL);
+			writer.flush();
+		}
+
+		writer.write(MessageParser.SRV_EOTR + MessageParser.EOL);
+		writer.flush();
+	}
+
+	private void deviceListResponse() {
+
+		GroupInfo g = srv.getGroup(parser.getGroup());
+
+		if (g == null) {
+
+			writer.write(MessageParser.SRV_FAIL + MessageParser.EOL);
+			writer.flush();
+
+		} else {
+
+			Iterator<String> it = g.getIterator();
 
 			while (it.hasNext()) {
 
-				writer.write(MessageParser.SRV_GDAT + " "
-						+ srv.getGroup(it.next()).toString()
-						+ MessageParser.EOL);
+				String dname = it.next();
+
+				writer.write(MessageParser.SRV_DDAT + " " + dname + " "
+						+ g.getDevice(dname).toString() + MessageParser.EOL);
 				writer.flush();
 			}
 
 			writer.write(MessageParser.SRV_EOTR + MessageParser.EOL);
 			writer.flush();
+		}
+	}
 
-		} else if (parser.getHeader().equals(MessageParser.CLIENT_DEVL)) {
+	private void joinGroupResponse() {
 
-			GroupInfo g = srv.getGroup(parser.getGroup());
+		GroupInfo g = srv.getGroup(parser.getGroup());
 
-			if (g == null) {
+		if (g == null) {
 
-				writer.write(MessageParser.SRV_FAIL + MessageParser.EOL);
-				writer.flush();
+			writer.write(MessageParser.SRV_FAIL + MessageParser.EOL);
+			writer.flush();
 
-			} else {
+		} else if (g.addDevice(parser.getDevice(),
+				new DeviceData(parser.getIPaddr(), parser.getPort()))) {
 
-				Iterator<String> it = g.getIterator();
+			writer.write(MessageParser.SRV_GJOK + MessageParser.EOL);
+			writer.flush();
 
-				while (it.hasNext()) {
+		} else {
 
-					String dname = it.next();
+			writer.write(MessageParser.SRV_FAIL + MessageParser.EOL);
+			writer.flush();
+		}
+	}
 
-					writer.write(MessageParser.SRV_DDAT + " " + dname + " "
-							+ g.getDevice(dname).toString() + MessageParser.EOL);
-					writer.flush();
-				}
+	private void quitGroupResponse() {
 
-				writer.write(MessageParser.SRV_EOTR + MessageParser.EOL);
-				writer.flush();
-			}
+		GroupInfo g = srv.getGroup(parser.getGroup());
 
-		} else if (parser.getHeader().equals(MessageParser.CLIENT_JGRP)) {
+		if (g == null) {
 
-			GroupInfo g = srv.getGroup(parser.getGroup());
+			writer.write(MessageParser.SRV_FAIL + MessageParser.EOL);
+			writer.flush();
 
-			if (g == null) {
+		} else if (g.removeDevice(parser.getDevice())) {
 
-				writer.write(MessageParser.SRV_FAIL + MessageParser.EOL);
-				writer.flush();
+			writer.write(MessageParser.SRV_QACK + MessageParser.EOL);
+			writer.flush();
 
-			} else if (g.addDevice(parser.getDevice(),
-					new DeviceData(parser.getIPaddr(), parser.getPort()))) {
+		} else {
 
-				writer.write(MessageParser.SRV_GJOK + MessageParser.EOL);
-				writer.flush();
-
-			} else {
-
-				writer.write(MessageParser.SRV_FAIL + MessageParser.EOL);
-				writer.flush();
-			}
-
-		} else if (parser.getHeader().equals(MessageParser.CLIENT_QGRP)) {
-
-			GroupInfo g = srv.getGroup(parser.getGroup());
-
-			if (g == null) {
-
-				writer.write(MessageParser.SRV_FAIL + MessageParser.EOL);
-				writer.flush();
-
-			} else if (g.removeDevice(parser.getDevice())) {
-
-				writer.write(MessageParser.SRV_QACK + MessageParser.EOL);
-				writer.flush();
-
-			} else {
-
-				writer.write(MessageParser.SRV_FAIL + MessageParser.EOL);
-				writer.flush();
-			}
-
-		} else if (parser.getHeader().equals(MessageParser.CLIENT_EOCO)) {
-
-			closeConnection();
+			writer.write(MessageParser.SRV_FAIL + MessageParser.EOL);
+			writer.flush();
 		}
 	}
 
