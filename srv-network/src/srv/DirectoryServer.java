@@ -45,7 +45,7 @@ public class DirectoryServer {
 				}
 
 				// Create a thread that handle the connection
-				new Thread(new RunClient(socket)).start();
+				new Thread(new RunClient(this, socket)).start();
 			}
 
 		} catch (IOException e) {
@@ -111,123 +111,6 @@ public class DirectoryServer {
 	public int nbGroups() {
 
 		return groups.size();
-	}
-
-	private class RunClient implements Runnable {
-
-		private Socket socket;
-		private BufferedReader reader;
-		private PrintWriter writer;
-
-		public RunClient(Socket client) {
-
-			socket = client;
-
-			try {
-				reader = new BufferedReader(new InputStreamReader(
-						socket.getInputStream()));
-				writer = new PrintWriter(socket.getOutputStream());
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-
-		@Override
-		public void run() {
-
-			if (reader == null || writer == null)
-				return;
-
-			int read;
-			boolean go = true;
-			MessageParser parser = null;
-
-			char[] buffer;
-			String strbuf = null;
-			buffer = new char[1024];
-
-			while (go) {
-
-				try {
-
-					read = reader.read(buffer);
-
-					if (read == -1) {
-
-						closeConnection();
-						go = false;
-						continue;
-					}
-
-					strbuf = new String(buffer).substring(0, read);
-
-					System.out.println("read: " + strbuf);
-
-					// / TODO message parser
-					parser = new MessageParser(strbuf);
-
-					if (parser.isWellParsed()) {
-
-						System.out.println("SUCCESS");
-						System.out.println(parser.getHeader());
-
-						if (parser.getHeader()
-								.equals(MessageParser.CLIENT_CGRP)) {
-
-							System.out.println("SUCCESS OK");
-
-							newGroup(parser.getGroup());
-							getGroup(parser.getGroup()).addDevice(
-									parser.getDevice(),
-									new DeviceData(parser.getIPaddr(), parser
-											.getPort()));
-
-							Iterator<String> it = getIterator();
-							System.out.println("Groups");
-							System.out.println(nbGroups() + " groups");
-
-							while (it.hasNext()) {
-
-								GroupInfo g = getGroup(it.next());
-								Iterator<String> itg = g.getIterator();
-								System.out.println(g.getName() + " - Devices");
-								System.out.println(g.nbDevices() + " elements");
-
-								while (itg.hasNext()) {
-									System.out.println(g.getDevice(itg.next())
-											.toString());
-								}
-
-							}
-						}
-
-					} else {
-						System.out.println("FAIL");
-						closeConnection();
-						go = false;
-					}
-
-				} catch (IOException e) {
-
-					e.printStackTrace();
-				}
-
-			}
-		}
-
-		private void closeConnection() {
-
-			try {
-
-				reader.close();
-				writer.close();
-				socket.close();
-
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-		}
 	}
 
 	// / * Uncomment this block in order to test the class
