@@ -12,7 +12,7 @@ import parser.MessageParser;
 
 public class RunClient implements Runnable {
 
-	private static final int SRV_TIMEOUT = 8000;
+	private static final int SRV_TIMEOUT = 16000;
 	private DirectoryServer srv;
 	private Socket socket;
 	private BufferedReader reader;
@@ -121,15 +121,26 @@ public class RunClient implements Runnable {
 						}
 						// / TODO Remove this block end
 
-					}	else if(parser.getHeader().equals(MessageParser.CLIENT_JGRP)){
-						
+					} else if (parser.getHeader().equals(
+							MessageParser.CLIENT_JGRP)) {
+
 						srv.getGroup(parser.getGroup()).addDevice(
 								parser.getDevice(),
 								new DeviceData(parser.getIPaddr(), parser
 										.getPort()));
+					} else if (parser.getHeader().equals(
+							MessageParser.CLIENT_QGRP)) {
+
+						srv.getGroup(parser.getGroup()).removeDevice(
+								parser.getDevice());
+
+					} else if (parser.getHeader().equals(
+							MessageParser.CLIENT_EOCO)) {
+
+						closeConnection();
+						go = false;
 					}
-					
-					
+
 				} else {
 					System.out.println("FAIL");
 					closeConnection();

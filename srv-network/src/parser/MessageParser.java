@@ -58,6 +58,13 @@ public class MessageParser {
 
 		else if (header.equals(CLIENT_JGRP))
 			parseJGRP();
+
+		else if (header.equals(CLIENT_QGRP))
+			parseQGRP();
+
+		else if (header.equals(CLIENT_EOCO))
+			parseEOCO();
+
 		else
 			well_parsed = false;
 	}
@@ -99,7 +106,6 @@ public class MessageParser {
 		}
 	}
 
-	
 	private void parseJGRP() {
 
 		int nbwords = 5;
@@ -117,7 +123,27 @@ public class MessageParser {
 		}
 
 	}
-	
+
+	private void parseQGRP() {
+
+		int nbwords = 3;
+		Pattern p = Pattern.compile(SPACE);
+		String[] tokens = p.split(message);
+
+		if (tokens.length != nbwords)
+			well_parsed = false;
+		else {
+			group_name = tokens[1];
+			device_name = tokens[2];
+			well_parsed = true;
+		}
+	}
+
+	private void parseEOCO() {
+
+		well_parsed = true;
+	}
+
 	public boolean isWellParsed() {
 
 		return well_parsed;
