@@ -84,20 +84,19 @@ public class RunClient implements Runnable {
 								parser.getDevice(),
 								new DeviceData(parser.getIPaddr(), parser
 										.getPort()));
-					
-					} else if (parser.getHeader().equals(MessageParser.CLIENT_GRPL)) {
-						
+
+					} else if (parser.getHeader().equals(
+							MessageParser.CLIENT_GRPL)) {
+
 						// / TODO Remove this block
 						Iterator<String> it = srv.getIterator();
-						System.out.println("Groups");
-						System.out.println(srv.nbGroups() + " groups");
+						// System.out.println("Groups");
+						// System.out.println(srv.nbGroups() + " groups");
 
 						while (it.hasNext()) {
 
 							GroupInfo g = srv.getGroup(it.next());
 							Iterator<String> itg = g.getIterator();
-							System.out.println(g.getName() + " - Devices");
-							System.out.println(g.nbDevices() + " elements");
 
 							while (itg.hasNext()) {
 								System.out.println(g.getDevice(itg.next())
@@ -106,8 +105,23 @@ public class RunClient implements Runnable {
 
 						}
 						// / TODO Remove this block end
+
+					} else if (parser.getHeader().equals(
+							MessageParser.CLIENT_DEVL)) {
+
+						// / TODO Remove this block
+						GroupInfo g = srv.getGroup(parser.getGroup());
+						Iterator<String> itg = g.getIterator();
+						System.out.println(g.getName() + " - Devices");
+						System.out.println(g.nbDevices() + " elements");
+
+						while (itg.hasNext()) {
+							System.out.println(g.getDevice(itg.next())
+									.toString());
+						}
+						// / TODO Remove this block end
+
 					}
-					
 				} else {
 					System.out.println("FAIL");
 					closeConnection();
@@ -123,7 +137,7 @@ public class RunClient implements Runnable {
 
 				e.printStackTrace();
 			} finally {
-				
+
 				parser = null;
 			}
 		}

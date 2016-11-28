@@ -52,6 +52,10 @@ public class MessageParser {
 
 		else if (header.equals(CLIENT_GRPL))
 			parseGRPL();
+
+		else if (header.equals(CLIENT_DEVL))
+			parseDEVL();
+
 		else
 			well_parsed = false;
 	}
@@ -73,10 +77,24 @@ public class MessageParser {
 		}
 
 	}
-	
+
 	private void parseGRPL() {
-		
+
 		well_parsed = true;
+	}
+
+	private void parseDEVL() {
+
+		int nbwords = 2;
+		Pattern p = Pattern.compile(SPACE);
+		String[] tokens = p.split(message);
+
+		if (tokens.length != nbwords)
+			well_parsed = false;
+		else {
+			group_name = tokens[1];
+			well_parsed = true;
+		}
 	}
 
 	public boolean isWellParsed() {
