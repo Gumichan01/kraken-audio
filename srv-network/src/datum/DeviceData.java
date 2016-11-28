@@ -13,12 +13,11 @@ public class DeviceData {
 		dname = name;
 	}
 
-	
 	public String getName() {
 
 		return dname;
 	}
-	
+
 	public String getAddr() {
 
 		return ipaddr.getAddress().getHostAddress();
@@ -33,5 +32,4 @@ public class DeviceData {
 
 		return getAddr() + " " + getPort();
 	}
-
 }
