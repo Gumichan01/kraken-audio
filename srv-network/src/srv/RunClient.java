@@ -12,7 +12,7 @@ import parser.MessageParser;
 
 public class RunClient implements Runnable {
 
-	private static final int SRV_TIMEOUT = 16000;
+	private static final int SRV_TIMEOUT = 0;
 	private DirectoryServer srv;
 	private Socket socket;
 	private BufferedReader reader;
