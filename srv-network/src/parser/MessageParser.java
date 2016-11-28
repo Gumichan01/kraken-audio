@@ -6,6 +6,8 @@ import java.util.regex.Pattern;
 public class MessageParser {
 
 	public static final String EOL = "\r\n";
+	public static final String SRV_FAIL = "FAIL";
+	public static final String SRV_BADR = "BADR";
 
 	// / Client request
 	// Group creation
@@ -28,7 +30,12 @@ public class MessageParser {
 	public static final String SRV_GJOK = "GJOK";
 	// Quit acknowlegdment
 	public static final String SRV_QACK = "QACK";
-	// / TODO final strings for server message header
+	// End of transmission
+	public static final String SRV_EOTR = "EOTR";
+	// - List of groups- Group data
+	public static final String SRV_GDAT = "GDAT";
+	// - List of devices- device data
+	public static final String SRV_DDAT = "DDAT";
 
 	// Additional information
 	private static final int HEADER_SIZE = 4;
@@ -39,6 +46,7 @@ public class MessageParser {
 	String header;
 	String group_name;
 	String device_name;
+	int devices_number;
 	InetSocketAddress ipaddr;
 
 	public MessageParser(String s) {
@@ -56,6 +64,7 @@ public class MessageParser {
 		// Look at the value of the header string
 		header = message.substring(0, HEADER_SIZE);
 
+		// Client message
 		if (header.equals(CLIENT_CGRP))
 			parseCGRP();
 
@@ -74,6 +83,15 @@ public class MessageParser {
 		else if (header.equals(CLIENT_EOCO))
 			parseEOCO();
 
+		// Server message
+		else if (header.equals(SRV_GCOK) || header.equals(SRV_GJOK)
+				|| header.equals(SRV_QACK) || header.equals(SRV_EOTR)
+				|| header.equals(SRV_BADR) || header.equals(SRV_FAIL))
+
+			parseOK();
+
+		else if (header.equals(SRV_GDAT))
+			parseGDAT();
 		else
 			well_parsed = false;
 	}
@@ -148,9 +166,31 @@ public class MessageParser {
 		}
 	}
 
-	private void parseEOCO() {
+	private void parseOK() {
 
 		well_parsed = true;
+	}
+
+	private void parseEOCO() {
+
+		parseOK();
+	}
+
+	private void parseGDAT() {
+
+		int nbwords = 3;
+		Pattern p = Pattern.compile(SPACE);
+		String[] tokens = p.split(message);
+
+		if (tokens.length != nbwords)
+			well_parsed = false;
+
+		else {
+
+			group_name = tokens[1];
+			devices_number = Integer.parseInt(tokens[2]);
+			well_parsed = true;
+		}
 	}
 
 	public boolean isWellParsed() {
