@@ -23,7 +23,7 @@ public class DirectoryServer {
 
 		try {
 
-			srvsock = new ServerSocket(0);
+			srvsock = new ServerSocket(2048);
 			buffer = new char[BUFFER_SIZE];
 
 			System.out.println("Server @"
@@ -47,6 +47,16 @@ public class DirectoryServer {
 
 			e.printStackTrace();
 			System.exit(-1);
+
+		} catch (SecurityException|NullPointerException se) {
+
+			se.printStackTrace();
+		
+		} catch (Exception u){
+		
+			System.err.println("UNKNOWN EXCEPTION");
+			u.printStackTrace();
+			throw u;
 		}
 	}
 

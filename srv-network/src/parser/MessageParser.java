@@ -1,5 +1,6 @@
 package parser;
 
+import java.net.InetSocketAddress;
 import java.util.regex.Pattern;
 
 public class MessageParser {
@@ -30,8 +31,7 @@ public class MessageParser {
 	String header;
 	String group_name;
 	String device_name;
-	String ipaddr;
-	int port;
+	InetSocketAddress ipaddr;
 
 	public MessageParser(String s) {
 
@@ -64,8 +64,8 @@ public class MessageParser {
 		else {
 			group_name = tokens[1];
 			device_name = tokens[2];
-			ipaddr = tokens[3];
-			port = Integer.parseInt(tokens[4]);
+			ipaddr = new InetSocketAddress(tokens[3],
+					Integer.parseInt(tokens[4]));
 			well_parsed = true;
 		}
 
@@ -93,12 +93,12 @@ public class MessageParser {
 
 	public String getIPaddr() {
 
-		return ipaddr;
+		return ipaddr.getAddress().getHostAddress();
 	}
 
 	public int getPort() {
 
-		return port;
+		return ipaddr.getPort();
 	}
 
 }

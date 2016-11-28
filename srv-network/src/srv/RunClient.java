@@ -5,12 +5,14 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.util.Iterator;
 
 import parser.MessageParser;
 
 public class RunClient implements Runnable {
 
+	private static final int SRV_TIMEOUT = 8000;
 	private DirectoryServer srv;
 	private Socket socket;
 	private BufferedReader reader;
@@ -22,9 +24,13 @@ public class RunClient implements Runnable {
 		socket = client;
 
 		try {
+			
+			socket.setSoTimeout(SRV_TIMEOUT);
+			
 			reader = new BufferedReader(new InputStreamReader(
 					socket.getInputStream()));
 			writer = new PrintWriter(socket.getOutputStream());
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -106,11 +112,16 @@ public class RunClient implements Runnable {
 					go = false;
 				}
 
+			} catch (SocketTimeoutException ste) {
+
+				ste.printStackTrace();
+				closeConnection();
+				go = false;
+			
 			} catch (IOException e) {
 
 				e.printStackTrace();
 			}
-
 		}
 	}
 
