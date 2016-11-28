@@ -13,10 +13,14 @@ import parser.MessageParser;
 public class RunClient implements Runnable {
 
 	private static final int SRV_TIMEOUT = 0;
+
 	private DirectoryServer srv;
 	private Socket socket;
 	private BufferedReader reader;
 	private PrintWriter writer;
+
+	boolean closed = false;
+	MessageParser parser = null;
 
 	public RunClient(DirectoryServer ds, Socket client) {
 
@@ -44,7 +48,6 @@ public class RunClient implements Runnable {
 
 		int read;
 		boolean go = true;
-		MessageParser parser = null;
 
 		char[] buffer;
 		String strbuf = null;
@@ -68,123 +71,8 @@ public class RunClient implements Runnable {
 
 				if (parser.isWellParsed()) {
 
-					if (parser.getHeader().equals(MessageParser.CLIENT_CGRP)) {
-
-						srv.newGroup(parser.getGroup());
-
-						if (srv.getGroup(parser.getGroup()).addDevice(
-								parser.getDevice(),
-								new DeviceData(parser.getIPaddr(), parser
-										.getPort()))) {
-
-							writer.write(MessageParser.SRV_GCOK
-									+ MessageParser.EOL);
-							writer.flush();
-
-						} else {
-
-							writer.write(MessageParser.SRV_FAIL
-									+ MessageParser.EOL);
-							writer.flush();
-						}
-
-					} else if (parser.getHeader().equals(
-							MessageParser.CLIENT_GRPL)) {
-
-						Iterator<String> it = srv.getIterator();
-
-						while (it.hasNext()) {
-
-							writer.write(MessageParser.SRV_GDAT + " "
-									+ srv.getGroup(it.next()).toString()
-									+ MessageParser.EOL);
-							writer.flush();
-						}
-
-						writer.write(MessageParser.SRV_EOTR + MessageParser.EOL);
-						writer.flush();
-
-					} else if (parser.getHeader().equals(
-							MessageParser.CLIENT_DEVL)) {
-
-						GroupInfo g = srv.getGroup(parser.getGroup());
-
-						if (g == null) {
-
-							writer.write(MessageParser.SRV_FAIL
-									+ MessageParser.EOL);
-							writer.flush();
-
-						} else {
-
-							Iterator<String> it = g.getIterator();
-
-							while (it.hasNext()) {
-
-								String dname = it.next();
-
-								writer.write(MessageParser.SRV_DDAT + " "
-										+ dname + " "
-										+ g.getDevice(dname).toString()
-										+ MessageParser.EOL);
-								writer.flush();
-							}
-
-							writer.write(MessageParser.SRV_EOTR
-									+ MessageParser.EOL);
-							writer.flush();
-						}
-
-					} else if (parser.getHeader().equals(
-							MessageParser.CLIENT_JGRP)) {
-
-						GroupInfo g = srv.getGroup(parser.getGroup());
-
-						if (g == null) {
-
-							writer.write(MessageParser.SRV_FAIL
-									+ MessageParser.EOL);
-							writer.flush();
-
-						} else if (g.addDevice(
-								parser.getDevice(),
-								new DeviceData(parser.getIPaddr(), parser
-										.getPort()))) {
-
-							writer.write(MessageParser.SRV_GJOK
-									+ MessageParser.EOL);
-							writer.flush();
-
-						} else {
-
-							writer.write(MessageParser.SRV_FAIL
-									+ MessageParser.EOL);
-							writer.flush();
-						}
-
-					} else if (parser.getHeader().equals(
-							MessageParser.CLIENT_QGRP)) {
-
-						if (srv.getGroup(parser.getGroup()).removeDevice(
-								parser.getDevice())) {
-
-							writer.write(MessageParser.SRV_QACK
-									+ MessageParser.EOL);
-							writer.flush();
-
-						} else {
-
-							writer.write(MessageParser.SRV_FAIL
-									+ MessageParser.EOL);
-							writer.flush();
-						}
-
-					} else if (parser.getHeader().equals(
-							MessageParser.CLIENT_EOCO)) {
-
-						closeConnection();
-						go = false;
-					}
+					respond();
+					go = closed ? false : true; // Is the connection closed?
 
 				} else {
 
@@ -209,6 +97,112 @@ public class RunClient implements Runnable {
 		}
 	}
 
+	private void respond() {
+
+		if (parser.getHeader().equals(MessageParser.CLIENT_CGRP)) {
+
+			srv.newGroup(parser.getGroup());
+
+			if (srv.getGroup(parser.getGroup()).addDevice(parser.getDevice(),
+					new DeviceData(parser.getIPaddr(), parser.getPort()))) {
+
+				writer.write(MessageParser.SRV_GCOK + MessageParser.EOL);
+				writer.flush();
+
+			} else {
+
+				writer.write(MessageParser.SRV_FAIL + MessageParser.EOL);
+				writer.flush();
+			}
+
+		} else if (parser.getHeader().equals(MessageParser.CLIENT_GRPL)) {
+
+			Iterator<String> it = srv.getIterator();
+
+			while (it.hasNext()) {
+
+				writer.write(MessageParser.SRV_GDAT + " "
+						+ srv.getGroup(it.next()).toString()
+						+ MessageParser.EOL);
+				writer.flush();
+			}
+
+			writer.write(MessageParser.SRV_EOTR + MessageParser.EOL);
+			writer.flush();
+
+		} else if (parser.getHeader().equals(MessageParser.CLIENT_DEVL)) {
+
+			GroupInfo g = srv.getGroup(parser.getGroup());
+
+			if (g == null) {
+
+				writer.write(MessageParser.SRV_FAIL + MessageParser.EOL);
+				writer.flush();
+
+			} else {
+
+				Iterator<String> it = g.getIterator();
+
+				while (it.hasNext()) {
+
+					String dname = it.next();
+
+					writer.write(MessageParser.SRV_DDAT + " " + dname + " "
+							+ g.getDevice(dname).toString() + MessageParser.EOL);
+					writer.flush();
+				}
+
+				writer.write(MessageParser.SRV_EOTR + MessageParser.EOL);
+				writer.flush();
+			}
+
+		} else if (parser.getHeader().equals(MessageParser.CLIENT_JGRP)) {
+
+			GroupInfo g = srv.getGroup(parser.getGroup());
+
+			if (g == null) {
+
+				writer.write(MessageParser.SRV_FAIL + MessageParser.EOL);
+				writer.flush();
+
+			} else if (g.addDevice(parser.getDevice(),
+					new DeviceData(parser.getIPaddr(), parser.getPort()))) {
+
+				writer.write(MessageParser.SRV_GJOK + MessageParser.EOL);
+				writer.flush();
+
+			} else {
+
+				writer.write(MessageParser.SRV_FAIL + MessageParser.EOL);
+				writer.flush();
+			}
+
+		} else if (parser.getHeader().equals(MessageParser.CLIENT_QGRP)) {
+
+			GroupInfo g = srv.getGroup(parser.getGroup());
+
+			if (g == null) {
+
+				writer.write(MessageParser.SRV_FAIL + MessageParser.EOL);
+				writer.flush();
+
+			} else if (g.removeDevice(parser.getDevice())) {
+
+				writer.write(MessageParser.SRV_QACK + MessageParser.EOL);
+				writer.flush();
+
+			} else {
+
+				writer.write(MessageParser.SRV_FAIL + MessageParser.EOL);
+				writer.flush();
+			}
+
+		} else if (parser.getHeader().equals(MessageParser.CLIENT_EOCO)) {
+
+			closeConnection();
+		}
+	}
+
 	private void closeConnection() {
 
 		try {
@@ -219,6 +213,10 @@ public class RunClient implements Runnable {
 
 		} catch (IOException e) {
 			e.printStackTrace();
+
+		} finally {
+
+			closed = true;
 		}
 
 	}
