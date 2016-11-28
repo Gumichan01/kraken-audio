@@ -3,6 +3,8 @@ package srv;
 import java.util.Hashtable;
 import java.util.Iterator;
 
+import datum.DeviceData;
+
 public class GroupInfo {
 
 	private String name;

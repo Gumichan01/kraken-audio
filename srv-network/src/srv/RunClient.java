@@ -8,6 +8,8 @@ import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.util.Iterator;
 
+import datum.DeviceData;
+
 import parser.MessageParser;
 
 public class RunClient implements Runnable {
@@ -129,8 +131,10 @@ public class RunClient implements Runnable {
 
 		srv.newGroup(parser.getGroup());
 
-		if (srv.getGroup(parser.getGroup()).addDevice(parser.getDevice(),
-				new DeviceData(parser.getIPaddr(), parser.getPort()))) {
+		if (srv.getGroup(parser.getGroup()).addDevice(
+				parser.getDevice(),
+				new DeviceData(parser.getDevice(), parser.getIPaddr(), parser
+						.getPort()))) {
 
 			writer.write(MessageParser.SRV_GCOK + MessageParser.EOL);
 			writer.flush();
@@ -193,8 +197,10 @@ public class RunClient implements Runnable {
 			writer.write(MessageParser.SRV_FAIL + MessageParser.EOL);
 			writer.flush();
 
-		} else if (g.addDevice(parser.getDevice(),
-				new DeviceData(parser.getIPaddr(), parser.getPort()))) {
+		} else if (g.addDevice(
+				parser.getDevice(),
+				new DeviceData(parser.getDevice(), parser.getIPaddr(), parser
+						.getPort()))) {
 
 			writer.write(MessageParser.SRV_GJOK + MessageParser.EOL);
 			writer.flush();
