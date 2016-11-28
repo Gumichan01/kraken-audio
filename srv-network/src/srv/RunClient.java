@@ -217,6 +217,9 @@ public class RunClient implements Runnable {
 
 		} else if (g.removeDevice(parser.getDevice())) {
 
+			if (g.nbDevices() == 0)
+				srv.destroyGroup(g.getName());
+
 			writer.write(MessageParser.SRV_QACK + MessageParser.EOL);
 			writer.flush();
 
