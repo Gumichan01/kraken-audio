@@ -65,7 +65,7 @@ Rejoindre un groupe spécifique:
 
 Quitter un groupe:
 
-    QGRP    /// QGRP : Quit GRouP
+    QGRP nom_groupe nom_appareil    /// QGRP : Quit GRouP
 
 Fermer la connexion:
 
@@ -79,8 +79,6 @@ Après la création d'un groupe (si ok):
 
 Envoi de la liste de groupes:
 
-    GRPL nombre_de_groupe
-    ...
     GDAT nom_groupe nombre_appareils
     ...
     EOTR
@@ -90,13 +88,21 @@ Envoi de la liste de groupes:
         EOTR : EndOf TRansmission
     \*/
 
+
+Envoi de la liste d'appareils':
+
+    DDAT nom_appareil ip_addr port
+    ...
+    EOTR
+    /*
+        DDAT : Device DATa
+        EOTR : EndOf TRansmission
+    \*/
+
 Après l'ajout d'un appareil dans un groupe (si OK).
 
     GJOK    /// GRPJ: GRouP Join OK
 
-Après l'ajout d'un appareil dans un groupe (si echec).
-
-    GJKO    /// GJKO : GRouP Join KO
 
 Quand le téléphone quitte le groupe:
 
@@ -107,6 +113,9 @@ Quand le téléphone ferme le connexion:
 
     /// Pas d'envoi, le serveur ferme juste le socket
 
+En cas d'echec quelconque:
+
+    FAIL
 
 ### Implémentation ###
 
