@@ -6,8 +6,6 @@ import java.util.regex.Pattern;
 public class MessageParser {
 
 	public static final String EOL = "\r\n";
-	public static final String SRV_FAIL = "FAIL";
-	public static final String SRV_BADR = "BADR";
 
 	// / Client request
 	// Group creation
@@ -36,6 +34,17 @@ public class MessageParser {
 	public static final String SRV_GDAT = "GDAT";
 	// - List of devices- device data
 	public static final String SRV_DDAT = "DDAT";
+
+	// FAIL means the requested operation failed
+	public static final String SRV_FAIL = "FAIL";
+	/*
+	 * BATR (BAd Request) means:
+	 * 
+	 * - The requested operation is not supported
+	 * 
+	 * - The operation is valid but the syntax is not correct
+	 */
+	public static final String SRV_BADR = "BADR";
 
 	// Additional information
 	private static final int HEADER_SIZE = 4;
@@ -92,6 +101,8 @@ public class MessageParser {
 
 		else if (header.equals(SRV_GDAT))
 			parseGDAT();
+		else if (header.equals(SRV_DDAT))
+			parseDDAT();
 		else
 			well_parsed = false;
 	}
@@ -193,6 +204,24 @@ public class MessageParser {
 		}
 	}
 
+	private void parseDDAT() {
+
+		int nbwords = 4;
+		Pattern p = Pattern.compile(SPACE);
+		String[] tokens = p.split(message);
+
+		if (tokens.length != nbwords)
+			well_parsed = false;
+
+		else {
+
+			device_name = tokens[1];
+			ipaddr = new InetSocketAddress(tokens[2],
+					Integer.parseInt(tokens[3]));
+			well_parsed = true;
+		}
+	}
+
 	public boolean isWellParsed() {
 
 		return well_parsed;
@@ -211,6 +240,11 @@ public class MessageParser {
 	public String getDevice() {
 
 		return device_name;
+	}
+
+	public int getNumberOfDevices() {
+
+		return devices_number;
 	}
 
 	public String getIPaddr() {
