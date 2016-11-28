@@ -12,6 +12,7 @@ import parser.MessageParser;
 
 public class RunClient implements Runnable {
 
+	public static final String FAIL = "FAIL";
 	private static final int SRV_TIMEOUT = 16000;
 	private DirectoryServer srv;
 	private Socket socket;
@@ -64,75 +65,68 @@ public class RunClient implements Runnable {
 				}
 
 				strbuf = new String(buffer).substring(0, read);
-
-				System.out.println("read: " + strbuf);
-
-				// / TODO message parser
 				parser = new MessageParser(strbuf);
 
 				if (parser.isWellParsed()) {
 
-					// System.out.println("SUCCESS");
-					// System.out.println(parser.getHeader());
-
 					if (parser.getHeader().equals(MessageParser.CLIENT_CGRP)) {
 
-						// System.out.println("SUCCESS Group creation");
-
 						srv.newGroup(parser.getGroup());
-						srv.getGroup(parser.getGroup()).addDevice(
+
+						if (srv.getGroup(parser.getGroup()).addDevice(
 								parser.getDevice(),
 								new DeviceData(parser.getIPaddr(), parser
-										.getPort()));
+										.getPort()))) {
+
+							writer.write(MessageParser.SRV_GCOK
+									+ MessageParser.EOL);
+							writer.flush();
+
+						} else {
+
+							writer.write(FAIL + MessageParser.EOL);
+							writer.flush();
+						}
 
 					} else if (parser.getHeader().equals(
 							MessageParser.CLIENT_GRPL)) {
 
-						// / TODO Remove this block
-						Iterator<String> it = srv.getIterator();
-						// System.out.println("Groups");
-						// System.out.println(srv.nbGroups() + " groups");
-
-						while (it.hasNext()) {
-
-							GroupInfo g = srv.getGroup(it.next());
-							Iterator<String> itg = g.getIterator();
-
-							while (itg.hasNext()) {
-								System.out.println(g.getDevice(itg.next())
-										.toString());
-							}
-
-						}
-						// / TODO Remove this block end
-
 					} else if (parser.getHeader().equals(
 							MessageParser.CLIENT_DEVL)) {
-
-						// / TODO Remove this block
-						GroupInfo g = srv.getGroup(parser.getGroup());
-						Iterator<String> itg = g.getIterator();
-						System.out.println(g.getName() + " - Devices");
-						System.out.println(g.nbDevices() + " elements");
-
-						while (itg.hasNext()) {
-							System.out.println(g.getDevice(itg.next())
-									.toString());
-						}
-						// / TODO Remove this block end
 
 					} else if (parser.getHeader().equals(
 							MessageParser.CLIENT_JGRP)) {
 
-						srv.getGroup(parser.getGroup()).addDevice(
+						if (srv.getGroup(parser.getGroup()).addDevice(
 								parser.getDevice(),
 								new DeviceData(parser.getIPaddr(), parser
-										.getPort()));
+										.getPort()))) {
+
+							writer.write(MessageParser.SRV_GJOK
+									+ MessageParser.EOL);
+							writer.flush();
+
+						} else {
+
+							writer.write(FAIL + MessageParser.EOL);
+							writer.flush();
+						}
+
 					} else if (parser.getHeader().equals(
 							MessageParser.CLIENT_QGRP)) {
 
-						srv.getGroup(parser.getGroup()).removeDevice(
-								parser.getDevice());
+						if (srv.getGroup(parser.getGroup()).removeDevice(
+								parser.getDevice())) {
+
+							writer.write(MessageParser.SRV_QACK
+									+ MessageParser.EOL);
+							writer.flush();
+
+						} else {
+
+							writer.write(FAIL + MessageParser.EOL);
+							writer.flush();
+						}
 
 					} else if (parser.getHeader().equals(
 							MessageParser.CLIENT_EOCO)) {
@@ -142,6 +136,7 @@ public class RunClient implements Runnable {
 					}
 
 				} else {
+
 					System.out.println("FAIL");
 					closeConnection();
 					go = false;

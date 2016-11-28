@@ -48,12 +48,12 @@ public class DirectoryServer {
 			e.printStackTrace();
 			System.exit(-1);
 
-		} catch (SecurityException|NullPointerException se) {
+		} catch (SecurityException | NullPointerException se) {
 
 			se.printStackTrace();
-		
-		} catch (Exception u){
-		
+
+		} catch (Exception u) {
+
 			System.err.println("UNKNOWN EXCEPTION");
 			u.printStackTrace();
 			throw u;

@@ -5,6 +5,8 @@ import java.util.regex.Pattern;
 
 public class MessageParser {
 
+	public static final String EOL = "\r\n";
+
 	// / Client request
 	// Group creation
 	public static final String CLIENT_CGRP = "CGRP";
@@ -20,6 +22,12 @@ public class MessageParser {
 	public static final String CLIENT_EOCO = "EOCO";
 
 	// / Server answer
+	// Group creation OK
+	public static final String SRV_GCOK = "GCOK";
+	// Join group OK
+	public static final String SRV_GJOK = "GJOK";
+	// Quit acknowlegdment
+	public static final String SRV_QACK = "QACK";
 	// / TODO final strings for server message header
 
 	// Additional information
@@ -41,7 +49,8 @@ public class MessageParser {
 
 	private void parse() {
 
-		if (message == null)
+		if (message == null || message.isEmpty()
+				|| message.length() < HEADER_SIZE)
 			return;
 
 		// Look at the value of the header string
