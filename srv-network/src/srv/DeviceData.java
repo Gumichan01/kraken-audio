@@ -1,28 +1,29 @@
 package srv;
 
+import java.net.InetSocketAddress;
+
 public class DeviceData {
 
-	private String ipaddr;
-	private int port;
+	private InetSocketAddress ipaddr;
 
-	public DeviceData(String ipaddr, int port) {
-		this.ipaddr = ipaddr;
-		this.port = port;
+	public DeviceData(String ipaddress, int port) {
+
+		ipaddr = new InetSocketAddress(ipaddress, port);
 	}
 
 	public String getAddr() {
 
-		return ipaddr;
+		return ipaddr.getAddress().getHostAddress();
 	}
 
 	public int getPort() {
 
-		return port;
+		return ipaddr.getPort();
 	}
 
 	public String toString() {
 
-		return "" + ipaddr + " " + port;
+		return getAddr() + " " + getPort();
 	}
 
 }
