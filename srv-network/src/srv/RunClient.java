@@ -121,7 +121,15 @@ public class RunClient implements Runnable {
 						}
 						// / TODO Remove this block end
 
+					}	else if(parser.getHeader().equals(MessageParser.CLIENT_JGRP)){
+						
+						srv.getGroup(parser.getGroup()).addDevice(
+								parser.getDevice(),
+								new DeviceData(parser.getIPaddr(), parser
+										.getPort()));
 					}
+					
+					
 				} else {
 					System.out.println("FAIL");
 					closeConnection();

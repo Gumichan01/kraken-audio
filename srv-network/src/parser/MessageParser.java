@@ -56,6 +56,8 @@ public class MessageParser {
 		else if (header.equals(CLIENT_DEVL))
 			parseDEVL();
 
+		else if (header.equals(CLIENT_JGRP))
+			parseJGRP();
 		else
 			well_parsed = false;
 	}
@@ -97,6 +99,25 @@ public class MessageParser {
 		}
 	}
 
+	
+	private void parseJGRP() {
+
+		int nbwords = 5;
+		Pattern p = Pattern.compile(SPACE);
+		String[] tokens = p.split(message);
+
+		if (tokens.length != nbwords)
+			well_parsed = false;
+		else {
+			group_name = tokens[1];
+			device_name = tokens[2];
+			ipaddr = new InetSocketAddress(tokens[3],
+					Integer.parseInt(tokens[4]));
+			well_parsed = true;
+		}
+
+	}
+	
 	public boolean isWellParsed() {
 
 		return well_parsed;
