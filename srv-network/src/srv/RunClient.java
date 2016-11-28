@@ -12,7 +12,6 @@ import parser.MessageParser;
 
 public class RunClient implements Runnable {
 
-	public static final String FAIL = "FAIL";
 	private static final int SRV_TIMEOUT = 16000;
 	private DirectoryServer srv;
 	private Socket socket;
@@ -84,12 +83,26 @@ public class RunClient implements Runnable {
 
 						} else {
 
-							writer.write(FAIL + MessageParser.EOL);
+							writer.write(MessageParser.SRV_FAIL
+									+ MessageParser.EOL);
 							writer.flush();
 						}
 
 					} else if (parser.getHeader().equals(
 							MessageParser.CLIENT_GRPL)) {
+
+						Iterator<String> it = srv.getIterator();
+
+						while (it.hasNext()) {
+
+							writer.write(MessageParser.SRV_GDAT
+									+ srv.getGroup(it.next()).toString()
+									+ MessageParser.EOL);
+							writer.flush();
+						}
+
+						writer.write(MessageParser.SRV_EOTR + MessageParser.EOL);
+						writer.flush();
 
 					} else if (parser.getHeader().equals(
 							MessageParser.CLIENT_DEVL)) {
@@ -108,7 +121,8 @@ public class RunClient implements Runnable {
 
 						} else {
 
-							writer.write(FAIL + MessageParser.EOL);
+							writer.write(MessageParser.SRV_FAIL
+									+ MessageParser.EOL);
 							writer.flush();
 						}
 
@@ -124,7 +138,8 @@ public class RunClient implements Runnable {
 
 						} else {
 
-							writer.write(FAIL + MessageParser.EOL);
+							writer.write(MessageParser.SRV_FAIL
+									+ MessageParser.EOL);
 							writer.flush();
 						}
 
@@ -137,7 +152,8 @@ public class RunClient implements Runnable {
 
 				} else {
 
-					System.out.println("FAIL");
+					writer.write(MessageParser.SRV_BADR + MessageParser.EOL);
+					writer.flush();
 					closeConnection();
 					go = false;
 				}

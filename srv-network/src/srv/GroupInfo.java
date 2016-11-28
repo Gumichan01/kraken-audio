@@ -74,6 +74,11 @@ public class GroupInfo {
 		return name;
 	}
 
+	public String toString() {
+
+		return name + " " + nbDevices();
+	}
+	
 	/*
 	 * Uncomment this block in order to test the class public static void
 	 * main(String[] args) {
