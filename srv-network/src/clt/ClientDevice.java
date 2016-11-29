@@ -77,6 +77,18 @@ public class ClientDevice{
 		return true;
 	}
 	
+	public void close(){
+		writer.write(MessageParser.CLIENT_EOCO);
+		try {
+			socket.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		reader = null;
+		writer = null;
+	}
+	
 	public boolean joinGroup(String gname){
 		return false;
 	}
