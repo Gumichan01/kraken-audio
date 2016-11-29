@@ -6,6 +6,8 @@ import java.net.Socket;
 import java.util.Hashtable;
 import java.util.Iterator;
 
+import clt.ClientDevice;
+
 public class DirectoryServer {
 
 	private static final int BUFFER_SIZE = 1024;
@@ -121,7 +123,7 @@ public class DirectoryServer {
 	// / * Uncomment this block in order to test the class
 	public static void main(String[] args) {
 
-		DirectoryServer srv = new DirectoryServer();
+		//DirectoryServer srv = new DirectoryServer();
 
 		/*
 		 * srv.newGroup("toto"); srv.newGroup("luno");
@@ -156,8 +158,46 @@ public class DirectoryServer {
 		 * 
 		 * }
 		 */
-
-		srv.launch();
+		
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				new DirectoryServer().launch();
+			}
+		}).start();
+		
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				System.out.println("client");
+				ClientDevice d = new ClientDevice("toto@21", "192.168.1.1", 1536);
+				d.createGroup("group1");
+				System.out.println("client");
+				
+				System.out.println("done");
+				new ClientDevice("alice@1", "192.168.1.2", 1536).joinGroup("group1");
+				new ClientDevice("bob@4", "192.168.1.3", 1536).joinGroup("group1");
+				d.quitGroup("group1");
+				d.close();
+			}
+		}).start();
+		
+			try {
+				Thread.sleep(4000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 	}
 	// */
 }

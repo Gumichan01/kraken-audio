@@ -9,9 +9,15 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.List;
+
+import parser.MessageParser;
+
+import datum.DeviceData;
+import datum.GroupData;
 
 
-public class ClientDevice {
+public class ClientDevice{
 	private Socket socket;
 	private BufferedReader reader;
 	private PrintWriter writer;
@@ -34,7 +40,138 @@ public class ClientDevice {
 		}
 	}
 
-	// Création d'un groupe:
+	public boolean createGroup(String gname){
+		char[] buffer = new char[1024];
+		
+		if(gname == null)
+			return false;
+		
+		writer.write(MessageParser.CLIENT_CGRP + " " + gname + " " + device_name + " " + ipaddr.getAddress().getHostAddress() + " " + ipaddr.getPort() + MessageParser.EOL);
+		writer.flush();
+		
+		try {
+			int read = reader.read(buffer);
+			
+			if(read == -1){
+				return false;
+			}
+			
+			String strbuf = new String(buffer).substring(0, read);
+			MessageParser parser = new MessageParser(strbuf);
+			
+			if(parser.isWellParsed()){
+				if(parser.getHeader().contains(MessageParser.SRV_GCOK)){
+					System.out.println("SUCCESS");
+					return true;
+				}
+				else
+					return false;
+			}
+			else
+				return false;
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return true;
+	}
+	
+	public void close(){
+		writer.write(MessageParser.CLIENT_EOCO);
+		try {
+			socket.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		reader = null;
+		writer = null;
+	}
+	
+	public boolean joinGroup(String gname){
+		char[] buffer = new char[1024];
+		
+		if(gname == null)
+			return false;
+		
+		writer.write(MessageParser.CLIENT_JGRP + " " + gname + " " + device_name + " " + ipaddr.getAddress().getHostAddress() + " " + ipaddr.getPort() + MessageParser.EOL);
+		writer.flush();
+		
+		try {
+			int read = reader.read(buffer);
+			
+			if(read == -1){
+				return false;
+			}
+			
+			String strbuf = new String(buffer).substring(0, read);
+			MessageParser parser = new MessageParser(strbuf);
+			
+			if(parser.isWellParsed()){
+				if(parser.getHeader().contains(MessageParser.SRV_GJOK)){
+					System.out.println("SUCCESS join");
+					return true;
+				}
+				else
+					return false;
+			}
+			else
+				return false;
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return true;
+	}
+	
+	public boolean quitGroup(String gname){
+		char[] buffer = new char[1024];
+		
+		if(gname == null)
+			return false;
+		
+		writer.write(MessageParser.CLIENT_QGRP + " " + gname + " " + device_name + MessageParser.EOL);
+		writer.flush();
+		
+		try {
+			int read = reader.read(buffer);
+			
+			if(read == -1){
+				return false;
+			}
+			
+			String strbuf = new String(buffer).substring(0, read);
+			MessageParser parser = new MessageParser(strbuf);
+			
+			if(parser.isWellParsed()){
+				if(parser.getHeader().contains(MessageParser.SRV_QACK)){
+					System.out.println("SUCCESS");
+					return true;
+				}
+				else
+					return false;
+			}
+			else
+				return false;
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return true;
+	}
+	
+	public List<GroupData> groupList(String gname){
+		return null;
+	}
+	
+	public List<DeviceData> deviceList(String gname){
+		return null;
+	}
+	
 	// Rejoindre un groupe spécifique:
 	// Avoir la liste des groupes:
 	// Avoir la liste des appareils d'un groupe donné:
