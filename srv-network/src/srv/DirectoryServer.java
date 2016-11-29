@@ -123,53 +123,21 @@ public class DirectoryServer {
 	// / * Uncomment this block in order to test the class
 	public static void main(String[] args) {
 
-		//DirectoryServer srv = new DirectoryServer();
+		// PRODUCTION CODE
+		// DirectoryServer srv = new DirectoryServer();
 
-		/*
-		 * srv.newGroup("toto"); srv.newGroup("luno");
-		 * 
-		 * GroupInfo ginfo = srv.getGroup("toto"); GroupInfo gi =
-		 * srv.getGroup("luno");
-		 * 
-		 * ginfo.addDevice("Gumichan01@GT-8189N", new DeviceData("192.245.2.1",
-		 * 2408)); ginfo.addDevice("Miku@GT-24N", new DeviceData("192.245.2.6",
-		 * 2048)); ginfo.addDevice("Luka@I-8601t", new DeviceData("192.245.2.4",
-		 * 2409));
-		 * 
-		 * gi.addDevice("Alice@GT-8189N", new DeviceData("192.168.25.1", 1562));
-		 * gi.addDevice("Bob@GT-24N", new DeviceData("192.168.25.2", 2142));
-		 * gi.addDevice("David@shit", new DeviceData("192.168.25.3", 2106));
-		 * gi.addDevice("Eloise@I-8601t", new DeviceData("192.168.25.4", 4058));
-		 * 
-		 * ginfo = null; gi = null;
-		 * 
-		 * Iterator<String> it = srv.getIterator();
-		 * System.out.println("Groups"); System.out.println(srv.nbGroups() +
-		 * " groups");
-		 * 
-		 * while (it.hasNext()) {
-		 * 
-		 * GroupInfo g = srv.getGroup(it.next()); Iterator<String> itg =
-		 * g.getIterator(); System.out.println(g.getName() + " - Devices");
-		 * System.out.println(g.nbDevices() + " elements");
-		 * 
-		 * while (itg.hasNext()) {
-		 * System.out.println(g.getDevice(itg.next()).toString()); }
-		 * 
-		 * }
-		 */
-		
+		// / For testing the server (DO NOT DEPLOY THAT)
 		new Thread(new Runnable() {
-			
+
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
 				new DirectoryServer().launch();
 			}
 		}).start();
-		
+
 		new Thread(new Runnable() {
-			
+
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
@@ -180,24 +148,27 @@ public class DirectoryServer {
 					e.printStackTrace();
 				}
 				System.out.println("client");
-				ClientDevice d = new ClientDevice("toto@21", "192.168.1.1", 1536);
+				ClientDevice d = new ClientDevice("toto@21", "192.168.1.1",
+						1536);
 				d.createGroup("group1");
 				System.out.println("client");
-				
+
 				System.out.println("done");
-				new ClientDevice("alice@1", "192.168.1.2", 1536).joinGroup("group1");
-				new ClientDevice("bob@4", "192.168.1.3", 1536).joinGroup("group1");
+				new ClientDevice("alice@1", "192.168.1.2", 1536)
+						.joinGroup("group1");
+				new ClientDevice("bob@4", "192.168.1.3", 1536)
+						.joinGroup("group1");
 				d.quitGroup("group1");
 				d.close();
 			}
 		}).start();
-		
-			try {
-				Thread.sleep(4000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+
+		try {
+			Thread.sleep(4000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	// */
 }
