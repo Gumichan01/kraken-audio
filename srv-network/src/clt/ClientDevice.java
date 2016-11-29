@@ -94,7 +94,41 @@ public class ClientDevice{
 	}
 	
 	public boolean quitGroup(String gname){
-		return false;
+		char[] buffer = new char[1024];
+		
+		if(gname == null)
+			return false;
+		
+		writer.write(MessageParser.CLIENT_QGRP + " " + gname + " " + device_name + MessageParser.EOL);
+		writer.flush();
+		
+		try {
+			int read = reader.read(buffer);
+			
+			if(read == -1){
+				return false;
+			}
+			
+			String strbuf = new String(buffer).substring(0, read);
+			MessageParser parser = new MessageParser(strbuf);
+			
+			if(parser.isWellParsed()){
+				if(parser.getHeader().contains(MessageParser.SRV_QACK)){
+					System.out.println("SUCCESS");
+					return true;
+				}
+				else
+					return false;
+			}
+			else
+				return false;
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return true;
 	}
 	
 	public List<GroupData> groupList(String gname){
@@ -105,7 +139,6 @@ public class ClientDevice{
 		return null;
 	}
 	
-	// Création d'un groupe:
 	// Rejoindre un groupe spécifique:
 	// Avoir la liste des groupes:
 	// Avoir la liste des appareils d'un groupe donné:
