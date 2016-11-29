@@ -1,0 +1,14 @@
+# This docker file is used for testing the image build
+# Commands:
+#   sudo docker build <path> -t <tag_name>  // Créer une image avec une étiquete
+#   sudo docker images                      // Lister les images
+#   sudo docker rmi <node>                  // Supprimer une image
+
+FROM ubuntu:12.04
+MAINTAINER Luxon JEAN-PIERRE <luxn.jean.pierre@gmail.com>
+RUN apt-get update && apt-get -y install git
+RUN git clone git@moule.informatique.univ-paris-diderot.fr:jeanpier/pl-multicast.git kraken-git
+RUN git log -1
+RUN echo -----------------------------------------------------------------------
+RUN echo SUCCESS - Created the image \\(^.^\)/
+RUN echo -----------------------------------------------------------------------
