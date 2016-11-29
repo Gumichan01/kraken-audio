@@ -90,7 +90,40 @@ public class ClientDevice{
 	}
 	
 	public boolean joinGroup(String gname){
-		return false;
+		char[] buffer = new char[1024];
+		
+		if(gname == null)
+			return false;
+		
+		writer.write(MessageParser.CLIENT_JGRP + " " + gname + " " + device_name + " " + ipaddr.getAddress().getHostAddress() + " " + ipaddr.getPort() + MessageParser.EOL);
+		writer.flush();
+		
+		try {
+			int read = reader.read(buffer);
+			
+			if(read == -1){
+				return false;
+			}
+			
+			String strbuf = new String(buffer).substring(0, read);
+			MessageParser parser = new MessageParser(strbuf);
+			
+			if(parser.isWellParsed()){
+				if(parser.getHeader().contains(MessageParser.SRV_GJOK)){
+					System.out.println("SUCCESS join");
+					return true;
+				}
+				else
+					return false;
+			}
+			else
+				return false;
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return true;
 	}
 	
 	public boolean quitGroup(String gname){
