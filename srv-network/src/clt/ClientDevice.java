@@ -9,6 +9,10 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.List;
+
+import datum.DeviceData;
+import datum.GroupData;
 
 
 public class ClientDevice {
@@ -34,6 +38,29 @@ public class ClientDevice {
 		}
 	}
 
+	boolean createGroup(String gname){
+		if(gname == null)
+			return false;
+		writer.write(gname);
+		return true;
+	}
+	
+	boolean joinGroup(String gname){
+		return false;
+	}
+	
+	boolean quitGroup(String gname){
+		return false;
+	}
+	
+	List<GroupData> groupList(String gname){
+		return false;
+	}
+	
+	List<DeviceData> deviceList(String gname){
+		return false;
+	}
+	
 	// Création d'un groupe:
 	// Rejoindre un groupe spécifique:
 	// Avoir la liste des groupes:
