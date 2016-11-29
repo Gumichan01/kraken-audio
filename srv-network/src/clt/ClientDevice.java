@@ -11,11 +11,13 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.List;
 
+import parser.MessageParser;
+
 import datum.DeviceData;
 import datum.GroupData;
 
 
-public class ClientDevice {
+public class ClientDevice{
 	private Socket socket;
 	private BufferedReader reader;
 	private PrintWriter writer;
@@ -38,27 +40,57 @@ public class ClientDevice {
 		}
 	}
 
-	boolean createGroup(String gname){
+	public boolean createGroup(String gname){
+		char[] buffer = new char[1024];
+		
 		if(gname == null)
 			return false;
-		writer.write(gname);
+		
+		writer.write(MessageParser.CLIENT_CGRP + " " + gname + " " + device_name + " " + ipaddr.getAddress().getHostAddress() + " " + ipaddr.getPort() + MessageParser.EOL);
+		writer.flush();
+		
+		try {
+			int read = reader.read(buffer);
+			
+			if(read == -1){
+				return false;
+			}
+			
+			String strbuf = new String(buffer).substring(0, read);
+			MessageParser parser = new MessageParser(strbuf);
+			
+			if(parser.isWellParsed()){
+				if(parser.getHeader().contains(MessageParser.SRV_GCOK)){
+					System.out.println("SUCCESS");
+					return true;
+				}
+				else
+					return false;
+			}
+			else
+				return false;
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return true;
 	}
 	
-	boolean joinGroup(String gname){
+	public boolean joinGroup(String gname){
 		return false;
 	}
 	
-	boolean quitGroup(String gname){
+	public boolean quitGroup(String gname){
 		return false;
 	}
 	
-	List<GroupData> groupList(String gname){
-		return false;
+	public List<GroupData> groupList(String gname){
+		return null;
 	}
 	
-	List<DeviceData> deviceList(String gname){
-		return false;
+	public List<DeviceData> deviceList(String gname){
+		return null;
 	}
 	
 	// Création d'un groupe:
