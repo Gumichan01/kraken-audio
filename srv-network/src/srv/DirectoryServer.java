@@ -124,9 +124,9 @@ public class DirectoryServer {
 	public static void main(String[] args) {
 
 		// PRODUCTION CODE
-		// DirectoryServer srv = new DirectoryServer();
+		new DirectoryServer().launch();
 
-		// / For testing the server (DO NOT DEPLOY THAT)
+		/** For testing the server (DO NOT DEPLOY THAT)
 		new Thread(new Runnable() {
 
 			@Override
@@ -168,7 +168,7 @@ public class DirectoryServer {
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 	}
-	// */
+	
 }
