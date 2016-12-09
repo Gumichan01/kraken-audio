@@ -1,3 +1,16 @@
+* <2016-12-09>
+** Fait:
+   - sur le serveur d'annuaire : fait un protocole raisonnable.
+   - sur l'UI : un premier proto sans table de mixage avec un
+     menu à gauche et à droite
+   - docker
+** A faire:
+   - on ne doit pas pouvoir déconnecter un autre client que soi-même
+   - éclaircir l'usage des différents ports
+   - passer à HTTP
+   - une version de l'application avec du texte plutôt que du son.
+   - une vidéo de démonstration
+   - démonstration en live
 * <2016-11-18>
 ** Fait:
    - changé la spécification de l'UI
