@@ -230,17 +230,28 @@ public class ClientDevice{
 				
 				if(parser.isWellParsed()){
 					
+					System.out.println("test" + parser.getHeader());
+					
 					if(parser.getHeader().contains(MessageParser.SRV_DDAT)){
+						
+						System.out.println("dev");
 						DeviceData newdevice = new DeviceData(parser.getDevice(), parser.getIPaddr(), parser.getPort());
 						devices.add(newdevice);
 					}
-					else if(parser.getHeader().contains(MessageParser.SRV_EOTR))
+					else if(parser.getHeader().contains(MessageParser.SRV_EOTR)){
+						System.out.println("dev ok");
 						return devices;
-					else
+					}
+						
+					else{
+						System.out.println("dev KO");
 						return null;
+					}
 				}
-				else
+				else{
+					System.out.println("FUCK");
 					return null;
+				}
 				
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -263,6 +274,12 @@ public class ClientDevice{
 		
 		for(GroupData g: listgroup){
 			System.out.println(g.getName() + " " + g.getNumberOfDevices());
+		}
+
+		List<DeviceData> listdev = c.deviceList("toto@GT-01");
+		
+		for(DeviceData d: listdev){
+			System.out.println(d.getName() + " " + d.getAddr() + "/" + d.getPort());
 		}
 		
 	}
