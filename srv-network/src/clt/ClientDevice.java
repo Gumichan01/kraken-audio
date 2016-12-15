@@ -9,6 +9,7 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.List;
 
 import parser.MessageParser;
@@ -61,7 +62,6 @@ public class ClientDevice{
 			
 			if(parser.isWellParsed()){
 				if(parser.getHeader().contains(MessageParser.SRV_GCOK)){
-					System.out.println("SUCCESS");
 					return true;
 				}
 				else
@@ -110,7 +110,6 @@ public class ClientDevice{
 			
 			if(parser.isWellParsed()){
 				if(parser.getHeader().contains(MessageParser.SRV_GJOK)){
-					System.out.println("SUCCESS join");
 					return true;
 				}
 				else
@@ -147,7 +146,6 @@ public class ClientDevice{
 			
 			if(parser.isWellParsed()){
 				if(parser.getHeader().contains(MessageParser.SRV_QACK)){
-					System.out.println("SUCCESS");
 					return true;
 				}
 				else
@@ -165,15 +163,125 @@ public class ClientDevice{
 	}
 	
 	public List<GroupData> groupList(String gname){
-		return null;
+		
+		char[] buffer = new char[1024];
+		List<GroupData> group = new ArrayList<>();
+		
+		if(gname == null)
+			return null;
+		
+		writer.write(MessageParser.CLIENT_GRPL + MessageParser.EOL);
+		writer.flush();
+		
+		while(true){
+			try {
+				int read = reader.read(buffer);
+				
+				if(read == -1){
+					return null;
+				}
+				
+				String strbuf = new String(buffer).substring(0, read);
+				MessageParser parser = new MessageParser(strbuf);
+				
+				if(parser.isWellParsed()){
+					
+					if(parser.getHeader().contains(MessageParser.SRV_GDAT)){
+						GroupData newgroup = new GroupData(parser.getGroup(), parser.getNumberOfDevices());
+						group.add(newgroup);
+					}
+					else if(parser.getHeader().contains(MessageParser.SRV_EOTR))
+						return group;
+					else
+						return null;
+				}
+				else
+					return null;
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return null;
+			}						
+		}
 	}
 	
 	public List<DeviceData> deviceList(String gname){
-		return null;
+		
+		char[] buffer = new char[1024];
+		List<DeviceData> devices = new ArrayList<>();
+		
+		if(gname == null)
+			return null;
+		
+		writer.write(MessageParser.CLIENT_DEVL + " " + gname + " " + MessageParser.EOL);
+		writer.flush();
+		
+		while(true){
+			try {
+				int read = reader.read(buffer);
+				
+				if(read == -1){
+					return null;
+				}
+				
+				String strbuf = new String(buffer).substring(0, read);
+				MessageParser parser = new MessageParser(strbuf);
+				
+				if(parser.isWellParsed()){
+					
+					System.out.println("test" + parser.getHeader());
+					
+					if(parser.getHeader().contains(MessageParser.SRV_DDAT)){
+						
+						System.out.println("dev");
+						DeviceData newdevice = new DeviceData(parser.getDevice(), parser.getIPaddr(), parser.getPort());
+						devices.add(newdevice);
+					}
+					else if(parser.getHeader().contains(MessageParser.SRV_EOTR)){
+						System.out.println("dev ok");
+						return devices;
+					}
+						
+					else{
+						System.out.println("dev KO");
+						return null;
+					}
+				}
+				else{
+					System.out.println("FUCK");
+					return null;
+				}
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return null;
+			}						
+		}
+	}
+
+
+	public static void main(String [] args) {
+		
+		ClientDevice c = new ClientDevice("toto", "192.168.48.2", 45621);
+		
+		c.createGroup("toto@GT-01");
+		new ClientDevice("lana", "192.168.48.4", 45645).joinGroup("toto@GT-01");
+		new ClientDevice("titi", "192.168.48.5", 45652).joinGroup("toto@GT-01");
+		
+		List<GroupData> listgroup = c.groupList("toto@GT-01");
+		
+		for(GroupData g: listgroup){
+			System.out.println(g.getName() + " " + g.getNumberOfDevices());
+		}
+
+		List<DeviceData> listdev = c.deviceList("toto@GT-01");
+		
+		for(DeviceData d: listdev){
+			System.out.println(d.getName() + " " + d.getAddr() + "/" + d.getPort());
+		}
+		
 	}
 	
-	// Rejoindre un groupe spécifique:
-	// Avoir la liste des groupes:
-	// Avoir la liste des appareils d'un groupe donné:
-	// Quitter un groupe:
 }
