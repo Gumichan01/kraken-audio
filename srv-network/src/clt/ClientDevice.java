@@ -9,6 +9,7 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.List;
 
 import parser.MessageParser;
@@ -165,15 +166,52 @@ public class ClientDevice{
 	}
 	
 	public List<GroupData> groupList(String gname){
-		return null;
+		
+		char[] buffer = new char[1024];
+		List<GroupData> group = new ArrayList<>();
+		
+		if(gname == null)
+			return null;
+		
+		writer.write(MessageParser.CLIENT_GRPL + MessageParser.EOL);
+		writer.flush();
+		
+		while(true){
+			try {
+				int read = reader.read(buffer);
+				
+				if(read == -1){
+					return null;
+				}
+				
+				String strbuf = new String(buffer).substring(0, read);
+				MessageParser parser = new MessageParser(strbuf);
+				
+				if(parser.isWellParsed()){
+					
+					if(parser.getHeader().contains(MessageParser.SRV_GDAT)){
+						GroupData newgroup = new GroupData(parser.getGroup(), parser.getNumberOfDevices());
+						group.add(newgroup);
+					}
+					else if(parser.getHeader().contains(MessageParser.SRV_EOTR))
+						return group;
+					else
+						return null;
+				}
+				else
+					return null;
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return null;
+			}						
+		}
 	}
 	
 	public List<DeviceData> deviceList(String gname){
 		return null;
 	}
-	
-	// Rejoindre un groupe spécifique:
-	// Avoir la liste des groupes:
+
 	// Avoir la liste des appareils d'un groupe donné:
-	// Quitter un groupe:
 }
