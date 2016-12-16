@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.Iterator;
 
@@ -84,8 +85,9 @@ public class RunClient implements Runnable {
 					go = false;
 				}
 
-			} catch (SocketTimeoutException ste) {
+			} catch (SocketTimeoutException | SocketException ste) {
 
+				ste.printStackTrace();
 				closeConnection();
 				go = false;
 
@@ -154,7 +156,6 @@ public class RunClient implements Runnable {
 
 			writer.write(MessageParser.SRV_GDAT + " "
 					+ srv.getGroup(it.next()).toString() + MessageParser.EOL);
-			writer.flush();
 		}
 
 		writer.write(MessageParser.SRV_EOTR + MessageParser.EOL);
@@ -180,7 +181,6 @@ public class RunClient implements Runnable {
 
 				writer.write(MessageParser.SRV_DDAT + " " + dname + " "
 						+ g.getDevice(dname).toString() + MessageParser.EOL);
-				writer.flush();
 			}
 
 			writer.write(MessageParser.SRV_EOTR + MessageParser.EOL);
