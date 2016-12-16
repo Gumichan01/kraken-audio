@@ -131,6 +131,21 @@ public class RunClient implements Runnable {
 
 	private void groupCreationResponse() {
 
+		// TODO check if the group already exists
+		/**
+		 * Bug critique: dans ce code, le serveur ne prend pas en compte
+		 * l'existence d'un groupe. Le code suppose. Cela signifie donc que si
+		 * le serveur créer un groupe ayant exactement le même nom qu'un groupe
+		 * éxistant, alors le groupe en question est détruit.
+		 * 
+		 * Algo:
+		 * 
+		 * Si un groupe existant porte le même nom que le groupe à créer, alors
+		 * refuser la création du groupe et envoyer le message d'échec (FAIL) et
+		 * terminer la fonction
+		 * 
+		 * */
+
 		srv.newGroup(parser.getGroup());
 
 		if (srv.getGroup(parser.getGroup()).addDevice(
