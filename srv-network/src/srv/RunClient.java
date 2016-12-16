@@ -136,7 +136,7 @@ public class RunClient implements Runnable {
 		if (srv.getGroup(parser.getGroup()).addDevice(
 				parser.getDevice(),
 				new DeviceData(parser.getDevice(), parser.getIPaddr(), parser
-						.getPort()))) {
+						.getPort(), parser.getBroadcastPort()))) {
 
 			writer.write(MessageParser.SRV_GCOK + MessageParser.EOL);
 			writer.flush();
@@ -200,7 +200,7 @@ public class RunClient implements Runnable {
 		} else if (g.addDevice(
 				parser.getDevice(),
 				new DeviceData(parser.getDevice(), parser.getIPaddr(), parser
-						.getPort()))) {
+						.getPort(), parser.getBroadcastPort()))) {
 
 			writer.write(MessageParser.SRV_GJOK + MessageParser.EOL);
 			writer.flush();

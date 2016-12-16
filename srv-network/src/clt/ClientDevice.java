@@ -19,21 +19,30 @@ import datum.GroupData;
 
 public class ClientDevice {
 
+	private static final int SERVER_PORT = 8080;
+
 	private Socket socket;
 	private BufferedReader reader;
 	private PrintWriter writer;
 	private String device_name;
 	private InetSocketAddress ipaddr;
+	private int bport;
 
-	public ClientDevice(String name, String addr, int port) {
+	public ClientDevice(String name, String addr, int port, int bport) {
+
 		this.device_name = name;
 		this.ipaddr = new InetSocketAddress(addr, port);
+		this.bport = bport;
+
 		try {
-			socket = new Socket(InetAddress.getByName("localhost"), 8080);
+
+			socket = new Socket(InetAddress.getByName("gumichan01"),
+					SERVER_PORT);
 			reader = new BufferedReader(new InputStreamReader(
 					socket.getInputStream()));
 			writer = new PrintWriter(new OutputStreamWriter(
 					socket.getOutputStream()));
+
 		} catch (UnknownHostException e) {
 
 			e.printStackTrace();
@@ -51,7 +60,7 @@ public class ClientDevice {
 
 		writer.write(MessageParser.CLIENT_CGRP + " " + gname + " "
 				+ device_name + " " + ipaddr.getAddress().getHostAddress()
-				+ " " + ipaddr.getPort() + MessageParser.EOL);
+				+ " " + ipaddr.getPort() + " " + bport + MessageParser.EOL);
 		writer.flush();
 
 		try {
@@ -99,7 +108,7 @@ public class ClientDevice {
 
 		writer.write(MessageParser.CLIENT_JGRP + " " + gname + " "
 				+ device_name + " " + ipaddr.getAddress().getHostAddress()
-				+ " " + ipaddr.getPort() + MessageParser.EOL);
+				+ " " + ipaddr.getPort() + " " + bport + MessageParser.EOL);
 		writer.flush();
 
 		try {
@@ -225,7 +234,7 @@ public class ClientDevice {
 
 						DeviceData newdevice = new DeviceData(
 								parser.getDevice(), parser.getIPaddr(),
-								parser.getPort());
+								parser.getPort(), parser.getBroadcastPort());
 						devices.add(newdevice);
 					} else if (parser.getHeader().contains(
 							MessageParser.SRV_EOTR))
@@ -247,18 +256,20 @@ public class ClientDevice {
 
 	public static void main(String[] args) {
 
-		ClientDevice c = new ClientDevice("toto", "192.168.48.2", 45621);
+		ClientDevice c = new ClientDevice("toto", "192.168.48.2", 45621, 2410);
 
 		c.createGroup("toto@GT-01");
-		new ClientDevice("lana", "192.168.48.4", 45645).joinGroup("toto@GT-01");
-		new ClientDevice("titi", "192.168.48.5", 45652).joinGroup("toto@GT-01");
+		new ClientDevice("lana", "192.168.48.4", 45645, 2410)
+				.joinGroup("toto@GT-01");
+		new ClientDevice("titi", "192.168.48.5", 45652, 2410)
+				.joinGroup("toto@GT-01");
 
 		List<GroupData> listgroup = c.groupList("toto@GT-01");
 
 		System.out.println("group list");
 		System.out.println("----------");
 		for (GroupData g : listgroup) {
-			System.out.println(g.getName() + " " + g.getNumberOfDevices());
+			System.out.println(g.toString());
 		}
 		System.out.println("-----------");
 
@@ -267,10 +278,10 @@ public class ClientDevice {
 		System.out.println("device list");
 		System.out.println("-----------");
 		for (DeviceData d : listdev) {
-			System.out.println(d.getName() + " " + d.getAddr() + "/"
-					+ d.getPort());
+			System.out.println(d.toString());
 		}
 		System.out.println("-----------");
+
 	}
 
 }
