@@ -8,7 +8,6 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +18,8 @@ import datum.GroupData;
 
 public class ClientDevice {
 
-	private static final int SERVER_PORT = 8080;
+	// Server port
+	private static final int SVPORT = 8080;
 
 	private Socket socket;
 	private BufferedReader reader;
@@ -36,16 +36,12 @@ public class ClientDevice {
 
 		try {
 
-			socket = new Socket(InetAddress.getByName("gumichan01"),
-					SERVER_PORT);
+			socket = new Socket(InetAddress.getByName("gumichan01"), SVPORT);
 			reader = new BufferedReader(new InputStreamReader(
 					socket.getInputStream()));
 			writer = new PrintWriter(new OutputStreamWriter(
 					socket.getOutputStream()));
 
-		} catch (UnknownHostException e) {
-
-			e.printStackTrace();
 		} catch (IOException e) {
 
 			e.printStackTrace();
@@ -74,9 +70,10 @@ public class ClientDevice {
 			MessageParser parser = new MessageParser(strbuf);
 
 			if (parser.isWellParsed()) {
-				if (parser.getHeader().contains(MessageParser.SRV_GCOK)) {
+
+				if (parser.getHeader().contains(MessageParser.SRV_GCOK))
 					return true;
-				} else
+				else
 					return false;
 			} else
 				return false;
@@ -89,18 +86,24 @@ public class ClientDevice {
 	}
 
 	public void close() {
+
 		writer.write(MessageParser.CLIENT_EOCO);
+
 		try {
+
 			socket.close();
+
 		} catch (IOException e) {
 
 			e.printStackTrace();
 		}
+
 		reader = null;
 		writer = null;
 	}
 
 	public boolean joinGroup(String gname) {
+
 		char[] buffer = new char[1024];
 
 		if (gname == null)
@@ -112,19 +115,20 @@ public class ClientDevice {
 		writer.flush();
 
 		try {
+
 			int read = reader.read(buffer);
 
-			if (read == -1) {
+			if (read == -1)
 				return false;
-			}
 
 			String strbuf = new String(buffer).substring(0, read);
 			MessageParser parser = new MessageParser(strbuf);
 
 			if (parser.isWellParsed()) {
-				if (parser.getHeader().contains(MessageParser.SRV_GJOK)) {
+
+				if (parser.getHeader().contains(MessageParser.SRV_GJOK))
 					return true;
-				} else
+				else
 					return false;
 			} else
 				return false;
@@ -137,6 +141,7 @@ public class ClientDevice {
 	}
 
 	public boolean quitGroup(String gname) {
+
 		char[] buffer = new char[1024];
 
 		if (gname == null)
@@ -147,19 +152,20 @@ public class ClientDevice {
 		writer.flush();
 
 		try {
+
 			int read = reader.read(buffer);
 
-			if (read == -1) {
+			if (read == -1)
 				return false;
-			}
 
 			String strbuf = new String(buffer).substring(0, read);
 			MessageParser parser = new MessageParser(strbuf);
 
 			if (parser.isWellParsed()) {
-				if (parser.getHeader().contains(MessageParser.SRV_QACK)) {
+
+				if (parser.getHeader().contains(MessageParser.SRV_QACK))
 					return true;
-				} else
+				else
 					return false;
 			} else
 				return false;
@@ -192,9 +198,10 @@ public class ClientDevice {
 				if (parser.isWellParsed()) {
 
 					if (parser.getHeader().contains(MessageParser.SRV_GDAT)) {
-						GroupData newgroup = new GroupData(parser.getGroup(),
-								parser.getNumberOfDevices());
-						group.add(newgroup);
+
+						group.add(new GroupData(parser.getGroup(), parser
+								.getNumberOfDevices()));
+
 					} else if (parser.getHeader().contains(
 							MessageParser.SRV_EOTR))
 						return group;
@@ -223,6 +230,7 @@ public class ClientDevice {
 		writer.flush();
 
 		while (true) {
+
 			try {
 
 				String strbuf = reader.readLine();
@@ -232,19 +240,17 @@ public class ClientDevice {
 
 					if (parser.getHeader().contains(MessageParser.SRV_DDAT)) {
 
-						DeviceData newdevice = new DeviceData(
-								parser.getDevice(), parser.getIPaddr(),
-								parser.getPort(), parser.getBroadcastPort());
-						devices.add(newdevice);
+						devices.add(new DeviceData(parser.getDevice(), parser
+								.getIPaddr(), parser.getPort(), parser
+								.getBroadcastPort()));
+
 					} else if (parser.getHeader().contains(
 							MessageParser.SRV_EOTR))
 						return devices;
 					else
 						return null;
-				} else {
-					System.out.println("FUCK");
+				} else
 					return null;
-				}
 
 			} catch (IOException e) {
 
