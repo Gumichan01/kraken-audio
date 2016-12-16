@@ -6,7 +6,6 @@ import java.net.Socket;
 import java.util.Hashtable;
 import java.util.Iterator;
 
-
 public class DirectoryServer {
 
 	private static final int BUFFER_SIZE = 1024;
@@ -121,10 +120,10 @@ public class DirectoryServer {
 	}
 
 	// Uncomment this block in order to test the class
-	//public static void main(String[] args) {
+	// public static void main(String[] args) {
 
-		// PRODUCTION CODE
-		//new DirectoryServer().launch();
-	//}
-	
+	// PRODUCTION CODE
+	// new DirectoryServer().launch();
+	// }
+
 }
