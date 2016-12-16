@@ -138,7 +138,15 @@ public class RunClient implements Runnable {
 		 * le serveur créer un groupe ayant exactement le même nom qu'un groupe
 		 * éxistant, alors le groupe en question est détruit.
 		 * 
-		 * Algo:
+		 */
+		
+		if(srv.getGroup(parser.getGroup()) != null){
+			writer.write(MessageParser.SRV_FAIL + MessageParser.EOL);
+			writer.flush();
+			return;
+		}
+			
+		/**
 		 * 
 		 * Si un groupe existant porte le même nom que le groupe à créer, alors
 		 * refuser la création du groupe et envoyer le message d'échec (FAIL) et
