@@ -17,271 +17,260 @@ import parser.MessageParser;
 import datum.DeviceData;
 import datum.GroupData;
 
+public class ClientDevice {
 
-public class ClientDevice{
 	private Socket socket;
 	private BufferedReader reader;
 	private PrintWriter writer;
 	private String device_name;
 	private InetSocketAddress ipaddr;
-		
+
 	public ClientDevice(String name, String addr, int port) {
 		this.device_name = name;
 		this.ipaddr = new InetSocketAddress(addr, port);
 		try {
-			socket = new Socket(InetAddress.getByName("localhost"), 2048);
-			reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			writer = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
+			socket = new Socket(InetAddress.getByName("localhost"), 8080);
+			reader = new BufferedReader(new InputStreamReader(
+					socket.getInputStream()));
+			writer = new PrintWriter(new OutputStreamWriter(
+					socket.getOutputStream()));
 		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 	}
 
-	public boolean createGroup(String gname){
+	public boolean createGroup(String gname) {
 		char[] buffer = new char[1024];
-		
-		if(gname == null)
+
+		if (gname == null)
 			return false;
-		
-		writer.write(MessageParser.CLIENT_CGRP + " " + gname + " " + device_name + " " + ipaddr.getAddress().getHostAddress() + " " + ipaddr.getPort() + MessageParser.EOL);
+
+		writer.write(MessageParser.CLIENT_CGRP + " " + gname + " "
+				+ device_name + " " + ipaddr.getAddress().getHostAddress()
+				+ " " + ipaddr.getPort() + MessageParser.EOL);
 		writer.flush();
-		
+
 		try {
 			int read = reader.read(buffer);
-			
-			if(read == -1){
+
+			if (read == -1) {
 				return false;
 			}
-			
+
 			String strbuf = new String(buffer).substring(0, read);
 			MessageParser parser = new MessageParser(strbuf);
-			
-			if(parser.isWellParsed()){
-				if(parser.getHeader().contains(MessageParser.SRV_GCOK)){
+
+			if (parser.isWellParsed()) {
+				if (parser.getHeader().contains(MessageParser.SRV_GCOK)) {
 					return true;
-				}
-				else
+				} else
 					return false;
-			}
-			else
+			} else
 				return false;
-			
+
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 		return true;
 	}
-	
-	public void close(){
+
+	public void close() {
 		writer.write(MessageParser.CLIENT_EOCO);
 		try {
 			socket.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 		reader = null;
 		writer = null;
 	}
-	
-	public boolean joinGroup(String gname){
+
+	public boolean joinGroup(String gname) {
 		char[] buffer = new char[1024];
-		
-		if(gname == null)
+
+		if (gname == null)
 			return false;
-		
-		writer.write(MessageParser.CLIENT_JGRP + " " + gname + " " + device_name + " " + ipaddr.getAddress().getHostAddress() + " " + ipaddr.getPort() + MessageParser.EOL);
+
+		writer.write(MessageParser.CLIENT_JGRP + " " + gname + " "
+				+ device_name + " " + ipaddr.getAddress().getHostAddress()
+				+ " " + ipaddr.getPort() + MessageParser.EOL);
 		writer.flush();
-		
+
 		try {
 			int read = reader.read(buffer);
-			
-			if(read == -1){
+
+			if (read == -1) {
 				return false;
 			}
-			
+
 			String strbuf = new String(buffer).substring(0, read);
 			MessageParser parser = new MessageParser(strbuf);
-			
-			if(parser.isWellParsed()){
-				if(parser.getHeader().contains(MessageParser.SRV_GJOK)){
+
+			if (parser.isWellParsed()) {
+				if (parser.getHeader().contains(MessageParser.SRV_GJOK)) {
 					return true;
-				}
-				else
+				} else
 					return false;
-			}
-			else
+			} else
 				return false;
-			
+
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 		return true;
 	}
-	
-	public boolean quitGroup(String gname){
+
+	public boolean quitGroup(String gname) {
 		char[] buffer = new char[1024];
-		
-		if(gname == null)
+
+		if (gname == null)
 			return false;
-		
-		writer.write(MessageParser.CLIENT_QGRP + " " + gname + " " + device_name + MessageParser.EOL);
+
+		writer.write(MessageParser.CLIENT_QGRP + " " + gname + " "
+				+ device_name + MessageParser.EOL);
 		writer.flush();
-		
+
 		try {
 			int read = reader.read(buffer);
-			
-			if(read == -1){
+
+			if (read == -1) {
 				return false;
 			}
-			
+
 			String strbuf = new String(buffer).substring(0, read);
 			MessageParser parser = new MessageParser(strbuf);
-			
-			if(parser.isWellParsed()){
-				if(parser.getHeader().contains(MessageParser.SRV_QACK)){
+
+			if (parser.isWellParsed()) {
+				if (parser.getHeader().contains(MessageParser.SRV_QACK)) {
 					return true;
-				}
-				else
+				} else
 					return false;
-			}
-			else
+			} else
 				return false;
-			
+
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
-		
+
 		return true;
 	}
-	
-	public List<GroupData> groupList(String gname){
-		
-		char[] buffer = new char[1024];
+
+	public List<GroupData> groupList(String gname) {
+
 		List<GroupData> group = new ArrayList<>();
-		
-		if(gname == null)
+
+		if (gname == null)
 			return null;
-		
+
 		writer.write(MessageParser.CLIENT_GRPL + MessageParser.EOL);
 		writer.flush();
-		
-		while(true){
+
+		while (true) {
+
 			try {
-				int read = reader.read(buffer);
-				
-				if(read == -1){
-					return null;
-				}
-				
-				String strbuf = new String(buffer).substring(0, read);
+
+				String strbuf = reader.readLine();
 				MessageParser parser = new MessageParser(strbuf);
-				
-				if(parser.isWellParsed()){
-					
-					if(parser.getHeader().contains(MessageParser.SRV_GDAT)){
-						GroupData newgroup = new GroupData(parser.getGroup(), parser.getNumberOfDevices());
+
+				if (parser.isWellParsed()) {
+
+					if (parser.getHeader().contains(MessageParser.SRV_GDAT)) {
+						GroupData newgroup = new GroupData(parser.getGroup(),
+								parser.getNumberOfDevices());
 						group.add(newgroup);
-					}
-					else if(parser.getHeader().contains(MessageParser.SRV_EOTR))
+					} else if (parser.getHeader().contains(
+							MessageParser.SRV_EOTR))
 						return group;
 					else
 						return null;
-				}
-				else
+				} else
 					return null;
-				
+
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
+
 				e.printStackTrace();
 				return null;
-			}						
+			}
 		}
 	}
-	
-	public List<DeviceData> deviceList(String gname){
-		
-		char[] buffer = new char[1024];
+
+	public List<DeviceData> deviceList(String gname) {
+
 		List<DeviceData> devices = new ArrayList<>();
-		
-		if(gname == null)
+
+		if (gname == null)
 			return null;
-		
-		writer.write(MessageParser.CLIENT_DEVL + " " + gname + " " + MessageParser.EOL);
+
+		writer.write(MessageParser.CLIENT_DEVL + " " + gname + " "
+				+ MessageParser.EOL);
 		writer.flush();
-		
-		while(true){
+
+		while (true) {
 			try {
-				int read = reader.read(buffer);
-				
-				if(read == -1){
-					return null;
-				}
-				
-				String strbuf = new String(buffer).substring(0, read);
+
+				String strbuf = reader.readLine();
 				MessageParser parser = new MessageParser(strbuf);
-				
-				if(parser.isWellParsed()){
-					
-					System.out.println("test" + parser.getHeader());
-					
-					if(parser.getHeader().contains(MessageParser.SRV_DDAT)){
-						
-						System.out.println("dev");
-						DeviceData newdevice = new DeviceData(parser.getDevice(), parser.getIPaddr(), parser.getPort());
+
+				if (parser.isWellParsed()) {
+
+					if (parser.getHeader().contains(MessageParser.SRV_DDAT)) {
+
+						DeviceData newdevice = new DeviceData(
+								parser.getDevice(), parser.getIPaddr(),
+								parser.getPort());
 						devices.add(newdevice);
-					}
-					else if(parser.getHeader().contains(MessageParser.SRV_EOTR)){
-						System.out.println("dev ok");
+					} else if (parser.getHeader().contains(
+							MessageParser.SRV_EOTR))
 						return devices;
-					}
-						
-					else{
-						System.out.println("dev KO");
+					else
 						return null;
-					}
-				}
-				else{
+				} else {
 					System.out.println("FUCK");
 					return null;
 				}
-				
+
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
+
 				e.printStackTrace();
 				return null;
-			}						
+			}
 		}
 	}
 
+	public static void main(String[] args) {
 
-	public static void main(String [] args) {
-		
 		ClientDevice c = new ClientDevice("toto", "192.168.48.2", 45621);
-		
+
 		c.createGroup("toto@GT-01");
 		new ClientDevice("lana", "192.168.48.4", 45645).joinGroup("toto@GT-01");
 		new ClientDevice("titi", "192.168.48.5", 45652).joinGroup("toto@GT-01");
-		
+
 		List<GroupData> listgroup = c.groupList("toto@GT-01");
-		
-		for(GroupData g: listgroup){
+
+		System.out.println("group list");
+		System.out.println("----------");
+		for (GroupData g : listgroup) {
 			System.out.println(g.getName() + " " + g.getNumberOfDevices());
 		}
+		System.out.println("-----------");
 
 		List<DeviceData> listdev = c.deviceList("toto@GT-01");
-		
-		for(DeviceData d: listdev){
-			System.out.println(d.getName() + " " + d.getAddr() + "/" + d.getPort());
+
+		System.out.println("device list");
+		System.out.println("-----------");
+		for (DeviceData d : listdev) {
+			System.out.println(d.getName() + " " + d.getAddr() + "/"
+					+ d.getPort());
 		}
-		
+		System.out.println("-----------");
 	}
-	
+
 }
