@@ -57,6 +57,7 @@ public class MessageParser {
 	String device_name;
 	int devices_number;
 	InetSocketAddress ipaddr;
+	int broadcast_port;
 
 	public MessageParser(String s) {
 
@@ -109,7 +110,7 @@ public class MessageParser {
 
 	private void parseCGRP() {
 
-		int nbwords = 5;
+		int nbwords = 6;
 		Pattern p = Pattern.compile(SPACE);
 		String[] tokens = p.split(message);
 
@@ -120,6 +121,7 @@ public class MessageParser {
 			device_name = tokens[2];
 			ipaddr = new InetSocketAddress(tokens[3],
 					Integer.parseInt(tokens[4]));
+			broadcast_port = Integer.parseInt(tokens[5]);
 			well_parsed = true;
 		}
 
@@ -146,7 +148,7 @@ public class MessageParser {
 
 	private void parseJGRP() {
 
-		int nbwords = 5;
+		int nbwords = 6;
 		Pattern p = Pattern.compile(SPACE);
 		String[] tokens = p.split(message);
 
@@ -157,6 +159,7 @@ public class MessageParser {
 			device_name = tokens[2];
 			ipaddr = new InetSocketAddress(tokens[3],
 					Integer.parseInt(tokens[4]));
+			broadcast_port = Integer.parseInt(tokens[5]);
 			well_parsed = true;
 		}
 
@@ -206,7 +209,7 @@ public class MessageParser {
 
 	private void parseDDAT() {
 
-		int nbwords = 4;
+		int nbwords = 5;
 		Pattern p = Pattern.compile(SPACE);
 		String[] tokens = p.split(message);
 
@@ -218,6 +221,7 @@ public class MessageParser {
 			device_name = tokens[1];
 			ipaddr = new InetSocketAddress(tokens[2],
 					Integer.parseInt(tokens[3]));
+			broadcast_port = Integer.parseInt(tokens[4]);
 			well_parsed = true;
 		}
 	}
@@ -255,6 +259,11 @@ public class MessageParser {
 	public int getPort() {
 
 		return ipaddr.getPort();
+	}
+
+	public int getBroadcastPort() {
+
+		return broadcast_port;
 	}
 
 }
