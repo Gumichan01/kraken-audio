@@ -39,7 +39,7 @@
 
 Création groupe:
 
-    CGRP nom_groupe nom_appareil ip_addr port
+    CGRP nom_groupe nom_appareil ip_addr port_info port_diff
     /// CGRP : Create GRouP
     /*
     NB: *ip_addr* et *port* correspondent respectivement à l'adresse IP
@@ -56,7 +56,7 @@ Avoir la liste des appareils d'un groupe donné:
 
 Rejoindre un groupe spécifique:
 
-    JGRP nom_groupe nom_appareil ip_addr port
+    JGRP nom_groupe nom_appareil ip_addr port_info port_diff
     /// JGRP : Join GRouP
     /*
     NB: *ip* et *port* correspondent respectivement à l'adresse IP
@@ -65,7 +65,7 @@ Rejoindre un groupe spécifique:
 
 Quitter un groupe:
 
-    QGRP nom_groupe nom_appareil    /// QGRP : Quit GRouP
+    QGRP nom_groupe /// QGRP : Quit GRouP
 
 Fermer la connexion:
 
@@ -91,7 +91,7 @@ Envoi de la liste de groupes:
 
 Envoi de la liste d'appareils':
 
-    DDAT nom_appareil ip_addr port
+    DDAT nom_appareil ip_addr port_info port_diff
     ...
     EOTR
     /*
@@ -119,6 +119,8 @@ En cas d'echec quelconque:
 
 ### Implémentation ###
 
+ - Un client ne peut pas créer un groupe qui existe déjà.
+ - Un client ne peut pas rejoindre ou quitter un groupe qui n'existe pas
  - Un serveur a plusieurs groupes de diffusions.
  - Un groupe de diffusion a plusieurs appareils (téléphones, tablettes, ...).
  - Les groupes du serveur seront stockés dans une [Hashtable][1], de la manière suivante :
