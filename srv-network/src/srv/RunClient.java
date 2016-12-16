@@ -139,13 +139,13 @@ public class RunClient implements Runnable {
 		 * éxistant, alors le groupe en question est détruit.
 		 * 
 		 */
-		
-		if(srv.getGroup(parser.getGroup()) != null){
+
+		if (srv.getGroup(parser.getGroup()) != null) {
 			writer.write(MessageParser.SRV_FAIL + MessageParser.EOL);
 			writer.flush();
 			return;
 		}
-			
+
 		/**
 		 * 
 		 * Si un groupe existant porte le même nom que le groupe à créer, alors
@@ -202,7 +202,7 @@ public class RunClient implements Runnable {
 
 				String dname = it.next();
 
-				writer.write(MessageParser.SRV_DDAT + " " + dname + " "
+				writer.write(MessageParser.SRV_DDAT + " "
 						+ g.getDevice(dname).toString() + MessageParser.EOL);
 			}
 
