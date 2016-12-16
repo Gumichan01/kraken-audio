@@ -21,4 +21,8 @@ public class GroupData {
 		return nbdev;
 	}
 
+	public String toString(){
+		
+		return gname + " " + nbdev;
+	}
 }
