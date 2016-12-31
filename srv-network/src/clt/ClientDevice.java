@@ -96,41 +96,34 @@ public class ClientDevice {
 		return status;
 	}
 
-	public void close() {
-
-		writer.write(MessageParser.CLIENT_EOCO);
-
-		try {
-
-			socket.close();
-
-		} catch (IOException e) {
-
-			e.printStackTrace();
-		}
-
-		reader = null;
-		writer = null;
-	}
 
 	public boolean joinGroup(String gname) {
 
-		char[] buffer = new char[1024];
-
 		if (gname == null)
 			return false;
+		
+		boolean status = false;
+		char[] buffer = new char[1024];
 
-		writer.write(MessageParser.CLIENT_JGRP + " " + gname + " "
-				+ device_name + " " + ipaddr.getAddress().getHostAddress()
-				+ " " + ipaddr.getPort() + " " + bport + MessageParser.EOL);
-		writer.flush();
 
 		try {
 
+			socket = new Socket(InetAddress.getByName(SVHOST), SVPORT);
+			
+			reader = new BufferedReader(new InputStreamReader(
+					socket.getInputStream()));
+			writer = new PrintWriter(new OutputStreamWriter(
+					socket.getOutputStream()));
+			
+			writer.write(MessageParser.CLIENT_JGRP + " " + gname + " "
+					+ device_name + " " + ipaddr.getAddress().getHostAddress()
+					+ " " + ipaddr.getPort() + " " + bport + MessageParser.EOL);
+			writer.flush();
+			
 			int read = reader.read(buffer);
 
 			if (read == -1)
-				return false;
+				status = false;
 
 			String strbuf = new String(buffer).substring(0, read);
 			MessageParser parser = new MessageParser(strbuf);
@@ -138,36 +131,54 @@ public class ClientDevice {
 			if (parser.isWellParsed()) {
 
 				if (parser.getHeader().contains(MessageParser.SRV_GJOK))
-					return true;
+					status = true;
 				else
-					return false;
+					status = false;
 			} else
-				return false;
+				status = false;
+
+			socket.close();
 
 		} catch (IOException e) {
 
 			e.printStackTrace();
+		
+		} finally {
+			
+			writer = null;
+			reader = null;
+			socket = null;
 		}
-		return true;
+
+		return status;
 	}
 
-	public boolean quitGroup(String gname) {
 
-		char[] buffer = new char[1024];
+	public boolean quitGroup(String gname) {
 
 		if (gname == null)
 			return false;
 
-		writer.write(MessageParser.CLIENT_QGRP + " " + gname + " "
-				+ device_name + MessageParser.EOL);
-		writer.flush();
+		boolean status = false;
+		char[] buffer = new char[1024];
 
 		try {
+
+			socket = new Socket(InetAddress.getByName(SVHOST), SVPORT);
+
+			reader = new BufferedReader(new InputStreamReader(
+					socket.getInputStream()));
+			writer = new PrintWriter(new OutputStreamWriter(
+					socket.getOutputStream()));
+
+			writer.write(MessageParser.CLIENT_QGRP + " " + gname + " "
+					+ device_name + MessageParser.EOL);
+			writer.flush();
 
 			int read = reader.read(buffer);
 
 			if (read == -1)
-				return false;
+				status = false;
 
 			String strbuf = new String(buffer).substring(0, read);
 			MessageParser parser = new MessageParser(strbuf);
@@ -175,19 +186,28 @@ public class ClientDevice {
 			if (parser.isWellParsed()) {
 
 				if (parser.getHeader().contains(MessageParser.SRV_QACK))
-					return true;
+					status = true;
 				else
-					return false;
+					status = false;
 			} else
-				return false;
+				status = false;
+
+			socket.close();
 
 		} catch (IOException e) {
 
 			e.printStackTrace();
+
+		} finally {
+
+			writer = null;
+			reader = null;
+			socket = null;
 		}
 
-		return true;
+		return status;
 	}
+
 
 	public List<GroupData> groupList(String gname) {
 
@@ -228,6 +248,7 @@ public class ClientDevice {
 			}
 		}
 	}
+
 
 	public List<DeviceData> deviceList(String gname) {
 
@@ -271,17 +292,18 @@ public class ClientDevice {
 		}
 	}
 
+
 	public static void main(String[] args) {
 
 		ClientDevice c = new ClientDevice("toto", "192.168.48.2", 45621, 2410);
 
 		System.out.println("create group: " + c.createGroup("toto@GT-01"));
-		/*new ClientDevice("lana", "192.168.48.4", 45645, 2410)
+		new ClientDevice("lana", "192.168.48.4", 45645, 2410)
 				.joinGroup("toto@GT-01");
 		new ClientDevice("titi", "192.168.48.5", 45652, 2410)
 				.joinGroup("toto@GT-01");
-
-		List<GroupData> listgroup = c.groupList("toto@GT-01");
+		
+		/*List<GroupData> listgroup = c.groupList("toto@GT-01");
 
 		System.out.println("group list");
 		System.out.println("----------");
