@@ -18,7 +18,8 @@ import datum.GroupData;
 
 public class ClientDevice {
 
-	// Server port
+	// Server information
+	private static final String SVHOST = "localhost";
 	private static final int SVPORT = 8080;
 
 	private Socket socket;
@@ -33,56 +34,66 @@ public class ClientDevice {
 		this.device_name = name;
 		this.ipaddr = new InetSocketAddress(addr, port);
 		this.bport = bport;
+		socket = null;
+		reader = null;
+		writer = null;
+	}
 
+	public boolean createGroup(String gname) {
+
+		if (gname == null)
+			return false;
+		
+		boolean status = false;
+		char[] buffer = new char[1024];
+		
 		try {
-
-			socket = new Socket(InetAddress.getByName("gumichan01"), SVPORT);
+			
+			socket = new Socket(InetAddress.getByName(SVHOST), SVPORT);
+			
 			reader = new BufferedReader(new InputStreamReader(
 					socket.getInputStream()));
 			writer = new PrintWriter(new OutputStreamWriter(
 					socket.getOutputStream()));
 
-		} catch (IOException e) {
-
-			e.printStackTrace();
-		}
-	}
-
-	public boolean createGroup(String gname) {
-		char[] buffer = new char[1024];
-
-		if (gname == null)
-			return false;
-
-		writer.write(MessageParser.CLIENT_CGRP + " " + gname + " "
-				+ device_name + " " + ipaddr.getAddress().getHostAddress()
-				+ " " + ipaddr.getPort() + " " + bport + MessageParser.EOL);
-		writer.flush();
-
-		try {
+			writer.write(MessageParser.CLIENT_CGRP + " " + gname + " "
+					+ device_name + " " + ipaddr.getAddress().getHostAddress()
+					+ " " + ipaddr.getPort() + " " + bport + MessageParser.EOL);
+			writer.flush();
+			
 			int read = reader.read(buffer);
 
-			if (read == -1) {
-				return false;
+			if (read == -1)
+				status = false;
+			else {
+				
+				String strbuf = new String(buffer).substring(0, read);
+				MessageParser parser = new MessageParser(strbuf);
+
+				if (parser.isWellParsed()) {
+
+					if (parser.getHeader().contains(MessageParser.SRV_GCOK))
+						status = true;
+					else
+						status = false;
+				} else
+					status = false;
 			}
 
-			String strbuf = new String(buffer).substring(0, read);
-			MessageParser parser = new MessageParser(strbuf);
-
-			if (parser.isWellParsed()) {
-
-				if (parser.getHeader().contains(MessageParser.SRV_GCOK))
-					return true;
-				else
-					return false;
-			} else
-				return false;
+			socket.close();
 
 		} catch (IOException e) {
 
 			e.printStackTrace();
+		
+		} finally {
+			
+			writer = null;
+			reader = null;
+			socket = null;
 		}
-		return true;
+		
+		return status;
 	}
 
 	public void close() {
@@ -262,10 +273,10 @@ public class ClientDevice {
 
 	public static void main(String[] args) {
 
-		/*ClientDevice c = new ClientDevice("toto", "192.168.48.2", 45621, 2410);
+		ClientDevice c = new ClientDevice("toto", "192.168.48.2", 45621, 2410);
 
-		c.createGroup("toto@GT-01");
-		new ClientDevice("lana", "192.168.48.4", 45645, 2410)
+		System.out.println("create group: " + c.createGroup("toto@GT-01"));
+		/*new ClientDevice("lana", "192.168.48.4", 45645, 2410)
 				.joinGroup("toto@GT-01");
 		new ClientDevice("titi", "192.168.48.5", 45652, 2410)
 				.joinGroup("toto@GT-01");
