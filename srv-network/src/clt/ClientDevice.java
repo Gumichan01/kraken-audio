@@ -270,19 +270,28 @@ public class ClientDevice {
 
 	public List<DeviceData> deviceList(String gname) {
 
-		List<DeviceData> devices = new ArrayList<>();
-
 		if (gname == null)
 			return null;
 
-		writer.write(MessageParser.CLIENT_DEVL + " " + gname + " "
-				+ MessageParser.EOL);
-		writer.flush();
+		boolean status = false;
+		boolean go = true;
+		List<DeviceData> devices = new ArrayList<>();
 
-		while (true) {
+		try {
 
-			try {
+			socket = new Socket(InetAddress.getByName(SVHOST), SVPORT);
 
+			reader = new BufferedReader(new InputStreamReader(
+					socket.getInputStream()));
+			writer = new PrintWriter(new OutputStreamWriter(
+					socket.getOutputStream()));
+
+			writer.write(MessageParser.CLIENT_DEVL + " " + gname + " "
+					+ MessageParser.EOL);
+			writer.flush();
+
+			while(go){
+				
 				String strbuf = reader.readLine();
 				MessageParser parser = new MessageParser(strbuf);
 
@@ -295,19 +304,31 @@ public class ClientDevice {
 								.getBroadcastPort()));
 
 					} else if (parser.getHeader().contains(
-							MessageParser.SRV_EOTR))
-						return devices;
+							MessageParser.SRV_EOTR)){
+					
+						status = true;
+						go = false;
+					}
 					else
-						return null;
+						go = false;
 				} else
-					return null;
-
-			} catch (IOException e) {
-
-				e.printStackTrace();
-				return null;
+					go = false;
 			}
+
+			socket.close();
+
+		} catch (IOException e) {
+
+			e.printStackTrace();
+		
+		} finally {
+
+			writer = null;
+			reader = null;
+			socket = null;
 		}
+		
+		return status ? devices: null;
 	}
 
 
@@ -330,14 +351,14 @@ public class ClientDevice {
 		}
 		System.out.println("-----------");
 
-		/*List<DeviceData> listdev = c.deviceList("toto@GT-01");
+		List<DeviceData> listdev = c.deviceList("toto@GT-01");
 
 		System.out.println("device list");
 		System.out.println("-----------");
 		for (DeviceData d : listdev) {
 			System.out.println(d.toString());
 		}
-		System.out.println("-----------");*/
+		System.out.println("-----------");
 
 	}
 
