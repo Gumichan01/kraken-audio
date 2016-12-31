@@ -43,14 +43,14 @@ public class ClientDevice {
 
 		if (gname == null)
 			return false;
-		
+
 		boolean status = false;
 		char[] buffer = new char[1024];
-		
+
 		try {
-			
+
 			socket = new Socket(InetAddress.getByName(SVHOST), SVPORT);
-			
+
 			reader = new BufferedReader(new InputStreamReader(
 					socket.getInputStream()));
 			writer = new PrintWriter(new OutputStreamWriter(
@@ -60,13 +60,13 @@ public class ClientDevice {
 					+ device_name + " " + ipaddr.getAddress().getHostAddress()
 					+ " " + ipaddr.getPort() + " " + bport + MessageParser.EOL);
 			writer.flush();
-			
+
 			int read = reader.read(buffer);
 
 			if (read == -1)
 				status = false;
 			else {
-				
+
 				String strbuf = new String(buffer).substring(0, read);
 				MessageParser parser = new MessageParser(strbuf);
 
@@ -85,41 +85,39 @@ public class ClientDevice {
 		} catch (IOException e) {
 
 			e.printStackTrace();
-		
+
 		} finally {
-			
+
 			writer = null;
 			reader = null;
 			socket = null;
 		}
-		
+
 		return status;
 	}
-
 
 	public boolean joinGroup(String gname) {
 
 		if (gname == null)
 			return false;
-		
+
 		boolean status = false;
 		char[] buffer = new char[1024];
-
 
 		try {
 
 			socket = new Socket(InetAddress.getByName(SVHOST), SVPORT);
-			
+
 			reader = new BufferedReader(new InputStreamReader(
 					socket.getInputStream()));
 			writer = new PrintWriter(new OutputStreamWriter(
 					socket.getOutputStream()));
-			
+
 			writer.write(MessageParser.CLIENT_JGRP + " " + gname + " "
 					+ device_name + " " + ipaddr.getAddress().getHostAddress()
 					+ " " + ipaddr.getPort() + " " + bport + MessageParser.EOL);
 			writer.flush();
-			
+
 			int read = reader.read(buffer);
 
 			if (read == -1)
@@ -142,9 +140,9 @@ public class ClientDevice {
 		} catch (IOException e) {
 
 			e.printStackTrace();
-		
+
 		} finally {
-			
+
 			writer = null;
 			reader = null;
 			socket = null;
@@ -152,7 +150,6 @@ public class ClientDevice {
 
 		return status;
 	}
-
 
 	public boolean quitGroup(String gname) {
 
@@ -208,7 +205,6 @@ public class ClientDevice {
 		return status;
 	}
 
-
 	public List<GroupData> groupList() {
 
 		boolean status = false;
@@ -223,15 +219,15 @@ public class ClientDevice {
 					socket.getInputStream()));
 			writer = new PrintWriter(new OutputStreamWriter(
 					socket.getOutputStream()));
-			
+
 			writer.write(MessageParser.CLIENT_GRPL + MessageParser.EOL);
 			writer.flush();
 
-			while(go){
+			while (go) {
 
 				String strbuf = reader.readLine();
 				MessageParser parser = new MessageParser(strbuf);
-				
+
 				if (parser.isWellParsed()) {
 
 					if (parser.getHeader().contains(MessageParser.SRV_GDAT)) {
@@ -240,17 +236,16 @@ public class ClientDevice {
 								.getNumberOfDevices()));
 
 					} else if (parser.getHeader().contains(
-							MessageParser.SRV_EOTR)){
-						
+							MessageParser.SRV_EOTR)) {
+
 						status = true;
 						go = false;
-					}
-					else
+					} else
 						go = false;
 				} else
 					go = false;
 			}
-			
+
 			socket.close();
 
 		} catch (IOException e) {
@@ -264,9 +259,8 @@ public class ClientDevice {
 			socket = null;
 		}
 
-		return status ? group: null;
+		return status ? group : null;
 	}
-
 
 	public List<DeviceData> deviceList(String gname) {
 
@@ -290,8 +284,8 @@ public class ClientDevice {
 					+ MessageParser.EOL);
 			writer.flush();
 
-			while(go){
-				
+			while (go) {
+
 				String strbuf = reader.readLine();
 				MessageParser parser = new MessageParser(strbuf);
 
@@ -304,12 +298,11 @@ public class ClientDevice {
 								.getBroadcastPort()));
 
 					} else if (parser.getHeader().contains(
-							MessageParser.SRV_EOTR)){
-					
+							MessageParser.SRV_EOTR)) {
+
 						status = true;
 						go = false;
-					}
-					else
+					} else
 						go = false;
 				} else
 					go = false;
@@ -320,17 +313,16 @@ public class ClientDevice {
 		} catch (IOException e) {
 
 			e.printStackTrace();
-		
+
 		} finally {
 
 			writer = null;
 			reader = null;
 			socket = null;
 		}
-		
-		return status ? devices: null;
-	}
 
+		return status ? devices : null;
+	}
 
 	public static void main(String[] args) {
 
@@ -341,7 +333,7 @@ public class ClientDevice {
 				.joinGroup("toto@GT-01");
 		new ClientDevice("titi", "192.168.48.5", 45652, 2410)
 				.joinGroup("toto@GT-01");
-		
+
 		List<GroupData> listgroup = c.groupList();
 
 		System.out.println("group list");
