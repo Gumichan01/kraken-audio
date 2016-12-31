@@ -1,6 +1,6 @@
 
 JAR=jar
-JFLAGS=cvfm
+JFLAGS=cfm
 
 BIN=bin/
 
@@ -21,7 +21,9 @@ OBJ_FILES=$(SRC_FILES:.cpp=.o)
 all: $(JAR_FILE)
 
 $(JAR_FILE): $(MANIFEST) $(OBJ_FILES)
-	$(JAR) $(JFLAGS) $(JAR_FILE) $(MANIFEST) -C $(BIN) .
+	@echo "Generate server.jar ..."
+	@$(JAR) $(JFLAGS) $(JAR_FILE) $(MANIFEST) -C $(BIN) .
+	@echo "server.jar: OK"
 
 clean:
 	rm $(JAR_FILE)
