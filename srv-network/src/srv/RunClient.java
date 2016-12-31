@@ -56,48 +56,38 @@ public class RunClient implements Runnable {
 		String strbuf = null;
 		buffer = new char[1024];
 
-		while (go) {
+		try {
 
-			try {
+			read = reader.read(buffer);
 
-				read = reader.read(buffer);
+			if (read == -1)
+				throw new IOException("data reading failed");
 
-				if (read == -1) {
+			strbuf = new String(buffer).substring(0, read);
+			parser = new MessageParser(strbuf);
 
-					closeConnection();
-					go = false;
-					continue;
-				}
+			if (parser.isWellParsed()) {
 
-				strbuf = new String(buffer).substring(0, read);
-				parser = new MessageParser(strbuf);
+				respond();
 
-				if (parser.isWellParsed()) {
+			} else {
 
-					respond();
-					go = closed ? false : true; // Is the connection closed?
-
-				} else {
-
-					writer.write(MessageParser.SRV_BADR + MessageParser.EOL);
-					writer.flush();
-					closeConnection();
-					go = false;
-				}
-
-			} catch (SocketTimeoutException | SocketException ste) {
-
-				ste.printStackTrace();
-				closeConnection();
-				go = false;
-
-			} catch (IOException e) {
-
-				e.printStackTrace();
-			} finally {
-
-				parser = null;
+				writer.write(MessageParser.SRV_BADR + MessageParser.EOL);
+				writer.flush();
 			}
+
+		} catch (SocketTimeoutException | SocketException ste) {
+
+			ste.printStackTrace();
+
+		} catch (IOException e) {
+
+			e.printStackTrace();
+
+		} finally {
+
+			parser = null;
+			closeConnection();
 		}
 	}
 
@@ -131,28 +121,12 @@ public class RunClient implements Runnable {
 
 	private void groupCreationResponse() {
 
-		// TODO check if the group already exists
-		/**
-		 * Bug critique: dans ce code, le serveur ne prend pas en compte
-		 * l'existence d'un groupe. Le code suppose. Cela signifie donc que si
-		 * le serveur créer un groupe ayant exactement le même nom qu'un groupe
-		 * éxistant, alors le groupe en question est détruit.
-		 * 
-		 */
-
 		if (srv.getGroup(parser.getGroup()) != null) {
+
 			writer.write(MessageParser.SRV_FAIL + MessageParser.EOL);
 			writer.flush();
 			return;
 		}
-
-		/**
-		 * 
-		 * Si un groupe existant porte le même nom que le groupe à créer, alors
-		 * refuser la création du groupe et envoyer le message d'échec (FAIL) et
-		 * terminer la fonction
-		 * 
-		 * */
 
 		srv.newGroup(parser.getGroup());
 
