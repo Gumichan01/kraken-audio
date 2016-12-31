@@ -326,7 +326,7 @@ public class ClientDevice {
 
 	public static void main(String[] args) {
 
-		ClientDevice c = new ClientDevice("toto", "192.168.48.2", 45621, 2410);
+		/*ClientDevice c = new ClientDevice("toto", "192.168.48.2", 45621, 2410);
 
 		System.out.println("create group: " + c.createGroup("toto@GT-01"));
 		new ClientDevice("lana", "192.168.48.4", 45645, 2410)
@@ -350,7 +350,7 @@ public class ClientDevice {
 		for (DeviceData d : listdev) {
 			System.out.println(d.toString());
 		}
-		System.out.println("-----------");
+		System.out.println("-----------");*/
 
 	}
 

@@ -18,8 +18,6 @@ public class MessageParser {
 	public static final String CLIENT_JGRP = "JGRP";
 	// Quit group
 	public static final String CLIENT_QGRP = "QGRP";
-	// EOCO
-	public static final String CLIENT_EOCO = "EOCO";
 
 	// / Server answer
 	// Group creation OK
@@ -89,9 +87,6 @@ public class MessageParser {
 
 		else if (header.equals(CLIENT_QGRP))
 			parseQGRP();
-
-		else if (header.equals(CLIENT_EOCO))
-			parseEOCO();
 
 		// Server message
 		else if (header.equals(SRV_GCOK) || header.equals(SRV_GJOK)
@@ -183,11 +178,6 @@ public class MessageParser {
 	private void parseOK() {
 
 		well_parsed = true;
-	}
-
-	private void parseEOCO() {
-
-		parseOK();
 	}
 
 	private void parseGDAT() {

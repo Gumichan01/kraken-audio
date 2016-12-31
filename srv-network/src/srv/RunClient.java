@@ -50,8 +50,6 @@ public class RunClient implements Runnable {
 			return;
 
 		int read;
-		boolean go = true;
-
 		char[] buffer;
 		String strbuf = null;
 		buffer = new char[1024];
@@ -109,14 +107,8 @@ public class RunClient implements Runnable {
 
 			joinGroupResponse();
 
-		} else if (parser.getHeader().equals(MessageParser.CLIENT_QGRP)) {
-
+		} else if (parser.getHeader().equals(MessageParser.CLIENT_QGRP))
 			quitGroupResponse();
-
-		} else if (parser.getHeader().equals(MessageParser.CLIENT_EOCO)) {
-
-			closeConnection();
-		}
 	}
 
 	private void groupCreationResponse() {
