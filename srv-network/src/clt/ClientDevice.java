@@ -209,23 +209,29 @@ public class ClientDevice {
 	}
 
 
-	public List<GroupData> groupList(String gname) {
+	public List<GroupData> groupList() {
 
+		boolean status = false;
+		boolean go = true;
 		List<GroupData> group = new ArrayList<>();
 
-		if (gname == null)
-			return null;
+		try {
 
-		writer.write(MessageParser.CLIENT_GRPL + MessageParser.EOL);
-		writer.flush();
+			socket = new Socket(InetAddress.getByName(SVHOST), SVPORT);
 
-		while (true) {
+			reader = new BufferedReader(new InputStreamReader(
+					socket.getInputStream()));
+			writer = new PrintWriter(new OutputStreamWriter(
+					socket.getOutputStream()));
+			
+			writer.write(MessageParser.CLIENT_GRPL + MessageParser.EOL);
+			writer.flush();
 
-			try {
+			while(go){
 
 				String strbuf = reader.readLine();
 				MessageParser parser = new MessageParser(strbuf);
-
+				
 				if (parser.isWellParsed()) {
 
 					if (parser.getHeader().contains(MessageParser.SRV_GDAT)) {
@@ -234,19 +240,31 @@ public class ClientDevice {
 								.getNumberOfDevices()));
 
 					} else if (parser.getHeader().contains(
-							MessageParser.SRV_EOTR))
-						return group;
+							MessageParser.SRV_EOTR)){
+						
+						status = true;
+						go = false;
+					}
 					else
-						return null;
+						go = false;
 				} else
-					return null;
-
-			} catch (IOException e) {
-
-				e.printStackTrace();
-				return null;
+					go = false;
 			}
+			
+			socket.close();
+
+		} catch (IOException e) {
+
+			e.printStackTrace();
+
+		} finally {
+
+			writer = null;
+			reader = null;
+			socket = null;
 		}
+
+		return status ? group: null;
 	}
 
 
@@ -303,7 +321,7 @@ public class ClientDevice {
 		new ClientDevice("titi", "192.168.48.5", 45652, 2410)
 				.joinGroup("toto@GT-01");
 		
-		/*List<GroupData> listgroup = c.groupList("toto@GT-01");
+		List<GroupData> listgroup = c.groupList();
 
 		System.out.println("group list");
 		System.out.println("----------");
@@ -312,7 +330,7 @@ public class ClientDevice {
 		}
 		System.out.println("-----------");
 
-		List<DeviceData> listdev = c.deviceList("toto@GT-01");
+		/*List<DeviceData> listdev = c.deviceList("toto@GT-01");
 
 		System.out.println("device list");
 		System.out.println("-----------");
