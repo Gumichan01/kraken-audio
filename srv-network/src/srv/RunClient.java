@@ -55,7 +55,8 @@ public class RunClient implements Runnable {
 		buffer = new char[1024];
 
 		try {
-
+			
+			System.out.print("from " + socket.getInetAddress().getHostAddress()+ ":" + socket.getPort() + ": ");
 			read = reader.read(buffer);
 
 			if (read == -1)
@@ -64,6 +65,8 @@ public class RunClient implements Runnable {
 			strbuf = new String(buffer).substring(0, read);
 			parser = new MessageParser(strbuf);
 
+			System.out.println(strbuf);
+			
 			if (parser.isWellParsed()) {
 
 				respond();
