@@ -62,8 +62,8 @@ public class GraphActivity extends Activity
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
 
-        navigationSenders.updateContent(new String[]{username, "toto08@48f1", "bob@I78b5"});
-        navigationReceivers.updateContent(new String[]{username, "Alice8@2408", "David@n1t0p9"});
+        navigationSenders.updateContent(new String[]{username});
+        navigationReceivers.updateContent(new String[]{username});
     }
 
 
@@ -91,21 +91,7 @@ public class GraphActivity extends Activity
     /// @// TODO: 14/11/2016 List WifiP2pDevice  → save that in the activity
     public void update(List devlist) {
 
-        List<WifiP2pDevice> devl = devlist;
-        ArrayList<String> devnames = new ArrayList<>();
-
-        for (WifiP2pDevice d : devl) {
-            devnames.add(d.deviceName);
-        }
-
-        Object[] o = devnames.toArray();
-        String[] s = new String[o.length];
-
-        for (int i = 0; i < o.length; i++) {
-            s[i] = (String) o[i];
-        }
-
-        navigationSenders.updateContent(s);
+        //navigationSenders.updateContent(s);
     }
 
     public String getUSR() {
@@ -114,23 +100,6 @@ public class GraphActivity extends Activity
 
 
     public void updateActivity(){
-
-        if(!mTitle.equals("toto08@48f1") && !mTitle.equals("bob@I78b5")
-                && !mTitle.equals("Alice8@2408") && !mTitle.equals("David@n1t0p9")){
-
-            navigationSenders.updateContent(new String[]{mTitle,"toto08@48f1", "bob@I78b5"});
-            navigationReceivers.updateContent(new String[]{mTitle,"Alice8@2408", "David@n1t0p9"});
-        }
-
-        if(mTitle.equals("toto08@48f1")){
-            navigationSenders.updateContent(new String[]{mTitle});
-            navigationReceivers.updateContent(new String[]{mTitle,"Jane Doe@GT-I8190N"});
-        }
-
-        if(mTitle.equals("Alice8@2408")){
-            navigationSenders.updateContent(new String[]{mTitle,"Jane Doe@GT-I8190N"});
-            navigationReceivers.updateContent(new String[]{mTitle});
-        }
 
     }
 
@@ -141,18 +110,7 @@ public class GraphActivity extends Activity
                 mTitle = username;
                 break;
 
-            case 2:
-                if(mTitle.equals(username))
-                    mTitle = "toto08@48f1";
-                else
-                    mTitle = username;
-                break;
-
-            case 3:
-                if(mTitle.equals(username))
-                    mTitle = "bob@I78b5";
-                else
-                    mTitle = username;
+            default:
                 break;
         }
         updateActivity();
