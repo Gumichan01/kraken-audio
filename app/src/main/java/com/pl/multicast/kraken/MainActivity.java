@@ -6,7 +6,16 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.Toast;
+
+import java.util.Iterator;
+import java.util.List;
+
+import datum.*;
+import clt.*;
 
 public class MainActivity extends Activity {
 
@@ -47,7 +56,11 @@ public class MainActivity extends Activity {
         EditText tv = (EditText) findViewById(R.id.usr);
         String s = tv.getText().toString();
 
-        intent.putExtra(USRNAME, s.isEmpty() ? "Jane Doe" : s);
-        startActivity(intent);
+        if(s.isEmpty())
+            Toast.makeText(this, "Empty string", Toast.LENGTH_SHORT).show();
+        else {
+            intent.putExtra(USRNAME, s);
+            startActivity(intent);
+        }
     }
 }
