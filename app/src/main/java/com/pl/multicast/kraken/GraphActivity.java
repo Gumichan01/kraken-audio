@@ -5,18 +5,20 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.IntentFilter;
-import android.net.wifi.p2p.WifiP2pDevice;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+
+import datum.*;
 
 
 public class GraphActivity extends Activity
@@ -34,11 +36,15 @@ public class GraphActivity extends Activity
      */
     private String mTitle;
     private String username;
+    private NetworkThread nt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_graph);
+
+        nt = new NetworkThread(username, "172.28.130.151", 2408, 2409);
+        nt.start();
 
         // Fragment creation
         navigationSenders = (NavDrawer)
@@ -61,9 +67,21 @@ public class GraphActivity extends Activity
                 R.id.navigation_drawerR,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
-
         navigationSenders.updateContent(new String[]{username});
         navigationReceivers.updateContent(new String[]{username});
+
+        List<GroupData> g = nt.getGroups();
+        Log.i("GROUP_DEV","OK get groups done");
+
+        if(g != null){
+
+            Iterator<GroupData> it = g.iterator();
+
+            while(it.hasNext()) {
+                Log.i("GROUP_DEV",it.next().toString());
+            }
+        } else
+            Log.i("GROUP_DEV","empty group");
     }
 
 
@@ -99,7 +117,7 @@ public class GraphActivity extends Activity
     }
 
 
-    public void updateActivity(){
+    public void updateActivity() {
 
     }
 
