@@ -30,27 +30,31 @@ public class ServerThread extends Thread {
 
     public void run() {
 
-        boolean go;
+        boolean go = true;
         boolean tosend;
 
         try {
             ServerSocket srvsock = new ServerSocket(SVTPORT);
-            Log.i("GROUP", "Server @" + srvsock.getInetAddress().toString() + " " + srvsock.getLocalPort());
             srvsock.setSoTimeout(16000);
-
-            synchronized (this) {
-                go = running;
-            }
+            Log.i("GROUP", "Server @" + srvsock.getInetAddress().toString() + " " + srvsock.getLocalPort());
 
             while (go) {
 
                 Log.i("GROUP", "Server is waiting for new connections" );
                 Socket sock = srvsock.accept();
 
+                synchronized (this) {
+                    go = running;
+                }
+
                 if (sock == null) {
 
                     Log.e("GROUP", "null socket");
-                    go = false;
+                    continue;
+
+                } else if(go == false) {
+
+                    Log.e("GROUP", "shut the server down");
                     srvsock.close();
                     continue;
                 }
