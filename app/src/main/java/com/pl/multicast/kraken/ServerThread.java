@@ -69,8 +69,8 @@ public class ServerThread extends Thread {
 
                     // envoi text
                     PrintWriter writer = new PrintWriter(new OutputStreamWriter(sock.getOutputStream()));
-                    Log.i("GROUP", "Server is sending a message");
-                    writer.write("Hello world !");
+                    Log.i("GROUP", "Server is sending: " + text);
+                    writer.write(text);
                     writer.flush();
                     Log.i("GROUP", "DONE");
                     send_text = false;
@@ -99,12 +99,13 @@ public class ServerThread extends Thread {
 
     public synchronized void stopServer() {
 
-        Log.i("GROUP","SHUT down the server");
+        Log.i("GROUP","Sync - SHUT down the server");
         running = false;
     }
 
     public synchronized void sendText(String s) {
 
+        Log.i("GROUP","Sync - down the server");
         text = s;
         send_text = true;
     }
