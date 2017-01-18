@@ -37,6 +37,7 @@ public class GraphActivity extends Activity
     private String mTitle;
     private String username;
     private NetworkThread nt;
+    private ServerThread st;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +46,9 @@ public class GraphActivity extends Activity
 
         nt = new NetworkThread(username, "172.28.130.151", 2408, 2409);
         nt.start();
+
+        st = new ServerThread();
+        st.start();
 
         // Fragment creation
         navigationSenders = (NavDrawer)
@@ -95,6 +99,14 @@ public class GraphActivity extends Activity
     public void onPause() {
 
         super.onPause();
+    }
+
+    @Override
+    public void onStop() {
+
+        super.onStop();
+        Log.i("GROUP", "stopping the activity");
+        st.stopServer();
     }
 
     @Override
