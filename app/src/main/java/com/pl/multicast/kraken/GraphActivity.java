@@ -14,6 +14,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import java.util.Iterator;
 import java.util.List;
@@ -74,18 +76,20 @@ public class GraphActivity extends Activity
         navigationSenders.updateContent(new String[]{username});
         navigationReceivers.updateContent(new String[]{username});
 
+        // Get the list of groups
+        // @// TODO: 18/01/2017 Display the groups in a box
         List<GroupData> g = nt.getGroups();
-        Log.i("GROUP_DEV","OK get groups done");
+        Log.i("GROUP_DEV", "OK get groups done");
 
-        if(g != null){
+        if (g != null) {
 
             Iterator<GroupData> it = g.iterator();
 
-            while(it.hasNext()) {
-                Log.i("GROUP_DEV",it.next().toString());
+            while (it.hasNext()) {
+                Log.i("GROUP_DEV", it.next().toString());
             }
         } else
-            Log.i("GROUP_DEV","empty group");
+            Log.i("GROUP_DEV", "empty group");
     }
 
 
@@ -105,7 +109,7 @@ public class GraphActivity extends Activity
     public void onStop() {
 
         super.onStop();
-        Log.i("GROUP", "stopping the activity");
+        Log.i("GROUP", "Stop the activity");
         st.stopServer();
     }
 
@@ -118,7 +122,6 @@ public class GraphActivity extends Activity
                 .commit();
     }
 
-    /// @// TODO: 14/11/2016 List WifiP2pDevice  → save that in the activity
     public void update(List devlist) {
 
         //navigationSenders.updateContent(s);
@@ -128,10 +131,6 @@ public class GraphActivity extends Activity
         return username;
     }
 
-
-    public void updateActivity() {
-
-    }
 
     public void onSectionAttached(int number) {
 
@@ -143,8 +142,20 @@ public class GraphActivity extends Activity
             default:
                 break;
         }
-        updateActivity();
     }
+
+
+    /** Button action **/
+
+    public void broadcastText(View v){
+
+        EditText edt = (EditText) findViewById(R.id.txtsend);
+        String s = edt.getText().toString();
+        Log.i("GROUP", "Send the following text: " + s);
+        st.sendText(s);
+    }
+
+    /** Action Bar **/
 
     public void restoreActionBar() {
         ActionBar actionBar = getActionBar();
@@ -166,6 +177,9 @@ public class GraphActivity extends Activity
         }
         return super.onCreateOptionsMenu(menu);
     }
+
+
+    /** Option Items **/
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
