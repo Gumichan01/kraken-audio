@@ -105,7 +105,7 @@ public class ServerThread extends Thread {
 
     public synchronized void sendText(String s) {
 
-        Log.i("GROUP","Sync - down the server");
+        Log.i("GROUP","Sync - send text");
         text = s;
         send_text = true;
     }

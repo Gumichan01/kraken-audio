@@ -14,9 +14,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -26,8 +29,8 @@ import datum.*;
 public class GraphActivity extends Activity
         implements NavDrawer.NavigationDrawerCallbacks {
 
-    private final IntentFilter intentFilter = new IntentFilter();
-    private int state = 0;
+    private static final IntentFilter intentFilter = new IntentFilter();
+    private static ArrayList<String> ltext = new ArrayList<>();
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
@@ -153,6 +156,12 @@ public class GraphActivity extends Activity
         String s = edt.getText().toString();
         Log.i("GROUP", "Send the following text: " + s);
         st.sendText(s);
+
+        /** Display the text in the ListView */
+        ListView lstv = (ListView) findViewById(R.id.txtrecv);
+        ltext.add(s);
+        lstv.setAdapter(new ArrayAdapter<String>(getApplicationContext(), R.layout.text_recv, ltext));
+        lstv.setVisibility(View.VISIBLE);
     }
 
     /** Action Bar **/
