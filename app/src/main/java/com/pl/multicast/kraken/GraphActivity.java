@@ -43,6 +43,7 @@ public class GraphActivity extends Activity
     private String username;
     private NetworkThread nt;
     private ServerThread st;
+    private ServerThreadData std;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +53,8 @@ public class GraphActivity extends Activity
         nt = new NetworkThread(username, "172.28.130.151", 2408, 2409);
         nt.start();
 
-        st = new ServerThread();
+        std = new ServerThreadData();
+        st = new ServerThread(std);
         st.start();
 
         // Fragment creation
@@ -113,7 +115,7 @@ public class GraphActivity extends Activity
 
         super.onStop();
         Log.i("GROUP", "Stop the activity");
-        st.stopServer();
+        std.stopServer();
     }
 
     @Override
@@ -155,7 +157,8 @@ public class GraphActivity extends Activity
         EditText edt = (EditText) findViewById(R.id.txtsend);
         String s = edt.getText().toString();
         Log.i("GROUP", "Send the following text: " + s);
-        st.sendText(s);
+        std.setText(s);
+        Log.i("GROUP", "Send text END");
 
         /** Display the text in the ListView */
         ListView lstv = (ListView) findViewById(R.id.txtrecv);

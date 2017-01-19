@@ -2,12 +2,12 @@ package com.pl.multicast.kraken;
 
 import android.util.Log;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 
 /**
  * Created by Luxon on 18/01/2017.
@@ -18,69 +18,63 @@ public class ServerThread extends Thread {
     private static String svthost = "";
     private boolean running;
     private String text;
-    private boolean send_text;
+    private String ptext;
+    private ServerThreadData std;
 
-    public ServerThread() {
+    public ServerThread(ServerThreadData s) {
 
         super();
+        std = s;
         svthost = clt.ClientDevice.SVHOST;
-        running = true;
-        send_text = true;
+
     }
 
     public void run() {
 
         boolean go = true;
         boolean tosend;
+        ArrayList<Socket> lsock = new ArrayList<>();
 
         try {
             ServerSocket srvsock = new ServerSocket(SVTPORT);
-            srvsock.setSoTimeout(16000);
             Log.i("GROUP", "Server @" + srvsock.getInetAddress().toString() + " " + srvsock.getLocalPort());
 
             while (go) {
 
-                Log.i("GROUP", "Server is waiting for new connections" );
+                Log.i("GROUP", "Server is waiting for new connections");
                 Socket sock = srvsock.accept();
+                Log.i("GROUP", "accept");
 
-                synchronized (this) {
-                    go = running;
-                }
-
-                if (sock == null) {
-
-                    Log.e("GROUP", "null socket");
-                    continue;
-
-                } else if(go == false) {
+                if (go == false) {
 
                     Log.e("GROUP", "shut the server down");
                     srvsock.close();
-                    continue;
+                    break;
                 }
+
+                if (sock != null)
+                    lsock.add(sock);
 
                 Log.i("GROUP", "Server received connection from:\n" + sock.getInetAddress().toString() + " " + sock.getLocalPort());
 
-                synchronized (this) {
-                    tosend = send_text;
-                }
+                text = std.getText();
 
-                if (tosend) {
+                Log.i("GROUP", "SEND");
+                Log.i("GROUP", "lsock size: " + lsock.size());
+                // envoi text
+                for (int i = 0; i < lsock.size(); i++) {
 
-                    // envoi text
-                    PrintWriter writer = new PrintWriter(new OutputStreamWriter(sock.getOutputStream()));
-                    Log.i("GROUP", "Server is sending: " + text);
+                    PrintWriter writer = new PrintWriter(new OutputStreamWriter(lsock.get(i).getOutputStream()));
+                    Log.i("GROUP", "Server is sending '" + text + "'" + " to " + lsock.get(i).getInetAddress().toString() + ":"
+                            + sock.getLocalPort());
                     writer.write(text);
                     writer.flush();
-                    Log.i("GROUP", "DONE");
-                    send_text = false;
                 }
 
-                sock.close();
+                Log.i("GROUP", "DONE");
 
-                synchronized (this) {
-                    go = running;
-                }
+                //ptext = text;
+                go = std.getRun();
             }
 
         } catch (IOException e) {
@@ -96,18 +90,4 @@ public class ServerThread extends Thread {
             u.printStackTrace();
         }
     }
-
-    public synchronized void stopServer() {
-
-        Log.i("GROUP","Sync - SHUT down the server");
-        running = false;
-    }
-
-    public synchronized void sendText(String s) {
-
-        Log.i("GROUP","Sync - send text");
-        text = s;
-        send_text = true;
-    }
-
 }
