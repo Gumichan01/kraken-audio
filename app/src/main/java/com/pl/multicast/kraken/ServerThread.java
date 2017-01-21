@@ -3,17 +3,16 @@ package com.pl.multicast.kraken;
 import android.util.Log;
 
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
+
 import java.net.SocketException;
 import java.util.ArrayList;
+
+import datum.DeviceData;
+
 
 /**
  * Created by Luxon on 18/01/2017.
@@ -59,21 +58,25 @@ public class ServerThread extends Thread {
 
                 text = std.getText();
                 data = text.getBytes();
+                ArrayList<DeviceData> listeners = std.getListeners();
 
                 if(!text.equals(ptext)){
 
-                    Log.i("GROUP", "SEND");
-                    try {
-                        p = new DatagramPacket(data, data.length,
-                                new InetSocketAddress("192.168.1.22", 2409));
-                        srvsock.send(p);
-                    } catch (SocketException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    for(DeviceData dev: listeners){
+
+                        Log.i("GROUP", "SEND data to " + dev.getName());
+                        try {
+                            p = new DatagramPacket(data, data.length,
+                                    new InetSocketAddress(dev.getAddr(), dev.getBroadcastPort()));
+                            srvsock.send(p);
+                        } catch (SocketException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        ptext = text;
+                        Log.i("GROUP", "DONE");
                     }
-                    ptext = text;
-                    Log.i("GROUP", "DONE");
                 }
 
                 go = std.getRun();
