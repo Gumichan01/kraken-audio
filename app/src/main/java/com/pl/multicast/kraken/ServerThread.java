@@ -5,8 +5,14 @@ import android.util.Log;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
 
 /**
@@ -32,18 +38,17 @@ public class ServerThread extends Thread {
     public void run() {
 
         boolean go = true;
+        String ptext = "";
         boolean tosend;
-        ArrayList<Socket> lsock = new ArrayList<>();
 
         try {
-            ServerSocket srvsock = new ServerSocket(SVTPORT);
-            Log.i("GROUP", "Server @" + srvsock.getInetAddress().toString() + " " + srvsock.getLocalPort());
+            DatagramSocket srvsock = new DatagramSocket();
+            Log.i("GROUP", "Server @" + InetAddress.getLocalHost().toString());
 
             while (go) {
 
-                Log.i("GROUP", "Server is waiting for new connections");
-                Socket sock = srvsock.accept();
-                Log.i("GROUP", "accept");
+                byte [] data;
+                DatagramPacket p;
 
                 if (go == false) {
 
@@ -52,29 +57,32 @@ public class ServerThread extends Thread {
                     break;
                 }
 
-                if (sock != null)
-                    lsock.add(sock);
-
-                Log.i("GROUP", "Server received connection from:\n" + sock.getInetAddress().toString() + " " + sock.getLocalPort());
-
                 text = std.getText();
+                data = text.getBytes();
 
-                Log.i("GROUP", "SEND");
-                Log.i("GROUP", "lsock size: " + lsock.size());
-                // envoi text
-                for (int i = 0; i < lsock.size(); i++) {
+                if(!text.equals(ptext)){
 
-                    PrintWriter writer = new PrintWriter(new OutputStreamWriter(lsock.get(i).getOutputStream()));
-                    Log.i("GROUP", "Server is sending '" + text + "'" + " to " + lsock.get(i).getInetAddress().toString() + ":"
-                            + sock.getLocalPort());
-                    writer.write(text);
-                    writer.flush();
+                    Log.i("GROUP", "SEND");
+                    try {
+                        p = new DatagramPacket(data, data.length,
+                                new InetSocketAddress("192.168.1.22", 2409));
+                        srvsock.send(p);
+                    } catch (SocketException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    ptext = text;
+                    Log.i("GROUP", "DONE");
                 }
 
-                Log.i("GROUP", "DONE");
-
-                //ptext = text;
                 go = std.getRun();
+
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException ie) {
+                    ie.printStackTrace();
+                }
             }
 
         } catch (IOException e) {
