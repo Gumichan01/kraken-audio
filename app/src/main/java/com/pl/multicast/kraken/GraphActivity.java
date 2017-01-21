@@ -17,13 +17,13 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import datum.*;
+import datum.DeviceData;
+import datum.GroupData;
 
 
 public class GraphActivity extends Activity
@@ -51,7 +51,7 @@ public class GraphActivity extends Activity
         setContentView(R.layout.activity_graph);
 
         nt = new NetworkThread(username, "172.28.130.151", 2408, 2409);
-        nt.start();
+        nt.start(); // get the groups
 
         std = new ServerThreadData();
         st = new ServerThread(std);
@@ -95,6 +95,38 @@ public class GraphActivity extends Activity
             }
         } else
             Log.i("GROUP_DEV", "empty group");
+
+        /// ONLY FOR TESTING THE BROADCAST
+        /**nt = new NetworkThread(username, "172.28.130.151", 2408, 2409);
+        nt.setOp(1);
+        nt.setGroupName("test");
+
+        try {
+            nt.join();
+        } catch (InterruptedException i) {
+            i.printStackTrace();
+        }
+
+        nt.start();
+
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException i) {
+            i.printStackTrace();
+        }
+
+        List<DeviceData> ld = nt.getDevices();
+
+        if (ld != null) {
+
+            Iterator<DeviceData> it = ld.iterator();
+
+            while (it.hasNext()) {
+                DeviceData dd = it.next();
+                std.addListener(dd);
+            }
+        } else
+            Log.i("GROUP_CONTENT", "no device");*/
     }
 
 
@@ -150,9 +182,11 @@ public class GraphActivity extends Activity
     }
 
 
-    /** Button action **/
+    /**
+     * Button action
+     **/
 
-    public void broadcastText(View v){
+    public void broadcastText(View v) {
 
         EditText edt = (EditText) findViewById(R.id.txtsend);
         String s = edt.getText().toString();
@@ -167,7 +201,9 @@ public class GraphActivity extends Activity
         lstv.setVisibility(View.VISIBLE);
     }
 
-    /** Action Bar **/
+    /**
+     * Action Bar
+     **/
 
     public void restoreActionBar() {
         ActionBar actionBar = getActionBar();
@@ -191,7 +227,9 @@ public class GraphActivity extends Activity
     }
 
 
-    /** Option Items **/
+    /**
+     * Option Items
+     **/
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
