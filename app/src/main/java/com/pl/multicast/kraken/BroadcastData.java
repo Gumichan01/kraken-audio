@@ -7,14 +7,14 @@ import datum.DeviceData;
 /**
  * Created by Luxon on 19/01/2017.
  */
-public class ServerThreadData {
+public class BroadcastData {
 
     private volatile boolean running;
     private volatile String text;
     private volatile boolean send_text;
     private volatile ArrayList<DeviceData> listeners;
 
-    public ServerThreadData() {
+    public BroadcastData() {
 
         text = "TEST";
         running = true;

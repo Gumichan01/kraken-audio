@@ -24,9 +24,9 @@ public class UDPBroadcast extends Thread {
     private boolean running;
     private String text;
     private String ptext;
-    private ServerThreadData std;
+    private BroadcastData std;
 
-    public UDPBroadcast(ServerThreadData s) {
+    public UDPBroadcast(BroadcastData s) {
 
         super();
         std = s;

@@ -10,7 +10,7 @@ import datum.GroupData;
 /**
  * Created by Luxon on 16/01/2017.
  */
-public class NetworkThread implements Runnable {
+public class RepositoryConnection implements Runnable {
 
     public static final int GROUP_OP = 0;
     public static final int DEVICE_OP = 1;
@@ -24,7 +24,7 @@ public class NetworkThread implements Runnable {
     private List<DeviceData> ddata;
     private ClientDevice cd;
 
-    public NetworkThread(String name, String addr, int port, int bport) {
+    public RepositoryConnection(String name, String addr, int port, int bport) {
 
         idop = 0;
         gname = null;
