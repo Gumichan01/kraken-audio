@@ -51,7 +51,7 @@ public class ServerThreadData {
 
     public synchronized void addListener(DeviceData listener) {
 
-        Log.i("GROUP", "Sync - adde ne listener: " + listener.toString());
+        Log.i("GROUP", "Sync - added the listener: " + listener.toString());
         listeners.add(listener);
     }
 

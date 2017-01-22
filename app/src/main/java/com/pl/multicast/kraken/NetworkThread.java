@@ -3,13 +3,20 @@ package com.pl.multicast.kraken;
 
 import java.util.List;
 
-import datum.*;
-import clt.*;
+import clt.ClientDevice;
+import datum.DeviceData;
+import datum.GroupData;
 
 /**
  * Created by Luxon on 16/01/2017.
  */
-public class NetworkThread extends Thread {
+public class NetworkThread implements Runnable {
+
+    public static final int GROUP_OP = 0;
+    public static final int DEVICE_OP = 1;
+    public static final int JOIN_GROUP_OP = 2;
+    public static final int QUIT_GROUP_OP = 3;
+    public static final int CREATE_GROUP_OP = 4;
 
     private int idop;
     private String gname;
@@ -17,52 +24,51 @@ public class NetworkThread extends Thread {
     private List<DeviceData> ddata;
     private ClientDevice cd;
 
-    public NetworkThread(String name, String addr, int port, int bport){
+    public NetworkThread(String name, String addr, int port, int bport) {
 
         idop = 0;
         gname = null;
         cd = new ClientDevice(name, addr, port, bport);
     }
 
-    public synchronized void run(){
+    public synchronized void run() {
 
         //synchronized(this){
 
-            if(idop == 0){
-                // get the groups
-                gdata = cd.groupList();
-
-            } else if(idop == 1){
-                // get the devices of a group
-                ddata = cd.deviceList(gname);
-            } else if(idop == 2){
-                // join a group
-            } else if(idop == 3){
-                // quit a group
-                cd.quitGroup(gname);
-            } else if(idop == 4){
-                // create a groups
-            }
+        if (idop == GROUP_OP) {
+            // get the groups
+            gdata = cd.groupList();
+        } else if (idop == DEVICE_OP) {
+            // get the devices of a group
+            ddata = cd.deviceList(gname);
+        } else if (idop == JOIN_GROUP_OP) {
+            // join a group
+        } else if (idop == QUIT_GROUP_OP) {
+            // quit a group
+            cd.quitGroup(gname);
+        } else if (idop == CREATE_GROUP_OP) {
+            // create a groups
+        }
         //}
     }
 
-    public synchronized void setOp(int op){
+    public synchronized void setOp(int op) {
 
         idop = op;
     }
 
-    public synchronized void setGroupName(String name){
+    public synchronized void setGroupName(String name) {
 
-        if(name != null)
+        if (name != null)
             gname = name;
     }
 
-    public synchronized List<GroupData> getGroups(){
+    public synchronized List<GroupData> getGroups() {
 
         return gdata;
     }
 
-    public synchronized List<DeviceData> getDevices(){
+    public synchronized List<DeviceData> getDevices() {
 
         return ddata;
     }
