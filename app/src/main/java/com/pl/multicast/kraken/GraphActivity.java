@@ -42,7 +42,7 @@ public class GraphActivity extends Activity
     private String mTitle;
     private String username;
     private NetworkThread nt;
-    private ServerThread st;
+    private UDPBroadcast st;
     private ServerThreadData std;
 
     @Override
@@ -54,7 +54,7 @@ public class GraphActivity extends Activity
         nt.start(); // get the groups
 
         std = new ServerThreadData();
-        st = new ServerThread(std);
+        st = new UDPBroadcast(std);
         st.start();
 
         // Fragment creation
@@ -97,7 +97,7 @@ public class GraphActivity extends Activity
             Log.i("GROUP_DEV", "empty group");
 
         /// ONLY FOR TESTING THE BROADCAST
-        /**nt = new NetworkThread(username, "172.28.130.151", 2408, 2409);
+        /*nt = new NetworkThread(username, "172.28.130.151", 2408, 2409);
         nt.setOp(1);
         nt.setGroupName("test");
 
