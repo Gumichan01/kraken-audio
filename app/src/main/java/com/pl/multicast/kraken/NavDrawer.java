@@ -1,6 +1,5 @@
 package com.pl.multicast.kraken;
 
-
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
@@ -22,15 +21,15 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import java.util.Observable;
-import java.util.Observer;
+import datum.DeviceData;
+
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
  * See the <a href="https://developer.android.com/design/patterns/navigation-drawer.html#Interaction">
  * design guidelines</a> for a complete explanation of the behaviors implemented here.
  */
-public class NavDrawer extends Fragment implements Observer {
+public class NavDrawer extends Fragment {
 
     /**
      * Remember the position of the selected item.
@@ -115,15 +114,20 @@ public class NavDrawer extends Fragment implements Observer {
     }
 
 
-    /// Be notified that MusicStreamer has been added/removed
-    @Override
-    public void update(Observable o, Object arg) {
+    /// Update the content of the fragment for each connected device
+    public void updateContent(Object[] content) {
 
-        /// @// TODO: 04/11/2016 Add/remove the music streamer into the list
+        String [] scontent = new String[content.length];
+
+        for(int i = 0; i < content.length; i++){
+            scontent[i] = ((DeviceData) content[i]).getName();
+        }
+
+        updateContent(scontent);
     }
 
-    /// Update the content of the fragment for each connected device
     public void updateContent(String[] content) {
+
         mDrawerListView.setAdapter(new ArrayAdapter<String>(
                 getActionBar().getThemedContext(),
                 android.R.layout.simple_list_item_activated_2,

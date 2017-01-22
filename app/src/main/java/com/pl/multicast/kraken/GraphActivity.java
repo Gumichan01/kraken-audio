@@ -41,19 +41,25 @@ public class GraphActivity extends Activity
      */
     private String mTitle;
     private String username;
-    private NetworkThread nt;
+    private RepositoryConnection nt;
     private UDPBroadcast st;
-    private ServerThreadData std;
+    private BroadcastData std;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_graph);
 
-        nt = new NetworkThread(username, "172.28.130.151", 2408, 2409);
-        nt.start(); // get the groups
+        // Set the attributes
+        username = getIntent().getStringExtra(MainActivity.USRNAME) + "@" + Build.MODEL;
+        mTitle = username;
 
-        std = new ServerThreadData();
+
+        nt = new RepositoryConnection(username, "172.28.130.151", 2408, 2409);
+        nt.setOp(0);    /* Get the groups */
+        new Thread(nt).start();
+
+        std = new BroadcastData();
         st = new UDPBroadcast(std);
         st.start();
 
@@ -63,10 +69,6 @@ public class GraphActivity extends Activity
 
         navigationReceivers = (NavDrawer)
                 getFragmentManager().findFragmentById(R.id.navigation_drawerR);
-
-        // Set the attributes
-        username = getIntent().getStringExtra(MainActivity.USRNAME) + "@" + Build.MODEL;
-        mTitle = username;
 
         // Set up the drawer (left side)
         navigationSenders.setUp(
@@ -97,17 +99,9 @@ public class GraphActivity extends Activity
             Log.i("GROUP_DEV", "empty group");
 
         /// ONLY FOR TESTING THE BROADCAST
-        /*nt = new NetworkThread(username, "172.28.130.151", 2408, 2409);
         nt.setOp(1);
         nt.setGroupName("test");
-
-        try {
-            nt.join();
-        } catch (InterruptedException i) {
-            i.printStackTrace();
-        }
-
-        nt.start();
+        new Thread(nt).start();
 
         try {
             Thread.sleep(100);
@@ -125,8 +119,12 @@ public class GraphActivity extends Activity
                 DeviceData dd = it.next();
                 std.addListener(dd);
             }
+
+            ld.add(0, new DeviceData(username,"",0,0));
+            navigationReceivers.updateContent(ld.toArray());
+
         } else
-            Log.i("GROUP_CONTENT", "no device");*/
+            Log.i("GROUP_CONTENT", "no device");
     }
 
 
@@ -171,12 +169,15 @@ public class GraphActivity extends Activity
 
     public void onSectionAttached(int number) {
 
+         List<DeviceData> ld = nt.getDevices();
+
         switch (number) {
             case 1:
                 mTitle = username;
                 break;
 
             default:
+                mTitle = ld.get(number-1).getName();
                 break;
         }
     }
