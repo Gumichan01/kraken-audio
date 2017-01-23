@@ -53,13 +53,13 @@ public class BroadcastData {
 
     public synchronized void addSender(DeviceData sender) {
 
-        Log.i("GROUP", "Sync - added the listener: " + sender.toString());
+        Log.i("GROUP", "Sync - added the sender: " + sender.toString());
         senders.add(sender);
     }
 
     public synchronized void rmSender(DeviceData sender) {
 
-        Log.i("GROUP", "Sync - remove the listener: " + sender.toString());
+        Log.i("GROUP", "Sync - remove the sender: " + sender.toString());
         senders.remove(sender);
     }
 

@@ -41,8 +41,13 @@ public class GraphActivity extends Activity
      */
     private String mTitle;
     private String username;
+
+    // Threads
     private RepositoryConnection nt;
     private UDPBroadcast st;
+    private Thread bservice;    // broadcast service
+
+    // Data
     private BroadcastData std;
 
     @Override
@@ -54,14 +59,16 @@ public class GraphActivity extends Activity
         username = getIntent().getStringExtra(MainActivity.USRNAME) + "@" + Build.MODEL;
         mTitle = username;
 
-
-        nt = new RepositoryConnection(username, "172.28.130.151", 2408, 2409);
-        nt.setOp(0);    /* Get the groups */
+        nt = new RepositoryConnection(username, "192.168.43.114", 2408, 2409);
+        nt.setOp(RepositoryConnection.GROUP_OP);    /* Get the groups */
         new Thread(nt).start();
 
         std = new BroadcastData();
         st = new UDPBroadcast(std);
         st.start();
+
+        bservice = new Thread(new BroadcastService(std));
+        bservice.start();
 
         // Fragment creation
         navigationSenders = (NavDrawer)
@@ -99,7 +106,7 @@ public class GraphActivity extends Activity
             Log.i("GROUP_DEV", "empty group");
 
         /// ONLY FOR TESTING THE BROADCAST
-        nt.setOp(1);
+        nt.setOp(RepositoryConnection.DEVICE_OP);
         nt.setGroupName("test");
         new Thread(nt).start();
 
@@ -117,11 +124,13 @@ public class GraphActivity extends Activity
 
             while (it.hasNext()) {
                 DeviceData dd = it.next();
-                std.addListener(dd);
+                std.addSender(dd);
+                //std.addListener(dd);
             }
 
             ld.add(0, new DeviceData(username,"",0,0));
-            navigationReceivers.updateContent(ld.toArray());
+            navigationSenders.updateContent(ld.toArray());
+            //navigationReceivers.updateContent(ld.toArray());
 
         } else
             Log.i("GROUP_CONTENT", "no device");
