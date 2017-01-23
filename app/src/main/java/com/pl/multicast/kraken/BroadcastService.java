@@ -20,6 +20,7 @@ import datum.DeviceData;
 public class BroadcastService implements Runnable {
 
     private static final String LISTEN_CMD = "LISTEN";
+    private static final String STOP_CMD = "STOP";
     private static final String ACK = "ACK\r\n";
     private static final String BADR = "BADR\r\n";
     private static final String FAIL = "FAIL\r\n";
@@ -54,7 +55,7 @@ public class BroadcastService implements Runnable {
                 BufferedReader r = new BufferedReader(new InputStreamReader(sock.getInputStream()));
 
                 String rstring = r.readLine();
-                Log.i("GROUP", "Service - received this message: " +  rstring);
+                Log.i("GROUP", "Service - received this message: " + rstring);
 
                 if (rstring.contains(LISTEN_CMD)) {
 
@@ -65,6 +66,16 @@ public class BroadcastService implements Runnable {
                         w.write(BADR);
                     else
                         w.write(registerListener(ss[1]) ? ACK : FAIL);
+
+                } else if (rstring.contains(STOP_CMD)) {
+
+                    Pattern p = Pattern.compile(SPACE);
+                    String[] ss = p.split(rstring);
+
+                    if (ss.length != LISTEN_NBTOK)
+                        w.write(BADR);
+                    else
+                        w.write(unregisterListener(ss[1]) ? ACK : FAIL);
                 }
 
                 w.flush();
@@ -97,6 +108,26 @@ public class BroadcastService implements Runnable {
         bdata.rmSender(dev);
         bdata.addListener(dev);
         Log.i("GROUP", "Service - Register listener: ok");
+        return true;
+    }
+
+    public boolean unregisterListener(String s) {
+
+        DeviceData dev = null;
+        List<DeviceData> ld = bdata.getListeners();
+        int i = 0;
+
+        while (i < ld.size() && !ld.get(i).getName().equals(s))
+            i++;
+
+        if (i < ld.size())
+            dev = ld.get(i);
+        else
+            return false;
+
+        bdata.rmListener(dev);
+        bdata.addSender(dev);
+        Log.i("GROUP", "Service - Unregister register listener: ok");
         return true;
     }
 }
