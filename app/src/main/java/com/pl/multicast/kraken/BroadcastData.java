@@ -12,6 +12,7 @@ public class BroadcastData {
     private volatile boolean running;
     private volatile String text;
     private volatile boolean send_text;
+    private volatile ArrayList<DeviceData> senders;
     private volatile ArrayList<DeviceData> listeners;
 
     public BroadcastData() {
@@ -19,6 +20,7 @@ public class BroadcastData {
         text = "TEST";
         running = true;
         send_text = false;
+        senders = new ArrayList<>();
         listeners = new ArrayList<>();
     }
 
@@ -42,6 +44,23 @@ public class BroadcastData {
 
         Log.i("GROUP", "Sync - set text to send");
         text = t;
+    }
+
+    public synchronized ArrayList<DeviceData> getSenders() {
+
+        return senders;
+    }
+
+    public synchronized void addSender(DeviceData sender) {
+
+        Log.i("GROUP", "Sync - added the listener: " + sender.toString());
+        senders.add(sender);
+    }
+
+    public synchronized void rmSender(DeviceData sender) {
+
+        Log.i("GROUP", "Sync - remove the listener: " + sender.toString());
+        senders.remove(sender);
     }
 
     public synchronized ArrayList<DeviceData> getListeners() {
