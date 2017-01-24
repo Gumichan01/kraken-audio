@@ -44,7 +44,7 @@ public class GraphActivity extends Activity
 
     // Threads
     private RepositoryConnection nt;
-    private UDPBroadcast st;
+    private UDPSender st;
     private Thread bservice;    // broadcast service
 
     // Data
@@ -64,7 +64,7 @@ public class GraphActivity extends Activity
         new Thread(nt).start();
 
         std = new BroadcastData();
-        st = new UDPBroadcast(std);
+        st = new UDPSender(std);
         st.start();
 
         bservice = new Thread(new BroadcastService(this, std));

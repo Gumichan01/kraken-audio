@@ -17,7 +17,7 @@ import datum.DeviceData;
 /**
  * Created by Luxon on 18/01/2017.
  */
-public class UDPBroadcast extends Thread {
+public class UDPSender extends Thread {
 
     private static final int SVTPORT = 2409;
     private static String svthost = "";
@@ -26,7 +26,7 @@ public class UDPBroadcast extends Thread {
     private String ptext;
     private BroadcastData std;
 
-    public UDPBroadcast(BroadcastData s) {
+    public UDPSender(BroadcastData s) {
 
         super();
         std = s;
