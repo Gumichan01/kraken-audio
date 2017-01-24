@@ -58,7 +58,7 @@ public class GraphActivity extends Activity
         username = getIntent().getStringExtra(MainActivity.USRNAME) + "@" + Build.MODEL;
         mTitle = username;
 
-        nt = new RepositoryConnection(username, "192.168.43.114", 2408, 2409);
+        nt = new RepositoryConnection(username, "192.168.43.1", 2408, 2409);
         nt.setOp(RepositoryConnection.GROUP_OP);    /* Get the groups */
         new Thread(nt).start();
 
@@ -105,7 +105,7 @@ public class GraphActivity extends Activity
             Log.i("GROUP_DEV", "empty group");
 
         /// ONLY FOR TESTING THE BROADCAST
-        nt.setOp(RepositoryConnection.DEVICE_OP);
+        /*nt.setOp(RepositoryConnection.DEVICE_OP);
         nt.setGroupName("test");
         new Thread(nt).start();
 
@@ -135,7 +135,7 @@ public class GraphActivity extends Activity
             Log.i("GROUP_CONTENT", "no device");
 
         UDPReceiver udpr = new UDPReceiver(this, std);
-        udpr.launchReceiver();
+        udpr.launchReceiver();*/
         //udpr.sendMessage(new DeviceData("toto", "192.168.43.222", 2408, 2409), "LISTEN gt-i8190n\r\n");
         //udpr.sendMessage(new DeviceData("toto", "192.168.43.1", 2408, 2409), "LISTEN kenny\r\n");
     }

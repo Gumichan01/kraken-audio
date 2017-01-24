@@ -43,11 +43,15 @@ public class RepositoryConnection implements Runnable {
             ddata = cd.deviceList(gname);
         } else if (idop == JOIN_GROUP_OP) {
             // join a group
+            if (cd.joinGroup(gname) == false)
+                cd.createGroup(gname);
         } else if (idop == QUIT_GROUP_OP) {
             // quit a group
             cd.quitGroup(gname);
         } else if (idop == CREATE_GROUP_OP) {
             // create a groups
+            if(cd.createGroup(gname) == false)
+                cd.joinGroup(gname);
         }
         //}
     }
