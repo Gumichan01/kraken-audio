@@ -109,8 +109,11 @@ public class BroadcastService implements Runnable {
         while (i < ld.size() && !ld.get(i).getName().equals(s))
             i++;
 
-        if (i < ld.size())
+        if (i < ld.size()){
+
+            Log.i("GROUP", ld.get(i).toString());
             dev = ld.get(i);
+        }
         else
             return false;
 
