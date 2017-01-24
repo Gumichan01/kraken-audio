@@ -135,7 +135,7 @@ public class GraphActivity extends Activity
             Log.i("GROUP_CONTENT", "no device");
 
         UDPReceiver udpr = new UDPReceiver(this, std);
-        udpr.sendMessage(new DeviceData("toto","192.168.43.1",2408,2409),"LISTEN kenny\r\n");
+        udpr.launchedReceiver();
     }
 
 
