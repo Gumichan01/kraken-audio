@@ -65,7 +65,7 @@ Rejoindre un groupe spécifique:
 
 Quitter un groupe:
 
-    QGRP nom_groupe /// QGRP : Quit GRouP
+    QGRP nom_groupe nom_appareil /// QGRP : Quit GRouP
 
 Fermer la connexion:
 
