@@ -1,6 +1,5 @@
 package com.pl.multicast.kraken;
 
-import android.bluetooth.BluetoothClass;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -20,32 +19,36 @@ public class UDPReceiver {
     private BroadcastData std;
     private boolean launched;
 
-    public UDPReceiver(BroadcastData b){
+    public UDPReceiver(BroadcastData b) {
         std = b;
         launched = false;
     }
 
-    public void launchedReceiver(){
-
+    public void launchedReceiver() {
+        /// @// TODO: 24/01/2017 Receive the stream
     }
 
-    public void sendMessage(DeviceData d, String str){
-        char[] buf = new char[1024];
-        try {
-            Log.i("Group","connection to " + d.getAddr() + ":" + d.getPort());
-            Socket s = new Socket(d.getAddr(), d.getPort());
+    public void sendMessage(final DeviceData d, final String str) {
 
-            PrintWriter writer = new PrintWriter(new OutputStreamWriter(s.getOutputStream()));
-            BufferedReader reader = new BufferedReader(new InputStreamReader(s.getInputStream()));
-            writer.write(str);
-            writer.flush();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Log.i("GROUP", "UDP receiver - connection to " + d.getAddr() + ":" + d.getPort());
+                    Socket s = new Socket(d.getAddr(), d.getPort());
 
-            String rstring = reader.readLine();
-            Log.i("Group","msg: " + rstring);
-            //if(rstring.equals(BroadcastService.ACK))
+                    PrintWriter writer = new PrintWriter(new OutputStreamWriter(s.getOutputStream()));
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(s.getInputStream()));
+                    writer.write(str);
+                    writer.flush();
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+                    String rstring = reader.readLine();
+                    Log.i("GROUP", "UDP receiver - msg: " + rstring);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 }
