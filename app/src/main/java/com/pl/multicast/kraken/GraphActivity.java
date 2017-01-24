@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -133,8 +134,9 @@ public class GraphActivity extends Activity
         } else
             Log.i("GROUP_CONTENT", "no device");
 
-        UDPReceiver udpr = new UDPReceiver(std);
-        udpr.sendMessage(new DeviceData("toto","192.168.43.1",2408,2409),"LISTEN kenny\r\n");
+        UDPReceiver udpr = new UDPReceiver(this, std);
+        //udpr.sendMessage(new DeviceData("toto","192.168.43.1",2408,2409),"LISTEN kenny\r\n");
+        udpr.sendMessage(new DeviceData("toto","192.168.43.1",2408,2409),"LISTEN gt-i8190\r\n");
     }
 
 
@@ -203,7 +205,6 @@ public class GraphActivity extends Activity
     /**
      * Button action
      **/
-
     public void broadcastText(View v) {
 
         EditText edt = (EditText) findViewById(R.id.txtsend);
@@ -212,11 +213,16 @@ public class GraphActivity extends Activity
         std.setText(s);
         Log.i("GROUP", "Send text END");
 
-        /** Display the text in the ListView */
+        Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
+    }
+
+    public void receiveText(String text){
+
         ListView lstv = (ListView) findViewById(R.id.txtrecv);
-        ltext.add(s);
+        ltext.add(text);
         lstv.setAdapter(new ArrayAdapter<String>(getApplicationContext(), R.layout.text_recv, ltext));
         lstv.setVisibility(View.VISIBLE);
+        Log.i("GROUP", "List updated. Added the following text: " + text);
     }
 
     /**
