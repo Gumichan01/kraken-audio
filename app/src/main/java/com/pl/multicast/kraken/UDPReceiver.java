@@ -30,7 +30,7 @@ public class UDPReceiver {
         graph = g;
     }
 
-    public void launchedReceiver() {
+    public void launchReceiver() {
         /// @// TODO: 24/01/2017 Receive the stream
 
         if (launched)
