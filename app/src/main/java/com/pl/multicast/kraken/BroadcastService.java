@@ -31,7 +31,7 @@ public class BroadcastService implements Runnable {
     private GraphActivity gactivity;
     private BroadcastData bdata;
 
-    public BroadcastService(GraphActivity g,BroadcastData dd) {
+    public BroadcastService(GraphActivity g, BroadcastData dd) {
         super();
         gactivity = g;
         bdata = dd;

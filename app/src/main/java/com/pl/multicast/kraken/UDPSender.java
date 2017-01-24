@@ -7,7 +7,6 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
-
 import java.net.SocketException;
 import java.util.ArrayList;
 
@@ -45,16 +44,16 @@ public class UDPSender extends Thread {
 
             while (std.getRun()) {
 
-                byte [] data;
+                byte[] data;
                 DatagramPacket p;
 
                 text = std.getText();
                 data = text.getBytes();
                 ArrayList<DeviceData> listeners = std.getListeners();
 
-                if(!text.equals(ptext)){
+                if (!text.equals(ptext)) {
 
-                    for(DeviceData dev: listeners){
+                    for (DeviceData dev : listeners) {
 
                         Log.i("GROUP", "SEND data to " + dev.getName());
                         try {

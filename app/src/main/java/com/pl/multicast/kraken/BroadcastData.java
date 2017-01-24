@@ -1,7 +1,9 @@
 package com.pl.multicast.kraken;
 
 import android.util.Log;
+
 import java.util.ArrayList;
+
 import datum.DeviceData;
 
 /**
@@ -32,7 +34,7 @@ public class BroadcastData {
     public synchronized void setRun(boolean r) {
 
         Log.i("GROUP", "Sync - running");
-        running  = r;
+        running = r;
     }
 
     public synchronized String getText() {

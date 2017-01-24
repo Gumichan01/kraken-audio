@@ -4,7 +4,6 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
@@ -29,7 +28,6 @@ import datum.GroupData;
 public class GraphActivity extends Activity
         implements NavDrawer.NavigationDrawerCallbacks {
 
-    private static final IntentFilter intentFilter = new IntentFilter();
     private static ArrayList<String> ltext = new ArrayList<>();
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
