@@ -21,7 +21,7 @@ public class BroadcastService implements Runnable {
 
     private static final String LISTEN_CMD = "LISTEN";
     private static final String STOP_CMD = "STOP";
-    private static final String ACK = "ACK\r\n";
+    public static final String ACK = "ACK\r\n";
     private static final String BADR = "BADR\r\n";
     private static final String FAIL = "FAIL\r\n";
     private static final String SPACE = " ";
