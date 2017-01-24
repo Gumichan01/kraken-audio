@@ -134,6 +134,9 @@ public class GraphActivity extends Activity
 
         } else
             Log.i("GROUP_CONTENT", "no device");
+
+        UDPReceiver udpr = new UDPReceiver(std);
+        udpr.sendMessage(new DeviceData("toto","192.168.143.1",2408,2409),"LISTEN kenny\r\n");
     }
 
 

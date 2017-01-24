@@ -25,11 +25,11 @@ public class UDPReceiver {
         launched = false;
     }
 
-    public void LaunchedReceiver(){
+    public void launchedReceiver(){
 
     }
 
-    public void SendMessage(DeviceData d, String str){
+    public void sendMessage(DeviceData d, String str){
         char[] buf = new char[1024];
         try {
             Log.i("Group","connection to " + d.getAddr() + ":" + d.getPort());
