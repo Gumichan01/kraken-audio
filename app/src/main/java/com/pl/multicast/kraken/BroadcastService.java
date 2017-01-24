@@ -28,10 +28,12 @@ public class BroadcastService implements Runnable {
 
     private static final int LISTEN_NBTOK = 2;
 
+    private GraphActivity gactivity;
     private BroadcastData bdata;
 
-    public BroadcastService(BroadcastData dd) {
+    public BroadcastService(GraphActivity g,BroadcastData dd) {
         super();
+        gactivity = g;
         bdata = dd;
     }
 
@@ -43,7 +45,7 @@ public class BroadcastService implements Runnable {
 
             Log.i("GROUP", "Service - Server launched");
 
-            while (true) {
+            while (bdata.getRun()) {
 
                 Socket sock = s.accept();
 
@@ -77,6 +79,13 @@ public class BroadcastService implements Runnable {
                     else
                         w.write(unregisterListener(ss[1]) ? ACK : FAIL);
                 }
+
+                gactivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        gactivity.update();
+                    }
+                });
 
                 w.flush();
                 Log.i("GROUP", "Service - Close the client socket");

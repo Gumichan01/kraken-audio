@@ -67,7 +67,7 @@ public class GraphActivity extends Activity
         st = new UDPBroadcast(std);
         st.start();
 
-        bservice = new Thread(new BroadcastService(std));
+        bservice = new Thread(new BroadcastService(this, std));
         bservice.start();
 
         // Fragment creation
@@ -91,7 +91,7 @@ public class GraphActivity extends Activity
         navigationReceivers.updateContent(new String[]{username});
 
         // Get the list of groups
-        // @// TODO: 18/01/2017 Display the groups in a box
+        // @// TODO: 18/01/2017 Display the groups in a box; handle the selection and the registering
         List<GroupData> g = nt.getGroups();
         Log.i("GROUP_DEV", "OK get groups done");
 
@@ -128,7 +128,7 @@ public class GraphActivity extends Activity
                 //std.addListener(dd);
             }
 
-            ld.add(0, new DeviceData(username,"",0,0));
+            ld.add(0, new DeviceData(username, "", 0, 0));
             navigationSenders.updateContent(ld.toArray());
             //navigationReceivers.updateContent(ld.toArray());
 
@@ -166,9 +166,16 @@ public class GraphActivity extends Activity
                 .commit();
     }
 
-    public void update(List devlist) {
+    public void update() {
 
-        //navigationSenders.updateContent(s);
+        List<DeviceData> ls = std.getSenders();
+        List<DeviceData> ll = std.getListeners();
+
+        ls.add(0, new DeviceData(username, "", 0, 0));
+        ll.add(0, new DeviceData(username, "", 0, 0));
+
+        navigationSenders.updateContent(ls.toArray());
+        navigationReceivers.updateContent(ll.toArray());
     }
 
     public String getUSR() {
@@ -178,7 +185,7 @@ public class GraphActivity extends Activity
 
     public void onSectionAttached(int number) {
 
-         List<DeviceData> ld = nt.getDevices();
+        List<DeviceData> ld = nt.getDevices();
 
         switch (number) {
             case 1:
@@ -186,7 +193,7 @@ public class GraphActivity extends Activity
                 break;
 
             default:
-                mTitle = ld.get(number-1).getName();
+                mTitle = ld.get(number - 1).getName();
                 break;
         }
     }

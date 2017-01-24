@@ -36,7 +36,6 @@ public class UDPBroadcast extends Thread {
 
     public void run() {
 
-        boolean go = true;
         String ptext = "";
         boolean tosend;
 
@@ -44,17 +43,10 @@ public class UDPBroadcast extends Thread {
             DatagramSocket srvsock = new DatagramSocket();
             Log.i("GROUP", "Server @" + InetAddress.getLocalHost().toString());
 
-            while (go) {
+            while (std.getRun()) {
 
                 byte [] data;
                 DatagramPacket p;
-
-                if (go == false) {
-
-                    Log.e("GROUP", "shut the server down");
-                    srvsock.close();
-                    break;
-                }
 
                 text = std.getText();
                 data = text.getBytes();
@@ -79,14 +71,13 @@ public class UDPBroadcast extends Thread {
                     }
                 }
 
-                go = std.getRun();
-
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException ie) {
                     ie.printStackTrace();
                 }
             }
+            Log.i("GROUP", "shut the server down");
 
         } catch (IOException e) {
 
