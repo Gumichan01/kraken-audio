@@ -1,3 +1,15 @@
+* <2017-01-25>
+** Fait:
+   - A essayer de programmer un client HTTP à la main.
+** A faire:
+   - Regarder HTTP pour de vrai
+   - Authentification sérieuse
+   - on ne doit pas pouvoir déconnecter un autre client que soi-même
+   - éclaircir l'usage des différents ports
+   - passer à HTTP(S)
+   - une version de l'application avec du texte plutôt que du son.
+   - une vidéo de démonstration
+   - démonstration en live
 * <2016-12-09>
 ** Fait:
    - sur le serveur d'annuaire : fait un protocole raisonnable.
