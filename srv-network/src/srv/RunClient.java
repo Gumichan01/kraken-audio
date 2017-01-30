@@ -66,7 +66,7 @@ public class RunClient implements HttpHandler {
 				}
 
 				parser = new MessageParser(strbuf);
-				
+
 				if (parser.isWellParsed()) {
 
 					respond();
@@ -88,65 +88,9 @@ public class RunClient implements HttpHandler {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-
-			// respond();
-		}
-
-	}
-
-	/**
-	 * 
-	 * @deprecated
-	 * 
-	 * */
-	public void run() {
-
-		if (reader == null || writer == null)
-			return;
-
-		int read;
-		char[] buffer;
-		String strbuf = null;
-		buffer = new char[1024];
-
-		try {
-
-			System.out.print("from " + socket.getInetAddress().getHostAddress()
-					+ ":" + socket.getPort() + ": ");
-			read = reader.read(buffer);
-
-			if (read == -1)
-				throw new IOException("data reading failed");
-
-			strbuf = new String(buffer).substring(0, read);
-			parser = new MessageParser(strbuf);
-
-			System.out.println(strbuf);
-
-			if (parser.isWellParsed()) {
-
-				respond();
-
-			} else {
-
-				writer.write(MessageParser.SRV_BADR + MessageParser.EOL);
-				writer.flush();
-			}
-
-		} catch (SocketTimeoutException | SocketException ste) {
-
-			ste.printStackTrace();
-
-		} catch (IOException e) {
-
-			e.printStackTrace();
-
-		} finally {
-
-			parser = null;
-			closeConnection();
 		}
 	}
+
 
 	private void respond() {
 
