@@ -22,8 +22,9 @@ public class RunClient implements HttpHandler {
 	private DirectoryServer srv;
 	private MessageParser parser = null;
 
-	public RunClient() {
+	public RunClient(DirectoryServer s) {
 
+		srv = s;
 	}
 
 	public void handle(HttpExchange t) {
@@ -32,6 +33,7 @@ public class RunClient implements HttpHandler {
 			return;
 
 		response = null;
+		System.out.println("Request method : " + t.getRequestMethod());
 
 		if (t.getRequestMethod().equals(REQ_GET)
 				|| t.getRequestMethod().equals(REQ_POST)) {
@@ -49,7 +51,7 @@ public class RunClient implements HttpHandler {
 					strbuf = "";
 				else {
 					strbuf = new String(buffer).substring(0, read);
-					System.out.println(strbuf);
+					System.out.print("message: " + strbuf);
 				}
 
 				parser = new MessageParser(strbuf);
@@ -62,7 +64,7 @@ public class RunClient implements HttpHandler {
 				} else {
 
 					response = MessageParser.SRV_BADR + MessageParser.EOL;
-					res = HttpURLConnection.HTTP_BAD_REQUEST;
+					res = HttpURLConnection.HTTP_OK;
 				}
 
 				t.sendResponseHeaders(res, response.length());
@@ -70,7 +72,7 @@ public class RunClient implements HttpHandler {
 				os.write(response.getBytes());
 				os.flush();
 				os.close();
-				
+
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
