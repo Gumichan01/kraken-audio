@@ -19,7 +19,7 @@ public class RunClient implements HttpHandler {
 	private static final int BUFSIZE = 1024;
 	private static final String REQ_GET = "GET";
 	private static final String REQ_POST = "POST";
-	private static final String PROP_CONTENT = "Content-Length";
+	private static final String PROP_CONT = "Content-Length";
 
 	private String response;
 	private DirectoryServer srv;
@@ -50,18 +50,31 @@ public class RunClient implements HttpHandler {
 			int res = HttpURLConnection.HTTP_OK;
 
 			try {
-
+				// get the headers
 				Headers h = t.getRequestHeaders();
 
-				if (h.containsKey(PROP_CONTENT)) {
+				if (h != null) {
 
-					String s = h.get(PROP_CONTENT).get(0);
-					System.out.println(PROP_CONTENT + ": " + s);
+					Iterator<String> it = h.keySet().iterator();
 
-					try {
-						toread = Integer.parseInt(s);
-					} catch (NumberFormatException ne) {
-						ne.printStackTrace();
+					while (it.hasNext()) {
+
+						String k = it.next();
+
+						for (String v : h.get(k)) {
+
+							System.out.println(k + ": " + v.toString());
+						}
+					}
+
+					// Use the length of the content
+					if (h.containsKey(PROP_CONT)) {
+
+						try {
+							toread = Integer.parseInt(h.get(PROP_CONT).get(0));
+						} catch (NumberFormatException ne) {
+							ne.printStackTrace();
+						}
 					}
 				}
 
