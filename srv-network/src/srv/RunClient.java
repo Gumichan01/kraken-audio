@@ -36,6 +36,7 @@ public class RunClient implements HttpHandler {
 			return;
 
 		response = null;
+		int res = HttpURLConnection.HTTP_OK;
 		System.out.println("Request method : " + t.getRequestMethod());
 
 		if (t.getRequestMethod().equals(REQ_GET)
@@ -47,7 +48,6 @@ public class RunClient implements HttpHandler {
 			BufferedReader r = null;
 			char[] buffer = new char[BUFSIZE];
 			r = new BufferedReader(new InputStreamReader(t.getRequestBody()));
-			int res = HttpURLConnection.HTTP_OK;
 
 			try {
 				// get the headers
@@ -103,7 +103,17 @@ public class RunClient implements HttpHandler {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+
+		} else {
+			res = HttpURLConnection.HTTP_NOT_IMPLEMENTED;
+			try {
+				t.sendResponseHeaders(res, 0);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
+
+		t.close();
 	}
 
 	private void respond() {
