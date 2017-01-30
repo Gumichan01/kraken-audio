@@ -3,47 +3,102 @@ package srv;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.Iterator;
 
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
+import com.sun.net.httpserver.HttpServer;
+
 import datum.DeviceData;
-
 import parser.MessageParser;
+import sun.net.www.protocol.http.HttpURLConnection;
 
-public class RunClient implements Runnable {
+public class RunClient implements HttpHandler {
 
-	private static final int SRV_TIMEOUT = 0;
+	private static final String REQ_GET = "GET";
+	private static final String REQ_POST = "POST";
 
+	// / remove
 	private DirectoryServer srv;
 	private Socket socket;
 	private BufferedReader reader;
 	private PrintWriter writer;
+	// / end remove
+
+	String response;
 
 	boolean closed = false;
 	MessageParser parser = null;
 
-	public RunClient(DirectoryServer ds, Socket client) {
+	public RunClient() {
 
-		srv = ds;
-		socket = client;
-
-		try {
-
-			socket.setSoTimeout(SRV_TIMEOUT);
-
-			reader = new BufferedReader(new InputStreamReader(
-					socket.getInputStream()));
-			writer = new PrintWriter(socket.getOutputStream());
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
-	@Override
+	public void handle(HttpExchange t) {
+
+		if (t == null)
+			return;
+
+		response = null;
+
+		if (t.getRequestMethod().equals(REQ_GET)
+				|| t.getRequestMethod().equals(REQ_POST)) {
+
+			int read;
+			String strbuf = null;
+			BufferedReader r = null;
+			char[] buffer = new char[1024];
+			r = new BufferedReader(new InputStreamReader(t.getRequestBody()));
+
+			try {
+				read = r.read(buffer);
+
+				if (read == -1)
+					strbuf = "";
+				else {
+					new String(buffer).substring(0, read);
+					System.out.println(strbuf);
+				}
+
+				parser = new MessageParser(strbuf);
+				
+				if (parser.isWellParsed()) {
+
+					respond();
+
+				} else {
+
+					response = new StringBuilder(MessageParser.SRV_BADR)
+							.append(MessageParser.EOL).toString();
+
+					t.sendResponseHeaders(HttpURLConnection.HTTP_OK,
+							response.length());
+
+					OutputStream os = t.getResponseBody();
+					os.write(response.getBytes());
+					os.flush();
+					os.close();
+				}
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			// respond();
+		}
+
+	}
+
+	/**
+	 * 
+	 * @deprecated
+	 * 
+	 * */
 	public void run() {
 
 		if (reader == null || writer == null)
@@ -55,8 +110,9 @@ public class RunClient implements Runnable {
 		buffer = new char[1024];
 
 		try {
-			
-			System.out.print("from " + socket.getInetAddress().getHostAddress()+ ":" + socket.getPort() + ": ");
+
+			System.out.print("from " + socket.getInetAddress().getHostAddress()
+					+ ":" + socket.getPort() + ": ");
 			read = reader.read(buffer);
 
 			if (read == -1)
@@ -66,7 +122,7 @@ public class RunClient implements Runnable {
 			parser = new MessageParser(strbuf);
 
 			System.out.println(strbuf);
-			
+
 			if (parser.isWellParsed()) {
 
 				respond();
