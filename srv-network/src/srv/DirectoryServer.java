@@ -10,7 +10,7 @@ import com.sun.net.httpserver.HttpServer;
 public class DirectoryServer {
 
 	// private static final int BUFFER_SIZE = 1024;
-	private static final int SERVER_PORT = 8080;
+	private static final int SERVER_PORT = 8000;
 
 	HttpServer server;
 	private Hashtable<String, GroupInfo> groups;
