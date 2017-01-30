@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.Iterator;
 
+import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
@@ -15,8 +16,10 @@ import sun.net.www.protocol.http.HttpURLConnection;
 
 public class RunClient implements HttpHandler {
 
+	private static final int BUFSIZE = 1024;
 	private static final String REQ_GET = "GET";
 	private static final String REQ_POST = "POST";
+	private static final String PROP_CONTENT = "Content-Length";
 
 	private String response;
 	private DirectoryServer srv;
@@ -38,14 +41,31 @@ public class RunClient implements HttpHandler {
 		if (t.getRequestMethod().equals(REQ_GET)
 				|| t.getRequestMethod().equals(REQ_POST)) {
 
-			int read, res;
+			int read;
+			int toread = BUFSIZE;
 			String strbuf = null;
 			BufferedReader r = null;
-			char[] buffer = new char[1024];
+			char[] buffer = new char[BUFSIZE];
 			r = new BufferedReader(new InputStreamReader(t.getRequestBody()));
+			int res = HttpURLConnection.HTTP_OK;
 
 			try {
-				read = r.read(buffer);
+
+				Headers h = t.getRequestHeaders();
+
+				if (h.containsKey(PROP_CONTENT)) {
+
+					String s = h.get(PROP_CONTENT).get(0);
+					System.out.println(PROP_CONTENT + ": " + s);
+
+					try {
+						toread = Integer.parseInt(s);
+					} catch (NumberFormatException ne) {
+						ne.printStackTrace();
+					}
+				}
+
+				read = r.read(buffer, 0, toread);
 
 				if (read == -1)
 					strbuf = "";
@@ -56,16 +76,10 @@ public class RunClient implements HttpHandler {
 
 				parser = new MessageParser(strbuf);
 
-				if (parser.isWellParsed()) {
-
+				if (parser.isWellParsed())
 					respond();
-					res = HttpURLConnection.HTTP_OK;
-
-				} else {
-
+				else
 					response = MessageParser.SRV_BADR + MessageParser.EOL;
-					res = HttpURLConnection.HTTP_OK;
-				}
 
 				t.sendResponseHeaders(res, response.length());
 				OutputStream os = t.getResponseBody();
