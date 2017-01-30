@@ -48,7 +48,7 @@ public class RunClient implements HttpHandler {
 				if (read == -1)
 					strbuf = "";
 				else {
-					new String(buffer).substring(0, read);
+					strbuf = new String(buffer).substring(0, read);
 					System.out.println(strbuf);
 				}
 
