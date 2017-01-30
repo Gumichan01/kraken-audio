@@ -4,15 +4,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.net.Socket;
-import java.net.SocketException;
-import java.net.SocketTimeoutException;
 import java.util.Iterator;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import com.sun.net.httpserver.HttpServer;
 
 import datum.DeviceData;
 import parser.MessageParser;
@@ -23,17 +18,9 @@ public class RunClient implements HttpHandler {
 	private static final String REQ_GET = "GET";
 	private static final String REQ_POST = "POST";
 
-	// / remove
+	private String response;
 	private DirectoryServer srv;
-	private Socket socket;
-	private BufferedReader reader;
-	private PrintWriter writer;
-	// / end remove
-
-	String response;
-
-	boolean closed = false;
-	MessageParser parser = null;
+	private MessageParser parser = null;
 
 	public RunClient() {
 
@@ -49,7 +36,7 @@ public class RunClient implements HttpHandler {
 		if (t.getRequestMethod().equals(REQ_GET)
 				|| t.getRequestMethod().equals(REQ_POST)) {
 
-			int read;
+			int read, res;
 			String strbuf = null;
 			BufferedReader r = null;
 			char[] buffer = new char[1024];
@@ -70,27 +57,25 @@ public class RunClient implements HttpHandler {
 				if (parser.isWellParsed()) {
 
 					respond();
+					res = HttpURLConnection.HTTP_OK;
 
 				} else {
 
-					response = new StringBuilder(MessageParser.SRV_BADR)
-							.append(MessageParser.EOL).toString();
-
-					t.sendResponseHeaders(HttpURLConnection.HTTP_OK,
-							response.length());
-
-					OutputStream os = t.getResponseBody();
-					os.write(response.getBytes());
-					os.flush();
-					os.close();
+					response = MessageParser.SRV_BADR + MessageParser.EOL;
+					res = HttpURLConnection.HTTP_BAD_REQUEST;
 				}
 
+				t.sendResponseHeaders(res, response.length());
+				OutputStream os = t.getResponseBody();
+				os.write(response.getBytes());
+				os.flush();
+				os.close();
+				
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
 	}
-
 
 	private void respond() {
 
@@ -118,8 +103,7 @@ public class RunClient implements HttpHandler {
 
 		if (srv.getGroup(parser.getGroup()) != null) {
 
-			writer.write(MessageParser.SRV_FAIL + MessageParser.EOL);
-			writer.flush();
+			response = MessageParser.SRV_FAIL + MessageParser.EOL;
 			return;
 		}
 
@@ -130,53 +114,53 @@ public class RunClient implements HttpHandler {
 				new DeviceData(parser.getDevice(), parser.getIPaddr(), parser
 						.getPort(), parser.getBroadcastPort()))) {
 
-			writer.write(MessageParser.SRV_GCOK + MessageParser.EOL);
-			writer.flush();
+			response = MessageParser.SRV_GCOK + MessageParser.EOL;
 
 		} else {
 
-			writer.write(MessageParser.SRV_FAIL + MessageParser.EOL);
-			writer.flush();
+			response = MessageParser.SRV_FAIL + MessageParser.EOL;
 		}
 	}
 
 	private void groupListResponse() {
 
 		Iterator<String> it = srv.getIterator();
+		StringBuilder sb = new StringBuilder("");
 
 		while (it.hasNext()) {
 
-			writer.write(MessageParser.SRV_GDAT + " "
-					+ srv.getGroup(it.next()).toString() + MessageParser.EOL);
+			sb.append(MessageParser.SRV_GDAT);
+			sb.append(" ");
+			sb.append(srv.getGroup(it.next()).toString());
+			sb.append(MessageParser.EOL);
 		}
 
-		writer.write(MessageParser.SRV_EOTR + MessageParser.EOL);
-		writer.flush();
+		sb.append(MessageParser.SRV_EOTR).append(MessageParser.EOL);
+		response = sb.toString();
 	}
 
 	private void deviceListResponse() {
 
 		GroupInfo g = srv.getGroup(parser.getGroup());
+		StringBuilder sb = new StringBuilder("");
 
-		if (g == null) {
-
-			writer.write(MessageParser.SRV_FAIL + MessageParser.EOL);
-			writer.flush();
-
-		} else {
+		if (g == null)
+			response = MessageParser.SRV_FAIL + MessageParser.EOL;
+		else {
 
 			Iterator<String> it = g.getIterator();
 
 			while (it.hasNext()) {
 
 				String dname = it.next();
-
-				writer.write(MessageParser.SRV_DDAT + " "
-						+ g.getDevice(dname).toString() + MessageParser.EOL);
+				sb.append(MessageParser.SRV_DDAT);
+				sb.append(" ");
+				sb.append(g.getDevice(dname).toString());
+				sb.append(MessageParser.EOL);
 			}
 
-			writer.write(MessageParser.SRV_EOTR + MessageParser.EOL);
-			writer.flush();
+			sb.append(MessageParser.SRV_EOTR).append(MessageParser.EOL);
+			response = sb.toString();
 		}
 	}
 
@@ -184,23 +168,18 @@ public class RunClient implements HttpHandler {
 
 		GroupInfo g = srv.getGroup(parser.getGroup());
 
-		if (g == null) {
+		if (g == null)
+			response = MessageParser.SRV_FAIL + MessageParser.EOL;
+		else {
 
-			writer.write(MessageParser.SRV_FAIL + MessageParser.EOL);
-			writer.flush();
+			DeviceData d = new DeviceData(parser.getDevice(),
+					parser.getIPaddr(), parser.getPort(),
+					parser.getBroadcastPort());
 
-		} else if (g.addDevice(
-				parser.getDevice(),
-				new DeviceData(parser.getDevice(), parser.getIPaddr(), parser
-						.getPort(), parser.getBroadcastPort()))) {
+			boolean b = g.addDevice(parser.getDevice(), d);
 
-			writer.write(MessageParser.SRV_GJOK + MessageParser.EOL);
-			writer.flush();
-
-		} else {
-
-			writer.write(MessageParser.SRV_FAIL + MessageParser.EOL);
-			writer.flush();
+			response = (b ? MessageParser.SRV_GJOK : MessageParser.SRV_FAIL)
+					+ MessageParser.EOL;
 		}
 	}
 
@@ -208,41 +187,14 @@ public class RunClient implements HttpHandler {
 
 		GroupInfo g = srv.getGroup(parser.getGroup());
 
-		if (g == null) {
-
-			writer.write(MessageParser.SRV_FAIL + MessageParser.EOL);
-			writer.flush();
-
-		} else if (g.removeDevice(parser.getDevice())) {
+		if (g == null || !g.removeDevice(parser.getDevice()))
+			response = MessageParser.SRV_FAIL + MessageParser.EOL;
+		else {
 
 			if (g.nbDevices() == 0)
 				srv.destroyGroup(g.getName());
 
-			writer.write(MessageParser.SRV_QACK + MessageParser.EOL);
-			writer.flush();
-
-		} else {
-
-			writer.write(MessageParser.SRV_FAIL + MessageParser.EOL);
-			writer.flush();
+			response = MessageParser.SRV_QACK + MessageParser.EOL;
 		}
-	}
-
-	private void closeConnection() {
-
-		try {
-
-			reader.close();
-			writer.close();
-			socket.close();
-
-		} catch (IOException e) {
-			e.printStackTrace();
-
-		} finally {
-
-			closed = true;
-		}
-
 	}
 }
