@@ -37,10 +37,10 @@ public class RunClient implements HttpHandler {
 
 		response = null;
 		int res = HttpURLConnection.HTTP_OK;
-		System.out.println("Request method : " + t.getRequestMethod());
+		String req = t.getRequestMethod();
+		System.out.println("Request method : " + req);
 
-		if (t.getRequestMethod().equals(REQ_GET)
-				|| t.getRequestMethod().equals(REQ_POST)) {
+		if (req.equals(REQ_GET) || req.equals(REQ_POST)) {
 
 			int read;
 			int toread = BUFSIZE;
@@ -78,13 +78,14 @@ public class RunClient implements HttpHandler {
 					}
 				}
 
+				System.out.print("\n" + t.getRemoteAddress().toString());
 				read = r.read(buffer, 0, toread);
 
 				if (read == -1)
 					strbuf = "";
 				else {
 					strbuf = new String(buffer).substring(0, read);
-					System.out.print("message: " + strbuf);
+					System.out.print(": " + strbuf);
 				}
 
 				parser = new MessageParser(strbuf);
@@ -95,10 +96,14 @@ public class RunClient implements HttpHandler {
 					response = MessageParser.SRV_BADR + MessageParser.EOL;
 
 				t.sendResponseHeaders(res, response.length());
-				OutputStream os = t.getResponseBody();
-				os.write(response.getBytes());
-				os.flush();
-				os.close();
+
+				if (res == HttpURLConnection.HTTP_OK) {
+
+					OutputStream os = t.getResponseBody();
+					os.write(response.getBytes());
+					os.flush();
+					os.close();
+				}
 
 			} catch (IOException e) {
 				e.printStackTrace();
