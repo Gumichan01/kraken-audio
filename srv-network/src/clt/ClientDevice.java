@@ -97,9 +97,6 @@ public class ClientDevice {
 		if (gname == null)
 			return false;
 
-		boolean status = false;
-		char[] buffer = new char[1024];
-
 		StringBuilder st = new StringBuilder("");
 
 		st.append(MessageParser.CLIENT_CGRP + " ");
@@ -115,49 +112,6 @@ public class ClientDevice {
 			return parser.getHeader().contains(MessageParser.SRV_GCOK);
 		
 		return false;
-			//status = false;
-
-		/*try {
-
-			
-			 * socket = new Socket(InetAddress.getByName(SVHOST), SVPORT);
-			 * 
-			 * reader = new BufferedReader(new InputStreamReader(
-			 * socket.getInputStream())); writer = new PrintWriter(new
-			 * OutputStreamWriter( socket.getOutputStream()));
-			 * 
-			 * writer.write(MessageParser.CLIENT_CGRP + " " + gname + " " +
-			 * device_name + " " + ipaddr.getAddress().getHostAddress() + " " +
-			 * ipaddr.getPort() + " " + bport + MessageParser.EOL);
-			 * writer.flush();
-			 * 
-			 * int read = reader.read(buffer);
-			 * 
-			 * if (read == -1) status = false; else {
-			 * 
-			 * String strbuf = new String(buffer).substring(0, read);
-			 * MessageParser parser = new MessageParser(strbuf);
-			 * 
-			 * if (parser.isWellParsed()) {
-			 * 
-			 * if (parser.getHeader().contains(MessageParser.SRV_GCOK)) status =
-			 * true; else status = false; } else status = false; }
-			 * 
-			 * socket.close();
-			 
-
-		} catch (IOException e) {
-
-			e.printStackTrace();
-
-		} finally {
-
-			writer = null;
-			reader = null;
-			socket = null;
-		}*/
-
-		//return status;
 	}
 
 	public boolean joinGroup(String gname) {
@@ -165,54 +119,21 @@ public class ClientDevice {
 		if (gname == null)
 			return false;
 
-		boolean status = false;
-		char[] buffer = new char[1024];
+		StringBuilder st = new StringBuilder("");
 
-		try {
+		st.append(MessageParser.CLIENT_JGRP + " ");
+		st.append(gname + " " + device_name + " ");
+		st.append(ipaddr.getAddress().getHostAddress() + " ");
+		st.append(ipaddr.getPort() + " ");
+		st.append(bport + MessageParser.EOL);
 
-			socket = new Socket(InetAddress.getByName(SVHOST), SVPORT);
+		String result = connectionToServer(st.toString());
+		MessageParser parser = new MessageParser(result);
 
-			reader = new BufferedReader(new InputStreamReader(
-					socket.getInputStream()));
-			writer = new PrintWriter(new OutputStreamWriter(
-					socket.getOutputStream()));
-
-			writer.write(MessageParser.CLIENT_JGRP + " " + gname + " "
-					+ device_name + " " + ipaddr.getAddress().getHostAddress()
-					+ " " + ipaddr.getPort() + " " + bport + MessageParser.EOL);
-			writer.flush();
-
-			int read = reader.read(buffer);
-
-			if (read == -1)
-				status = false;
-
-			String strbuf = new String(buffer).substring(0, read);
-			MessageParser parser = new MessageParser(strbuf);
-
-			if (parser.isWellParsed()) {
-
-				if (parser.getHeader().contains(MessageParser.SRV_GJOK))
-					status = true;
-				else
-					status = false;
-			} else
-				status = false;
-
-			socket.close();
-
-		} catch (IOException e) {
-
-			e.printStackTrace();
-
-		} finally {
-
-			writer = null;
-			reader = null;
-			socket = null;
-		}
-
-		return status;
+		if (parser.isWellParsed())
+			return parser.getHeader().contains(MessageParser.SRV_GJOK);
+		
+		return false;
 	}
 
 	public boolean quitGroup(String gname) {
@@ -390,8 +311,9 @@ public class ClientDevice {
 
 	public static void main(String[] args) throws MalformedURLException {
 
-		ClientDevice c = new ClientDevice("toto", "192.168.48.2", 45621,2410);
-		System.out.println("create group: " + c.createGroup("toto@GT-01"));
+		//ClientDevice c = new ClientDevice("toto", "192.168.48.2", 45621,2410);
+		//System.out.println("create group: " + c.createGroup("toto@GT-01"));
+		new ClientDevice("lana", "192.168.48.4", 45645, 2410).joinGroup("toto@GT-01");
 		/*
 		 * ClientDevice c = new ClientDevice("toto", "192.168.48.2", 45621,
 		 * 2410);
