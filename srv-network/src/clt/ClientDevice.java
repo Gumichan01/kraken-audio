@@ -22,12 +22,11 @@ import datum.GroupData;
 public class ClientDevice {
 
 	// Server information
-	private static final String SVHOST = "localhost";
-	private static final int SVPORT = 8080;
+	
+	private static final String SVHOST = "http://localhost:8000";
+	private static final int SVPORT = 8080;	// REMOVE
 
 	private URL url;
-	private HttpURLConnection connection;
-
 	private Socket socket;
 	private BufferedReader reader;
 	private PrintWriter writer;
@@ -38,18 +37,15 @@ public class ClientDevice {
 	public ClientDevice(String name, String addr, int port, int bport)
 			throws MalformedURLException {
 
-		url = new URL("http://localhost:8000");
+		url = new URL(SVHOST);
 		this.device_name = name;
 		this.ipaddr = new InetSocketAddress(addr, port);
 		this.bport = bport;
-		// socket = null;
-		// reader = null;
-		// writer = null;
 	}
 
 	private String connectionToServer(String msg) {
 
-		HttpURLConnection connection;
+		HttpURLConnection connection = null;
 
 		try {
 			connection = (HttpURLConnection) url.openConnection();
@@ -87,6 +83,10 @@ public class ClientDevice {
 		} catch (IOException e) {
 			e.printStackTrace();
 			return null;
+		} finally {
+
+			if (connection != null)
+				connection.disconnect();
 		}
 
 		return null;
@@ -110,7 +110,7 @@ public class ClientDevice {
 
 		if (parser.isWellParsed())
 			return parser.getHeader().contains(MessageParser.SRV_GCOK);
-		
+
 		return false;
 	}
 
@@ -132,7 +132,7 @@ public class ClientDevice {
 
 		if (parser.isWellParsed())
 			return parser.getHeader().contains(MessageParser.SRV_GJOK);
-		
+
 		return false;
 	}
 
@@ -141,53 +141,18 @@ public class ClientDevice {
 		if (gname == null)
 			return false;
 
-		boolean status = false;
-		char[] buffer = new char[1024];
+		StringBuilder st = new StringBuilder("");
 
-		try {
+		st.append(MessageParser.CLIENT_QGRP + " ");
+		st.append(gname + " " + device_name + MessageParser.EOL);
 
-			socket = new Socket(InetAddress.getByName(SVHOST), SVPORT);
+		String result = connectionToServer(st.toString());
+		MessageParser parser = new MessageParser(result);
 
-			reader = new BufferedReader(new InputStreamReader(
-					socket.getInputStream()));
-			writer = new PrintWriter(new OutputStreamWriter(
-					socket.getOutputStream()));
+		if (parser.isWellParsed())
+			return parser.getHeader().contains(MessageParser.SRV_QACK);
 
-			writer.write(MessageParser.CLIENT_QGRP + " " + gname + " "
-					+ device_name + MessageParser.EOL);
-			writer.flush();
-
-			int read = reader.read(buffer);
-
-			if (read == -1)
-				status = false;
-
-			String strbuf = new String(buffer).substring(0, read);
-			MessageParser parser = new MessageParser(strbuf);
-
-			if (parser.isWellParsed()) {
-
-				if (parser.getHeader().contains(MessageParser.SRV_QACK))
-					status = true;
-				else
-					status = false;
-			} else
-				status = false;
-
-			socket.close();
-
-		} catch (IOException e) {
-
-			e.printStackTrace();
-
-		} finally {
-
-			writer = null;
-			reader = null;
-			socket = null;
-		}
-
-		return status;
+		return false;
 	}
 
 	public List<GroupData> groupList() {
@@ -311,9 +276,13 @@ public class ClientDevice {
 
 	public static void main(String[] args) throws MalformedURLException {
 
-		//ClientDevice c = new ClientDevice("toto", "192.168.48.2", 45621,2410);
-		//System.out.println("create group: " + c.createGroup("toto@GT-01"));
-		new ClientDevice("lana", "192.168.48.4", 45645, 2410).joinGroup("toto@GT-01");
+		// ClientDevice c = new ClientDevice("toto", "192.168.48.2",
+		// 45621,2410);
+		// System.out.println("create group: " + c.createGroup("toto@GT-01"));
+		new ClientDevice("lana", "192.168.48.4", 45645, 2410)
+				.joinGroup("toto@GT-01");
+		new ClientDevice("lana", "192.168.48.4", 45645, 2410)
+				.quitGroup("toto@GT-01");
 		/*
 		 * ClientDevice c = new ClientDevice("toto", "192.168.48.2", 45621,
 		 * 2410);
