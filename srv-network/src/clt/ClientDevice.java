@@ -43,9 +43,11 @@ public class ClientDevice {
 		this.bport = bport;
 	}
 
+	@SuppressWarnings("finally")
 	private String connectionToServer(String msg) {
 
 		HttpURLConnection connection = null;
+		StringBuilder stbuild = null;
 
 		try {
 			connection = (HttpURLConnection) url.openConnection();
@@ -66,14 +68,13 @@ public class ClientDevice {
 						connection.getInputStream()));
 
 				String line = null;
-				StringBuilder stbuild = new StringBuilder("");
+				stbuild = new StringBuilder("");
 
 				while ((line = reader.readLine()) != null) {
 					stbuild.append(line).append(MessageParser.EOL);
 				}
 
 				System.out.println(stbuild.toString());
-				return stbuild.toString();
 
 			} else {
 				System.err.println("response code: "
@@ -82,14 +83,13 @@ public class ClientDevice {
 
 		} catch (IOException e) {
 			e.printStackTrace();
-			return null;
 		} finally {
 
 			if (connection != null)
 				connection.disconnect();
+			
+			return stbuild == null ? null : stbuild.toString();
 		}
-
-		return null;
 	}
 
 	public boolean createGroup(String gname) {
