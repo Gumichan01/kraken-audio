@@ -12,14 +12,14 @@ public class DirectoryServer {
 	// private static final int BUFFER_SIZE = 1024;
 	private static final int SERVER_PORT = 8000;
 
-	HttpServer server;
+	private HttpServer server;
 	private Hashtable<String, GroupInfo> groups;
 
 	public DirectoryServer() throws Exception {
 		groups = new Hashtable<String, GroupInfo>();
 
 		server = HttpServer.create(new InetSocketAddress(SERVER_PORT), 0);
-		server.createContext("/", new RunClient());
+		server.createContext("/", new RunClient(this));
 		server.setExecutor(null); // creates a default executor
 		System.out.println("The server is running");
 	}
@@ -46,7 +46,6 @@ public class DirectoryServer {
 			ne.printStackTrace();
 			return false;
 		}
-
 	}
 
 	public boolean destroyGroup(String name) {
@@ -66,7 +65,6 @@ public class DirectoryServer {
 			ne.printStackTrace();
 			return false;
 		}
-
 	}
 
 	public GroupInfo getGroup(String key) {
@@ -93,10 +91,10 @@ public class DirectoryServer {
 	}
 
 	// Uncomment this block in order to test the class
-	public static void main(String[] args) throws Exception {
+	/*public static void main(String[] args) throws Exception {
 
 		// PRODUCTION CODE
 		new DirectoryServer().launch();
-	}
+	}*/
 
 }
