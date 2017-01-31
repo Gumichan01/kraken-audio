@@ -14,6 +14,7 @@ import java.net.Socket;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import parser.MessageParser;
 import datum.DeviceData;
@@ -22,9 +23,9 @@ import datum.GroupData;
 public class ClientDevice {
 
 	// Server information
-	
+
 	private static final String SVHOST = "http://localhost:8000";
-	private static final int SVPORT = 8080;	// REMOVE
+	private static final int SVPORT = 8080; // REMOVE
 
 	private URL url;
 	private Socket socket;
@@ -87,7 +88,7 @@ public class ClientDevice {
 
 			if (connection != null)
 				connection.disconnect();
-			
+
 			return stbuild == null ? null : stbuild.toString();
 		}
 	}
@@ -157,59 +158,39 @@ public class ClientDevice {
 
 	public List<GroupData> groupList() {
 
-		boolean status = false;
-		boolean go = true;
+		StringBuilder st = new StringBuilder("");
 		List<GroupData> group = new ArrayList<>();
 
-		try {
+		st.append(MessageParser.CLIENT_GRPL);
+		st.append(MessageParser.EOL);
 
-			socket = new Socket(InetAddress.getByName(SVHOST), SVPORT);
+		String result = connectionToServer(st.toString());
+		Pattern p = Pattern.compile(MessageParser.EOL);
+		String[] tokens = p.split(result);
 
-			reader = new BufferedReader(new InputStreamReader(
-					socket.getInputStream()));
-			writer = new PrintWriter(new OutputStreamWriter(
-					socket.getOutputStream()));
+		if (tokens == null)
+			return null;
 
-			writer.write(MessageParser.CLIENT_GRPL + MessageParser.EOL);
-			writer.flush();
+		for (String s : tokens) {
 
-			while (go) {
+			MessageParser parser = new MessageParser(s);
 
-				String strbuf = reader.readLine();
-				MessageParser parser = new MessageParser(strbuf);
+			if (parser.isWellParsed()) {
 
-				if (parser.isWellParsed()) {
+				if (parser.getHeader().contains(MessageParser.SRV_GDAT)) {
 
-					if (parser.getHeader().contains(MessageParser.SRV_GDAT)) {
+					group.add(new GroupData(parser.getGroup(), parser
+							.getNumberOfDevices()));
 
-						group.add(new GroupData(parser.getGroup(), parser
-								.getNumberOfDevices()));
-
-					} else if (parser.getHeader().contains(
-							MessageParser.SRV_EOTR)) {
-
-						status = true;
-						go = false;
-					} else
-						go = false;
-				} else
-					go = false;
+				} else if (parser.getHeader().contains(MessageParser.SRV_EOTR))
+					break;
+				else
+					return null;
 			}
 
-			socket.close();
-
-		} catch (IOException e) {
-
-			e.printStackTrace();
-
-		} finally {
-
-			writer = null;
-			reader = null;
-			socket = null;
 		}
 
-		return status ? group : null;
+		return group;
 	}
 
 	public List<DeviceData> deviceList(String gname) {
@@ -217,94 +198,64 @@ public class ClientDevice {
 		if (gname == null)
 			return null;
 
-		boolean status = false;
-		boolean go = true;
+		StringBuilder st = new StringBuilder("");
 		List<DeviceData> devices = new ArrayList<>();
 
-		try {
+		st.append(MessageParser.CLIENT_DEVL + " ");
+		st.append(gname + " ");
+		st.append(MessageParser.EOL);
 
-			socket = new Socket(InetAddress.getByName(SVHOST), SVPORT);
+		String result = connectionToServer(st.toString());
+		Pattern p = Pattern.compile(MessageParser.EOL);
+		String[] tokens = p.split(result);
 
-			reader = new BufferedReader(new InputStreamReader(
-					socket.getInputStream()));
-			writer = new PrintWriter(new OutputStreamWriter(
-					socket.getOutputStream()));
+		if (tokens == null)
+			return null;
 
-			writer.write(MessageParser.CLIENT_DEVL + " " + gname + " "
-					+ MessageParser.EOL);
-			writer.flush();
+		for (String s : tokens) {
 
-			while (go) {
+			MessageParser parser = new MessageParser(s);
 
-				String strbuf = reader.readLine();
-				MessageParser parser = new MessageParser(strbuf);
+			if (parser.isWellParsed()) {
 
-				if (parser.isWellParsed()) {
+				if (parser.getHeader().contains(MessageParser.SRV_DDAT)) {
 
-					if (parser.getHeader().contains(MessageParser.SRV_DDAT)) {
+					devices.add(new DeviceData(parser.getDevice(), parser
+							.getIPaddr(), parser.getPort(), parser
+							.getBroadcastPort()));
 
-						devices.add(new DeviceData(parser.getDevice(), parser
-								.getIPaddr(), parser.getPort(), parser
-								.getBroadcastPort()));
-
-					} else if (parser.getHeader().contains(
-							MessageParser.SRV_EOTR)) {
-
-						status = true;
-						go = false;
-					} else
-						go = false;
-				} else
-					go = false;
+				} else if (parser.getHeader().contains(MessageParser.SRV_EOTR))
+					break;
+				else
+					return null;
 			}
 
-			socket.close();
-
-		} catch (IOException e) {
-
-			e.printStackTrace();
-
-		} finally {
-
-			writer = null;
-			reader = null;
-			socket = null;
 		}
 
-		return status ? devices : null;
+		return devices;
 	}
 
 	public static void main(String[] args) throws MalformedURLException {
 
-		// ClientDevice c = new ClientDevice("toto", "192.168.48.2",
-		// 45621,2410);
-		// System.out.println("create group: " + c.createGroup("toto@GT-01"));
-		new ClientDevice("lana", "192.168.48.4", 45645, 2410)
-				.joinGroup("toto@GT-01");
-		new ClientDevice("lana", "192.168.48.4", 45645, 2410)
-				.quitGroup("toto@GT-01");
 		/*
 		 * ClientDevice c = new ClientDevice("toto", "192.168.48.2", 45621,
-		 * 2410);
-		 * 
-		 * System.out.println("create group: " + c.createGroup("toto@GT-01"));
-		 * new ClientDevice("lana", "192.168.48.4", 45645, 2410)
-		 * .joinGroup("toto@GT-01"); new ClientDevice("titi", "192.168.48.5",
-		 * 45652, 2410) .joinGroup("toto@GT-01");
+		 * 2410); // System.out.println("create group: " +
+		 * c.createGroup("toto@GT-01")); new ClientDevice("lana",
+		 * "192.168.48.4", 45645, 2410) .joinGroup("toto@GT-01"); new
+		 * ClientDevice("titi", "192.168.48.5", 45652, 2410)
+		 * .joinGroup("toto@GT-01");
 		 * 
 		 * List<GroupData> listgroup = c.groupList();
 		 * 
 		 * System.out.println("group list"); System.out.println("----------");
 		 * for (GroupData g : listgroup) { System.out.println(g.toString()); }
-		 * System.out.println("-----------");
-		 * 
-		 * List<DeviceData> listdev = c.deviceList("toto@GT-01");
+		 * System.out.println("-----------"); List<DeviceData> listdev =
+		 * c.deviceList("toto@GT-01");
 		 * 
 		 * System.out.println("device list"); System.out.println("-----------");
 		 * for (DeviceData d : listdev) { System.out.println(d.toString()); }
 		 * System.out.println("-----------");
 		 */
-
 	}
 
 }
