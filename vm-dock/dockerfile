@@ -4,8 +4,9 @@
 #   sudo docker images                      // Lister les images
 #   sudo docker rmi <node>                  // Supprimer une image
 
-FROM ubuntu:12.04
+FROM ubuntu:latest
 MAINTAINER Luxon JEAN-PIERRE <luxon.jean.pierre@gmail.com>
-RUN echo ----------------------------------------------------------------------- && \
-echo SUCCESS - Created the image \\\(^.^\)/ && \
-echo -----------------------------------------------------------------------
+RUN apt-get update && apt-get install -y openjdk-7-jre openjdk-7-jdk wget
+RUN wget --no-cache https://github.com/Gumichan01/gumichan01.github.io/raw/master/work/server.jar
+EXPOSE 80
+CMD java -jar server.jar
