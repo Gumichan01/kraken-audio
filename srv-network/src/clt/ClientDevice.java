@@ -4,13 +4,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.net.HttpURLConnection;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
-import java.net.Socket;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,14 +19,10 @@ import datum.GroupData;
 public class ClientDevice {
 
 	// Server information
-
 	private static final String SVHOST = "http://localhost:8000";
-	private static final int SVPORT = 8080; // REMOVE
 
 	private URL url;
-	private Socket socket;
 	private BufferedReader reader;
-	private PrintWriter writer;
 	private String device_name;
 	private InetSocketAddress ipaddr;
 	private int bport;
@@ -235,27 +227,31 @@ public class ClientDevice {
 		return devices;
 	}
 
-	public static void main(String[] args) throws MalformedURLException {
+	/*public static void main(String[] args) throws MalformedURLException {
 
-		/*
-		 * ClientDevice c = new ClientDevice("toto", "192.168.48.2", 45621,
-		 * 2410); // System.out.println("create group: " +
-		 * c.createGroup("toto@GT-01")); new ClientDevice("lana",
-		 * "192.168.48.4", 45645, 2410) .joinGroup("toto@GT-01"); new
-		 * ClientDevice("titi", "192.168.48.5", 45652, 2410)
-		 * .joinGroup("toto@GT-01");
-		 * 
-		 * List<GroupData> listgroup = c.groupList();
-		 * 
-		 * System.out.println("group list"); System.out.println("----------");
-		 * for (GroupData g : listgroup) { System.out.println(g.toString()); }
-		 * System.out.println("-----------"); List<DeviceData> listdev =
-		 * c.deviceList("toto@GT-01");
-		 * 
-		 * System.out.println("device list"); System.out.println("-----------");
-		 * for (DeviceData d : listdev) { System.out.println(d.toString()); }
-		 * System.out.println("-----------");
-		 */
-	}
+		 ClientDevice c = new ClientDevice("toto", "192.168.48.2", 45621,
+		 2410);
+		 System.out.println("create group: " + c.createGroup("toto@GT-01"));
+		 new ClientDevice("lana", "192.168.48.4", 45645, 2410)
+		 .joinGroup("toto@GT-01");
+		 new ClientDevice("titi", "192.168.48.5", 45652, 2410)
+		 .joinGroup("toto@GT-01");
 
+		 List<GroupData> listgroup = c.groupList();
+
+		 System.out.println("group list");
+		 System.out.println("----------");
+		 for (GroupData g : listgroup) {
+		 System.out.println(g.toString());
+		 }
+		 System.out.println("-----------");
+		 List<DeviceData> listdev = c.deviceList("toto@GT-01");
+
+		 System.out.println("device list");
+		 System.out.println("-----------");
+		 for (DeviceData d : listdev) {
+		 System.out.println(d.toString());
+		 }
+		 System.out.println("-----------");
+	}*/
 }
