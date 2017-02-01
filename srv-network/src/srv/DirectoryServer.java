@@ -91,10 +91,10 @@ public class DirectoryServer {
 	}
 
 	// Uncomment this block in order to test the class
-	/*public static void main(String[] args) throws Exception {
+	public static void main(String[] args) throws Exception {
 
 		// PRODUCTION CODE
 		new DirectoryServer().launch();
-	}*/
+	}
 
 }
