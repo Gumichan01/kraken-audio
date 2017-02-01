@@ -38,7 +38,7 @@ public class RunClient implements HttpHandler {
 		response = null;
 		int res = HttpURLConnection.HTTP_OK;
 		String req = t.getRequestMethod();
-		System.out.println("Request method : " + req);
+		System.out.println(" - " + req + " - ");
 
 		if (req.equals(REQ_GET) || req.equals(REQ_POST)) {
 
@@ -78,14 +78,13 @@ public class RunClient implements HttpHandler {
 					}
 				}
 
-				System.out.print("\n" + t.getRemoteAddress().toString());
 				read = r.read(buffer, 0, toread);
 
 				if (read == -1)
 					strbuf = "";
 				else {
 					strbuf = new String(buffer).substring(0, read);
-					System.out.print(": " + strbuf);
+					System.out.print(t.getRemoteAddress().toString() + ": " + strbuf);
 				}
 
 				parser = new MessageParser(strbuf);
