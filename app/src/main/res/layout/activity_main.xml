@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
+
     android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -13,7 +13,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
         android:orientation="horizontal">
 
         <TextView
@@ -33,13 +32,51 @@
             android:lines="1" />
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="12dp"
+            android:text="Group name(optional): "
+            android:textSize="18dp" />
+
+        <EditText
+            android:id="@+id/usr"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Group name (for creating a new group)"
+            android:imeOptions="actionNext"
+            android:inputType="text"
+            android:lines="1" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
         <Button
             android:id="@+id/bouton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:onClick="mix"
-            android:text="Mix"
+            android:text="Create group"
             android:textSize="18dp" />
+
+        <Button
+            android:id="@+id/bouton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Join Group"
+            android:textSize="18dp" />
+
+        </LinearLayout>
 
 </LinearLayout>
