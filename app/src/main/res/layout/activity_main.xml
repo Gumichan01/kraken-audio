@@ -45,7 +45,7 @@
             android:textSize="18dp" />
 
         <EditText
-            android:id="@+id/usr"
+            android:id="@+id/grp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Group name (for creating a new group)"
@@ -61,7 +61,7 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/bouton"
+            android:id="@+id/cgrp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -70,11 +70,12 @@
             android:textSize="18dp" />
 
         <Button
-            android:id="@+id/bouton"
+            android:id="@+id/jgrp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="Join Group"
+            android:onClick="mix"
             android:textSize="18dp" />
 
         </LinearLayout>

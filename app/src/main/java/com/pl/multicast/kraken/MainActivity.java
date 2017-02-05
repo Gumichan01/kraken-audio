@@ -3,19 +3,12 @@ package com.pl.multicast.kraken;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.Toast;
-
-import java.util.Iterator;
-import java.util.List;
-
-import datum.*;
-import clt.*;
 
 public class MainActivity extends Activity {
 
@@ -51,16 +44,47 @@ public class MainActivity extends Activity {
 
 
     public void mix(View v) {
-        Intent intent = new Intent(this, GraphActivity.class);
 
+        int id = v.getId();
         EditText tv = (EditText) findViewById(R.id.usr);
-        String s = tv.getText().toString();
 
-        if(s.isEmpty())
-            Toast.makeText(this, "Empty string", Toast.LENGTH_SHORT).show();
+        if (tv == null)
+            Log.e(this.getLocalClassName(), "Internal error - usr: no edit text");
         else {
-            intent.putExtra(USRNAME, s);
-            startActivity(intent);
+
+            String s = tv.getText().toString();
+
+            if (s.isEmpty())
+                Toast.makeText(this, "Empty string", Toast.LENGTH_SHORT).show();
+            else {
+
+                Intent intent = new Intent(this, GraphActivity.class);
+
+                if (id == R.id.cgrp) {
+
+                    EditText gtv = (EditText) findViewById(R.id.grp);
+
+                    if (gtv == null || gtv.getText().toString().isEmpty())
+                        Toast.makeText(this, "Empty string\n In order to create a group, you must speciify the name",
+                                Toast.LENGTH_LONG).show();
+                        //Log.e(this.getLocalClassName(), "Internal error - grp: no edit text");
+                    else {
+                        // TODO: 05/02/2017 create group in the directory server
+                    }
+
+                } else if (id == R.id.jgrp) {
+
+                    // TODO: 05/02/2017 join a group in the server
+                }
+
+                //intent.putExtra(USRNAME, s);
+                //startActivity(intent);
+            }
         }
+
+        if (id == R.id.cgrp)
+            Log.i(this.getLocalClassName(), "cgrp");
+        else if (id == R.id.jgrp)
+            Log.i(this.getLocalClassName(), "jgrp");
     }
 }
