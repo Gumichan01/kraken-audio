@@ -25,31 +25,43 @@ public class Hackojo {
     private List<DeviceData> ddata;
     private ClientDevice cd;
 
-    public Hackojo(String name, String addr, int port, int bport) throws MalformedURLException {
+    public Hackojo(DeviceData ddata, String gn) throws MalformedURLException {
 
-        gname = null;
-        cd = new ClientDevice(name, addr, port, bport);
+        gname = gn;
+        cd = new ClientDevice(ddata.getName(), ddata.getAddr(), ddata.getPort(), ddata.getBroadcastPort());
     }
 
-    public void runOperation(int idop) {
+    public void runOperation(final int idop) {
 
-        if (idop == GROUP_OP) {
-            // get the groups
-            gdata = cd.groupList();
-        } else if (idop == DEVICE_OP) {
-            // get the devices of a group
-            ddata = cd.deviceList(gname);
-        } else if (idop == JOIN_GROUP_OP) {
-            // join a group
-            if (cd.joinGroup(gname) == false)
-                cd.createGroup(gname);
-        } else if (idop == QUIT_GROUP_OP) {
-            // quit a group
-            cd.quitGroup(gname);
-        } else if (idop == CREATE_GROUP_OP) {
-            // create a groups
-            if(cd.createGroup(gname) == false)
-                cd.joinGroup(gname);
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (idop == GROUP_OP) {
+                    // get the groups
+                    gdata = cd.groupList();
+                } else if (idop == DEVICE_OP) {
+                    // get the devices of a group
+                    ddata = cd.deviceList(gname);
+                } else if (idop == JOIN_GROUP_OP) {
+                    // join a group
+                    if (cd.joinGroup(gname) == false)
+                        cd.createGroup(gname);
+                } else if (idop == QUIT_GROUP_OP) {
+                    // quit a group
+                    cd.quitGroup(gname);
+                } else if (idop == CREATE_GROUP_OP) {
+                    // create a groups
+                    if (cd.createGroup(gname) == false)
+                        cd.joinGroup(gname);
+                }
+            }
+        });
+
+        t.start();
+        try {
+            t.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 

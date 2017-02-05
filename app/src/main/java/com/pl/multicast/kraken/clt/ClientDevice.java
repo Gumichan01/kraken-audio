@@ -73,7 +73,7 @@ public class ClientDevice {
 					stbuild.append(line).append(MessageParser.EOL);
 				}
 
-				System.out.println(stbuild.toString());
+                Log.i("kraken-NETWORK", stbuild.toString());
 
 			} else {
                 Log.e("kraken-NETWORK", "response code: "
