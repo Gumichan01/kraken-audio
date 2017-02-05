@@ -22,7 +22,6 @@ import java.util.Enumeration;
 
 public class MainActivity extends Activity {
 
-    //public static final String USRNAME = "USRNAME";
     public static final String GRPNAME = "GRPNAME";
     public static final String DEVICEDATA = "DEVICEDATA";
 

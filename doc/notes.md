@@ -4,7 +4,7 @@
 ## UI ##
 
 - écran creation de nom (DONE)
-- écran creation de groupe (TODO)
+- écran creation de groupe (DONE)
 
 > Info complémentaire
 
