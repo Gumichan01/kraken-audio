@@ -2,6 +2,7 @@ package com.pl.multicast.kraken;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -10,9 +11,20 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.pl.multicast.kraken.datum.DeviceData;
+
+import java.net.InetAddress;
+import java.net.MalformedURLException;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.Enumeration;
+
+
 public class MainActivity extends Activity {
 
-    public static final String USRNAME = "USRNAME";
+    //public static final String USRNAME = "USRNAME";
+    public static final String GRPNAME = "GRPNAME";
+    public static final String DEVICEDATA = "DEVICEDATA";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +55,7 @@ public class MainActivity extends Activity {
     }
 
 
-    public void mix(View v) {
+    public void mix(View v) throws MalformedURLException {
 
         int id = v.getId();
         EditText tv = (EditText) findViewById(R.id.usr);
@@ -52,39 +64,74 @@ public class MainActivity extends Activity {
             Log.e(this.getLocalClassName(), "Internal error - usr: no edit text");
         else {
 
-            String s = tv.getText().toString();
+            String susr = tv.getText().toString();
 
-            if (s.isEmpty())
+            if (susr.isEmpty())
                 Toast.makeText(this, "Empty string", Toast.LENGTH_SHORT).show();
             else {
 
+                String ipaddr = getIPAddress();
                 Intent intent = new Intent(this, GraphActivity.class);
+                susr += "@" + Build.MODEL;
 
                 if (id == R.id.cgrp) {
 
                     EditText gtv = (EditText) findViewById(R.id.grp);
 
                     if (gtv == null || gtv.getText().toString().isEmpty())
-                        Toast.makeText(this, "Empty string\n In order to create a group, you must speciify the name",
+                        Toast.makeText(this, "Empty string\n In order to create a group, you must specify the name",
                                 Toast.LENGTH_LONG).show();
-                        //Log.e(this.getLocalClassName(), "Internal error - grp: no edit text");
                     else {
-                        // TODO: 05/02/2017 create group in the directory server
+
+                        String gname = gtv.getText().toString();
+                        DeviceData dd = new DeviceData(susr, ipaddr, 2408, 2409);
+                        Log.i(this.getLocalClassName(), "group name: " + gname);
+                        Log.i(this.getLocalClassName(), "device: " + dd.toString());
+
+                        new Hackojo(dd, gname).runOperation(Hackojo.CREATE_GROUP_OP);
+                        intent.putExtra(GRPNAME, gname);
+                        intent.putExtra(DEVICEDATA, dd);
                     }
 
                 } else if (id == R.id.jgrp) {
 
                     // TODO: 05/02/2017 join a group in the server
+                    return;
+                } else {
+                    Log.i(this.getLocalClassName(), "Bad view");
+                    return;
                 }
 
-                //intent.putExtra(USRNAME, s);
-                //startActivity(intent);
+                startActivity(intent);
             }
         }
-
-        if (id == R.id.cgrp)
-            Log.i(this.getLocalClassName(), "cgrp");
-        else if (id == R.id.jgrp)
-            Log.i(this.getLocalClassName(), "jgrp");
     }
+
+    private String getIPAddress() {
+        String ip = null;
+        try {
+            Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+            while (interfaces.hasMoreElements()) {
+                NetworkInterface iface = interfaces.nextElement();
+                // filters out 127.0.0.1 and inactive interfaces
+                if (iface.isLoopback() || !iface.isUp())
+                    continue;
+
+                Enumeration<InetAddress> addresses = iface.getInetAddresses();
+                if (addresses.hasMoreElements()) {
+                    InetAddress addr = addresses.nextElement();
+                    ip = addr.getHostAddress();
+                    Log.i(this.getLocalClassName(), iface.getDisplayName() + " " + ip);
+                    break;
+                }
+            }
+
+        } catch (SocketException e) {
+            throw new RuntimeException(e);
+        } finally {
+            return ip;
+        }
+
+    }
+
 }

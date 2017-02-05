@@ -4,7 +4,6 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
@@ -18,12 +17,14 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.pl.multicast.kraken.datum.DeviceData;
+import com.pl.multicast.kraken.datum.GroupData;
+
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import datum.DeviceData;
-import datum.GroupData;
 
 
 public class GraphActivity extends Activity
@@ -40,36 +41,43 @@ public class GraphActivity extends Activity
      */
     private String mTitle;
     private String username;
+    private String gname;
+
+    // Communication point
+    Hackojo hack;
 
     // Threads
-    private RepositoryConnection nt;
-    private UDPSender st;
-    private Thread bservice;    // broadcast service
+    //private UDPSender st;
+    //private Thread bservice;    // broadcast service
 
     // Data
-    private BroadcastData std;
+    //private BroadcastData std;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_graph);
 
-        // Set the attributes
-        username = getIntent().getStringExtra(MainActivity.USRNAME) + "@" + Build.MODEL;
+        // Retrieve data from the main activity
+        DeviceData d = getIntent().getParcelableExtra(MainActivity.DEVICEDATA);
+        gname = getIntent().getStringExtra(MainActivity.GRPNAME);
+        username = d.getName();
         mTitle = username;
 
-        nt = new RepositoryConnection(username, "192.168.43.1", 2408, 2409);
-        nt.setOp(RepositoryConnection.GROUP_OP);    /* Get the groups */
-        new Thread(nt).start();
+        try {
+            hack = new Hackojo(d, gname);
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
 
-        std = new BroadcastData();
-        st = new UDPSender(std);
-        st.start();
+        //std = new BroadcastData();
+        //st = new UDPSender(std);
+        //st.start();
 
-        bservice = new Thread(new BroadcastService(this, std));
-        bservice.start();
+        //bservice = new Thread(new BroadcastService(this, std));
+        //bservice.start();
 
-        // Fragment creation
+        /** Fragment creation */
         navigationSenders = (NavDrawer)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
 
@@ -89,25 +97,28 @@ public class GraphActivity extends Activity
         navigationSenders.updateContent(new String[]{username});
         navigationReceivers.updateContent(new String[]{username});
 
-        // Get the list of groups
-        // @// TODO: 18/01/2017 Display the groups in a box; handle the selection and the registering
-        List<GroupData> g = nt.getGroups();
-        Log.i("GROUP_DEV", "OK get groups done");
+        /** Get devices */
+        hack.runOperation(Hackojo.DEVICE_OP);
+        List<DeviceData> ld = hack.getDevices();
 
-        if (g != null) {
+        if (ld != null) {
 
-            Iterator<GroupData> it = g.iterator();
+            Iterator<DeviceData> it = ld.iterator();
 
             while (it.hasNext()) {
-                Log.i("GROUP_DEV", it.next().toString());
+                DeviceData dd = it.next();
+                Log.i(this.getLocalClassName(), dd.toString());
             }
+
+            //ld.add(0, new DeviceData(username, "", 0, 0));
+            navigationSenders.updateContent(ld.toArray());
+            //navigationReceivers.updateContent(ld.toArray());
+
         } else
-            Log.i("GROUP_DEV", "empty group");
+            Log.i("GROUP_CONTENT", "no device");
 
         /// ONLY FOR TESTING THE BROADCAST
-        /*nt.setOp(RepositoryConnection.DEVICE_OP);
-        nt.setGroupName("test");
-        new Thread(nt).start();
+        /*
 
         try {
             Thread.sleep(100);
@@ -158,7 +169,7 @@ public class GraphActivity extends Activity
 
         super.onStop();
         Log.i("GROUP", "Stop the activity");
-        std.stopServer();
+        //std.stopServer();
     }
 
     @Override
@@ -172,14 +183,14 @@ public class GraphActivity extends Activity
 
     public void update() {
 
-        List<DeviceData> ls = std.getSenders();
-        List<DeviceData> ll = std.getListeners();
+        /*ArrayList<DeviceData> ls = std.getSenders();
+        ArrayList<DeviceData> ll = std.getListeners();
 
         ls.add(0, new DeviceData(username, "", 0, 0));
         ll.add(0, new DeviceData(username, "", 0, 0));
 
         navigationSenders.updateContent(ls.toArray());
-        navigationReceivers.updateContent(ll.toArray());
+        navigationReceivers.updateContent(ll.toArray());*/
     }
 
     public String getUSR() {
@@ -189,7 +200,7 @@ public class GraphActivity extends Activity
 
     public void onSectionAttached(int number) {
 
-        List<DeviceData> ld = nt.getDevices();
+        List<DeviceData> ld = null;//nt.getDevices();
 
         switch (number) {
             case 1:
@@ -211,13 +222,13 @@ public class GraphActivity extends Activity
         EditText edt = (EditText) findViewById(R.id.txtsend);
         String s = edt.getText().toString();
         Log.i("GROUP", "Send the following text: " + s);
-        std.setText(s);
+        //std.setText(s);
         Log.i("GROUP", "Send text END");
 
         Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
     }
 
-    public void receiveText(String text){
+    public void receiveText(String text) {
 
         ListView lstv = (ListView) findViewById(R.id.txtrecv);
         ltext.add(text);
