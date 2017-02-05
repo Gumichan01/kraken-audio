@@ -168,7 +168,8 @@ public class GraphActivity extends Activity
     public void onStop() {
 
         super.onStop();
-        Log.i("GROUP", "Stop the activity");
+        Log.i(this.getLocalClassName(), "Stop the activity");
+        hack.runOperation(Hackojo.QUIT_GROUP_OP);
         //std.stopServer();
     }
 
@@ -221,9 +222,9 @@ public class GraphActivity extends Activity
 
         EditText edt = (EditText) findViewById(R.id.txtsend);
         String s = edt.getText().toString();
-        Log.i("GROUP", "Send the following text: " + s);
+        Log.i(this.getLocalClassName(), "Send the following text: " + s);
         //std.setText(s);
-        Log.i("GROUP", "Send text END");
+        Log.i(this.getLocalClassName(), "Send text END");
 
         Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
     }
@@ -234,7 +235,7 @@ public class GraphActivity extends Activity
         ltext.add(text);
         lstv.setAdapter(new ArrayAdapter<String>(getApplicationContext(), R.layout.text_recv, ltext));
         lstv.setVisibility(View.VISIBLE);
-        Log.i("GROUP", "List updated. Added the following text: " + text);
+        Log.i(this.getLocalClassName(), "List updated. Added the following text: " + text);
     }
 
     /**
