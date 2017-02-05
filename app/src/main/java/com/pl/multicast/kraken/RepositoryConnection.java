@@ -11,7 +11,7 @@ import clt.ClientDevice;
 /**
  * Created by Luxon on 16/01/2017.
  */
-public class RepositoryConnection implements Runnable {
+public class RepositoryConnection{
 
     public static final int GROUP_OP = 0;
     public static final int DEVICE_OP = 1;
@@ -19,7 +19,6 @@ public class RepositoryConnection implements Runnable {
     public static final int QUIT_GROUP_OP = 3;
     public static final int CREATE_GROUP_OP = 4;
 
-    private int idop;
     private String gname;
     private List<GroupData> gdata;
     private List<DeviceData> ddata;
@@ -27,14 +26,11 @@ public class RepositoryConnection implements Runnable {
 
     public RepositoryConnection(String name, String addr, int port, int bport) {
 
-        idop = 0;
         gname = null;
         cd = new ClientDevice(name, addr, port, bport);
     }
 
-    public synchronized void run() {
-
-        //synchronized(this){
+    public void runOperation(int idop) {
 
         if (idop == GROUP_OP) {
             // get the groups
@@ -54,18 +50,6 @@ public class RepositoryConnection implements Runnable {
             if(cd.createGroup(gname) == false)
                 cd.joinGroup(gname);
         }
-        //}
-    }
-
-    public synchronized void setOp(int op) {
-
-        idop = op;
-    }
-
-    public synchronized void setGroupName(String name) {
-
-        if (name != null)
-            gname = name;
     }
 
     public synchronized List<GroupData> getGroups() {
