@@ -2,6 +2,8 @@ package com.pl.multicast.kraken;
 
 import android.util.Log;
 
+import com.pl.multicast.kraken.datum.DeviceData;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -12,7 +14,6 @@ import java.net.Socket;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import datum.DeviceData;
 
 /**
  * Created by Luxon on 19/01/2017.

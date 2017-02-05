@@ -21,7 +21,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import datum.DeviceData;
+import com.pl.multicast.kraken.datum.DeviceData;
 
 
 /**

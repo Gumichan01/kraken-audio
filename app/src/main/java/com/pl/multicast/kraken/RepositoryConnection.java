@@ -1,11 +1,12 @@
 package com.pl.multicast.kraken;
 
 
+import com.pl.multicast.kraken.datum.DeviceData;
+import com.pl.multicast.kraken.datum.GroupData;
+
 import java.util.List;
 
 import clt.ClientDevice;
-import datum.DeviceData;
-import datum.GroupData;
 
 /**
  * Created by Luxon on 16/01/2017.

@@ -2,9 +2,11 @@ package com.pl.multicast.kraken;
 
 import android.util.Log;
 
+import com.pl.multicast.kraken.datum.DeviceData;
+
 import java.util.ArrayList;
 
-import datum.DeviceData;
+
 
 /**
  * Created by Luxon on 19/01/2017.

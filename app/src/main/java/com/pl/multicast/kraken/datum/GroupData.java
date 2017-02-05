@@ -1,4 +1,4 @@
-package datum;
+package com.pl.multicast.kraken.datum;
 
 public class GroupData {
 

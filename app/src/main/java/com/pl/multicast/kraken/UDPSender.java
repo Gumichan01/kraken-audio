@@ -2,6 +2,8 @@ package com.pl.multicast.kraken;
 
 import android.util.Log;
 
+import com.pl.multicast.kraken.datum.DeviceData;
+
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -9,8 +11,6 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
 import java.util.ArrayList;
-
-import datum.DeviceData;
 
 
 /**
@@ -29,7 +29,7 @@ public class UDPSender extends Thread {
 
         super();
         std = s;
-        svthost = clt.ClientDevice.SVHOST;
+        svthost = null;//clt.ClientDevice.SVHOST;
 
     }
 

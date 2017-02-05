@@ -1,4 +1,4 @@
-package parser;
+package com.pl.multicast.kraken.parser;
 
 import java.net.InetSocketAddress;
 import java.util.regex.Pattern;
