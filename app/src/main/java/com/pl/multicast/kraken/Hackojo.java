@@ -11,7 +11,7 @@ import clt.ClientDevice;
 /**
  * Created by Luxon on 16/01/2017.
  */
-public class RepositoryConnection{
+public class Hackojo {
 
     public static final int GROUP_OP = 0;
     public static final int DEVICE_OP = 1;
@@ -24,7 +24,7 @@ public class RepositoryConnection{
     private List<DeviceData> ddata;
     private ClientDevice cd;
 
-    public RepositoryConnection(String name, String addr, int port, int bport) {
+    public Hackojo(String name, String addr, int port, int bport) {
 
         gname = null;
         cd = new ClientDevice(name, addr, port, bport);
