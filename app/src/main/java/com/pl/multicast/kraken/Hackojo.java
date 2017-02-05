@@ -1,12 +1,13 @@
 package com.pl.multicast.kraken;
 
 
+import com.pl.multicast.kraken.clt.ClientDevice;
 import com.pl.multicast.kraken.datum.DeviceData;
 import com.pl.multicast.kraken.datum.GroupData;
 
+import java.net.MalformedURLException;
 import java.util.List;
 
-import clt.ClientDevice;
 
 /**
  * Created by Luxon on 16/01/2017.
@@ -24,7 +25,7 @@ public class Hackojo {
     private List<DeviceData> ddata;
     private ClientDevice cd;
 
-    public Hackojo(String name, String addr, int port, int bport) {
+    public Hackojo(String name, String addr, int port, int bport) throws MalformedURLException {
 
         gname = null;
         cd = new ClientDevice(name, addr, port, bport);
