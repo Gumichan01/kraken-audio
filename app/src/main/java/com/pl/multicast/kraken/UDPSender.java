@@ -14,9 +14,13 @@ import java.util.ArrayList;
 
 
 /**
- * Created by Luxon on 18/01/2017.
+ * This class is reponsible of sending message using UDP
  */
 public class UDPSender extends Thread {
+
+    // TODO: 06/02/2017 Refactorize this class (UDPSendr is no longer a subclass of Thread)
+    // TODO: 06/02/2017 UDPSender is an Observer of GraphActivity and BoadcastService
+    // TODO: 06/02/2017 UDPSender send a message if and only if the activity notify it 
 
     private static final int SVTPORT = 2409;
     private static String svthost = "";
