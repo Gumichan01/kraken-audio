@@ -1,5 +1,6 @@
 package com.pl.multicast.kraken;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -14,6 +15,14 @@ public class JoinGroupDialogFragment extends DialogFragment {
 
     private static final String NAMES = "NAMES";
 
+    public interface JoinGroupDialogListener {
+
+        public void onItemSelected(DialogInterface dialog, String gname);
+    }
+
+
+    JoinGroupDialogListener jlistener;
+
     public static JoinGroupDialogFragment newInstance(String[] names) {
 
         JoinGroupDialogFragment f = new JoinGroupDialogFragment();
@@ -23,12 +32,11 @@ public class JoinGroupDialogFragment extends DialogFragment {
         return f;
     }
 
-
     @Override
     public Dialog onCreateDialog(Bundle saveInstanceState) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        String[] items = getArguments().getStringArray(NAMES);
+        final String[] items = getArguments().getStringArray(NAMES);
 
         // Title
         builder.setTitle(R.string.avgrp);
@@ -62,23 +70,8 @@ public class JoinGroupDialogFragment extends DialogFragment {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
 
-                    switch (which) {
-                        case 0:
-                            Log.i(this.getClass().getName(), "Read");
-                            break;
-
-                        case 1:
-                            Log.i(this.getClass().getName(), "Write");
-                            break;
-
-                        case 2:
-                            Log.i(this.getClass().getName(), "Delete");
-                            break;
-
-                        case 3:
-                            Log.i(this.getClass().getName(), "Create");
-                            break;
-                    }
+                    // TODO: 06/02/2017 JoinGroupDialogListener
+                    jlistener.onItemSelected(dialog, items[which]);
                 }
             });
 
@@ -86,6 +79,20 @@ public class JoinGroupDialogFragment extends DialogFragment {
         }
 
         return builder.create();
+    }
+
+    @Override
+    public void onAttach(Activity activity){
+        super.onAttach(activity);
+
+        try {
+
+            jlistener = (JoinGroupDialogListener) activity;
+
+        } catch (ClassCastException ce) {
+            throw new ClassCastException(activity.toString() + "must implement JoinGroupDialogListener");
+        }
+
     }
 
 }

@@ -1,6 +1,7 @@
 package com.pl.multicast.kraken;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,11 +24,13 @@ import java.util.Enumeration;
 import java.util.List;
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements JoinGroupDialogFragment.JoinGroupDialogListener {
 
     public static final String GRPNAME = "GRPNAME";
     public static final String DEVICEDATA = "DEVICEDATA";
     public static final String FRAG = "JOIN-GROUP-FRAG";
+    public static final int PORT = 2408;
+    public static final int BPORT = 2409;
 
     String usrname;
 
@@ -88,7 +91,7 @@ public class MainActivity extends Activity {
 
                         String ipaddr = getIPAddress();
                         String gname = gtv.getText().toString();
-                        DeviceData dd = new DeviceData(susr, ipaddr, 2408, 2409);
+                        DeviceData dd = new DeviceData(susr, ipaddr, PORT, BPORT);
                         Intent intent = new Intent(this, GraphActivity.class);
 
                         Log.i(this.getLocalClassName(), "group name: " + gname);
@@ -98,7 +101,7 @@ public class MainActivity extends Activity {
                         intent.putExtra(GRPNAME, gname);
                         intent.putExtra(DEVICEDATA, dd);
                         startActivity(intent);
-                    }
+                }
 
                 } else if (id == R.id.jgrp) {
 
@@ -118,23 +121,22 @@ public class MainActivity extends Activity {
 
     private void showDialog(List<GroupData> groups) {
 
-        // TODO: 06/02/2017 AlertDialog here
         JoinGroupDialogFragment fragment;
 
-        if(groups == null || groups.isEmpty())
+        if (groups == null || groups.isEmpty())
             fragment = JoinGroupDialogFragment.newInstance(null);
         else {
 
             List<String> strings = new ArrayList<>();
 
-            for(GroupData gd: groups) {
-                if(gd != null)
+            for (GroupData gd : groups) {
+                if (gd != null)
                     strings.add(gd.getName());
             }
 
             Log.i(this.getLocalClassName(), "There are a set of " + groups.size() + " group data");
             Log.i(this.getLocalClassName(), "There are " + strings.size() + " real groups");
-            String [] sarray = new String[strings.size()];
+            String[] sarray = new String[strings.size()];
             strings.toArray(sarray);
             fragment = JoinGroupDialogFragment.newInstance(sarray);
         }
@@ -142,6 +144,7 @@ public class MainActivity extends Activity {
         fragment.show(getFragmentManager(), FRAG);
     }
 
+    // TODO: 06/02/2017 Put this function in a separate class (commonOperations)
     private String getIPAddress() {
         String ip = null;
         try {
@@ -169,4 +172,32 @@ public class MainActivity extends Activity {
 
     }
 
+    @Override
+    public void onItemSelected(DialogInterface dialog, String gname) {
+
+        if(dialog == null || gname == null || gname.isEmpty())
+            Log.e(this.getLocalClassName(),"Cannot handle this event");
+        else {
+
+            Hackojo hackojo = null;
+            DeviceData d = new DeviceData(usrname, getIPAddress(), PORT, BPORT);
+            Intent intent = new Intent(this, GraphActivity.class);
+
+            try {
+                hackojo = new Hackojo(d, gname);
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } finally {
+
+                if(hackojo != null) {
+
+                    hackojo.runOperation(Hackojo.JOIN_GROUP_OP);
+                    intent.putExtra(GRPNAME, gname);
+                    intent.putExtra(DEVICEDATA, d);
+                    startActivity(intent);
+                }
+            }
+        }
+    }
 }
