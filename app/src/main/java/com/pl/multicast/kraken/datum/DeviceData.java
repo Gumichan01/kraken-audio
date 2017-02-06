@@ -13,6 +13,10 @@ public class DeviceData implements Parcelable{
 	private InetSocketAddress ipaddr;
 	private int bport;
 
+	public DeviceData() {
+		this("", "", 0, 0);
+	}
+
 	public DeviceData(String name, String ipaddress, int port, int bport) {
 
 		ipaddr = new InetSocketAddress(ipaddress, port);

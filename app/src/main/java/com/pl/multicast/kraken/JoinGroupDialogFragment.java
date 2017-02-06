@@ -32,19 +32,31 @@ public class JoinGroupDialogFragment extends DialogFragment {
 
         // Title
         builder.setTitle(R.string.avgrp);
-        // Cancel button
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
 
-                Log.i(this.getClass().getName(), "Cancel the group");
-            }
-        });
+        if (items == null) {
 
-        // TODO: 06/02/2017 Retrieve the list of groups in order to send it into the dialog
-        if (items == null)
+            // OK button
+            builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                    Log.i(this.getClass().getName(), "Cancel the group");
+                }
+            });
+
             builder.setMessage(R.string.nogrp);
-        else {
+            Log.i(this.getClass().getName(), "No group");
+
+        } else {
+
+            // Cancel button
+            builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                    Log.i(this.getClass().getName(), "Cancel the group");
+                }
+            });
 
             builder.setItems(items, new DialogInterface.OnClickListener() {
                 @Override
@@ -69,6 +81,8 @@ public class JoinGroupDialogFragment extends DialogFragment {
                     }
                 }
             });
+
+            Log.i(this.getClass().getName(), "There are " + items.length + "active groups");
         }
 
         return builder.create();
