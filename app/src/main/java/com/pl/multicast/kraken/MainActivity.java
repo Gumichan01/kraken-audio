@@ -18,6 +18,7 @@ import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
@@ -27,6 +28,8 @@ public class MainActivity extends Activity {
     public static final String GRPNAME = "GRPNAME";
     public static final String DEVICEDATA = "DEVICEDATA";
     public static final String FRAG = "JOIN-GROUP-FRAG";
+
+    String usrname;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +75,8 @@ public class MainActivity extends Activity {
                 Toast.makeText(this, "Empty string", Toast.LENGTH_SHORT).show();
             else {
 
+                susr += "@" + Build.MODEL;
+
                 if (id == R.id.cgrp) {
 
                     EditText gtv = (EditText) findViewById(R.id.grp);
@@ -81,7 +86,6 @@ public class MainActivity extends Activity {
                                 Toast.LENGTH_LONG).show();
                     else {
 
-                        susr += "@" + Build.MODEL;
                         String ipaddr = getIPAddress();
                         String gname = gtv.getText().toString();
                         DeviceData dd = new DeviceData(susr, ipaddr, 2408, 2409);
@@ -98,10 +102,12 @@ public class MainActivity extends Activity {
 
                 } else if (id == R.id.jgrp) {
 
-                    // TODO: 05/02/2017 join a group in the server
-                    Log.i(this.getLocalClassName(), "dialog");
-                    JoinGroupDialogFragment fragment = JoinGroupDialogFragment.newInstance(new String[]{"Read", "Write", "Delete", "Create"});
-                    fragment.show(getFragmentManager(), FRAG);
+                    usrname = susr;     // Save the name for the next activity instance
+                    Hackojo ho = new Hackojo(new DeviceData(), null);
+                    Log.i(this.getLocalClassName(), "Connection to the directory server");
+                    ho.runOperation(Hackojo.GROUP_OP);
+                    Log.i(this.getLocalClassName(), "Generate the list of groups");
+                    showDialog(ho.getGroups());
 
                 } else {
                     Log.i(this.getLocalClassName(), "Bad view");
@@ -112,8 +118,28 @@ public class MainActivity extends Activity {
 
     private void showDialog(List<GroupData> groups) {
 
-        //List<String> gnames = null
         // TODO: 06/02/2017 AlertDialog here
+        JoinGroupDialogFragment fragment;
+
+        if(groups == null || groups.isEmpty())
+            fragment = JoinGroupDialogFragment.newInstance(null);
+        else {
+
+            List<String> strings = new ArrayList<>();
+
+            for(GroupData gd: groups) {
+                if(gd != null)
+                    strings.add(gd.getName());
+            }
+
+            Log.i(this.getLocalClassName(), "There are a set of " + groups.size() + " group data");
+            Log.i(this.getLocalClassName(), "There are " + strings.size() + " real groups");
+            String [] sarray = new String[strings.size()];
+            strings.toArray(sarray);
+            fragment = JoinGroupDialogFragment.newInstance(sarray);
+        }
+
+        fragment.show(getFragmentManager(), FRAG);
     }
 
     private String getIPAddress() {
