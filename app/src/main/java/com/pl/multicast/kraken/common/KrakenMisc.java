@@ -2,10 +2,14 @@ package com.pl.multicast.kraken.common;
 
 import android.util.Log;
 
+import com.pl.multicast.kraken.datum.DeviceData;
+
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Class that contains miscellaneous variables and function
@@ -40,5 +44,22 @@ public class KrakenMisc {
         } finally {
             return ip;
         }
+    }
+
+    // Function used in GraphActivity
+    public static List<DeviceData> adaptList(List<DeviceData> ld, String username) {
+
+        Iterator<DeviceData> it = ld.iterator();
+        DeviceData dev = null;
+
+        while (it.hasNext()) {
+            DeviceData dd = it.next();
+            Log.i(KRAKEN_MISC, dd.toString());
+            if (dd.getName().equals(username)) dev = dd;
+        }
+
+        if (dev != null) ld.remove(dev);
+        ld.add(0, new DeviceData(username, "", 0, 0));
+        return ld;
     }
 }

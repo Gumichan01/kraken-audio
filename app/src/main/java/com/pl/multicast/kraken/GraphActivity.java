@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.pl.multicast.kraken.common.KrakenMisc;
 import com.pl.multicast.kraken.datum.DeviceData;
 
 import java.net.MalformedURLException;
@@ -45,10 +46,10 @@ public class GraphActivity extends Activity
 
     // Threads
     //private UDPSender st;
-    //private Thread bservice;    // broadcast service
+    private Thread bservice;    // broadcast service
 
     // Data
-    //private BroadcastData std;
+    private BroadcastData std;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,12 +68,13 @@ public class GraphActivity extends Activity
             throw new RuntimeException(e);
         }
 
-        //std = new BroadcastData();
+        std = new BroadcastData();  // TODO: 06/02/2017 Refactorize it
         //st = new UDPSender(std);
         //st.start();
 
-        //bservice = new Thread(new BroadcastService(this, std));
-        //bservice.start();
+        /** Service server */
+        bservice = new Thread(new BroadcastService(this, std));
+        bservice.start();
 
         /** Fragment creation */
         navigationSenders = (NavDrawer)
@@ -100,21 +102,13 @@ public class GraphActivity extends Activity
 
         if (ld != null) {
 
-            Iterator<DeviceData> it = ld.iterator();
-            DeviceData dev = null;
+            for(DeviceData dev: ld)
+                std.addSender(dev);
 
-            while (it.hasNext()) {
-                DeviceData dd = it.next();
-                Log.i(this.getLocalClassName(), dd.toString());
-                if (dd.getName().equals(username)) dev = dd;
-            }
-
-            if (dev != null) ld.remove(dev);
-            ld.add(0, new DeviceData(username, "", 0, 0));
-            navigationSenders.updateContent(ld.toArray());
+            navigationSenders.updateContent(KrakenMisc.adaptList(ld, username).toArray());
 
         } else
-            Log.i("GROUP_CONTENT", "no device");
+            Log.i(this.getLocalClassName(), "no device");
 
         /// ONLY FOR TESTING THE BROADCAST
         /*
@@ -142,8 +136,9 @@ public class GraphActivity extends Activity
 
         super.onStop();
         Log.i(this.getLocalClassName(), "Stop the activity");
+        bservice.interrupt();
         hack.runOperation(Hackojo.QUIT_GROUP_OP);
-        //std.stopServer();
+
     }
 
     @Override
