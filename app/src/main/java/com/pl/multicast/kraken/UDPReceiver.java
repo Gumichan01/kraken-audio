@@ -2,6 +2,7 @@ package com.pl.multicast.kraken;
 
 import android.util.Log;
 
+import com.pl.multicast.kraken.common.KrakenMisc;
 import com.pl.multicast.kraken.datum.DeviceData;
 
 import java.io.BufferedReader;
@@ -20,6 +21,8 @@ import java.net.SocketException;
  */
 public class UDPReceiver {
 
+    private static final int DATAPCK_SIZE = 32;
+
     private BroadcastData std;
     private Thread receiver;
     private GraphActivity graph;
@@ -32,7 +35,6 @@ public class UDPReceiver {
     }
 
     public void launchReceiver() {
-        /// @// TODO: 24/01/2017 Receive the stream
 
         if (launched)
             return;
@@ -43,8 +45,8 @@ public class UDPReceiver {
                 DatagramSocket udpsock = null;
 
                 try {
-                    udpsock = new DatagramSocket(2409);
-                    byte[] data = new byte[16];
+                    udpsock = new DatagramSocket(KrakenMisc.BROADCAST_PORT);
+                    byte[] data = new byte[DATAPCK_SIZE];
                     DatagramPacket p = new DatagramPacket(data, data.length);
 
                     while (std.getRun()) {

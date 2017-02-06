@@ -13,7 +13,7 @@ import java.util.ArrayList;
  */
 public class BroadcastData {
 
-    private volatile boolean running;
+    private volatile boolean running; // TODO: 06/02/2017 Remove this variable
     private volatile String text;
     private volatile boolean send_text;
     private volatile ArrayList<DeviceData> senders;

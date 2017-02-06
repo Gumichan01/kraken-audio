@@ -2,6 +2,7 @@ package com.pl.multicast.kraken;
 
 import android.util.Log;
 
+import com.pl.multicast.kraken.common.KrakenMisc;
 import com.pl.multicast.kraken.datum.DeviceData;
 
 import java.io.BufferedReader;
@@ -42,7 +43,7 @@ public class BroadcastService implements Runnable {
     public void run() {
 
         try {
-            ServerSocket s = new ServerSocket(2408);
+            ServerSocket s = new ServerSocket(KrakenMisc.SERVICE_PORT);
 
             Log.i("GROUP", "Service - Server launched");
 

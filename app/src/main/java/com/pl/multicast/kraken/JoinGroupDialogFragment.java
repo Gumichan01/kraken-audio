@@ -14,7 +14,7 @@ import android.util.Log;
 public class JoinGroupDialogFragment extends DialogFragment {
 
     private static final String NAMES = "NAMES";
-    JoinGroupDialogListener jlistener;
+    private JoinGroupDialogListener jlistener;
 
     public static JoinGroupDialogFragment newInstance(String[] names) {
 
@@ -86,6 +86,9 @@ public class JoinGroupDialogFragment extends DialogFragment {
         }
     }
 
+    /**
+     * Interface for the communication from the fragment to its host (the activity)
+     */
     public interface JoinGroupDialogListener {
 
         public void onItemSelected(DialogInterface dialog, String gname);

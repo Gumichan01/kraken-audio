@@ -12,25 +12,20 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.pl.multicast.kraken.common.KrakenMisc;
 import com.pl.multicast.kraken.datum.DeviceData;
 import com.pl.multicast.kraken.datum.GroupData;
 
-import java.net.InetAddress;
 import java.net.MalformedURLException;
-import java.net.NetworkInterface;
-import java.net.SocketException;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
 
 
 public class MainActivity extends Activity implements JoinGroupDialogFragment.JoinGroupDialogListener {
 
-    public static final String GRPNAME = "GRPNAME";
-    public static final String DEVICEDATA = "DEVICEDATA";
-    public static final String FRAG = "JOIN-GROUP-FRAG";
-    public static final int PORT = 2408;
-    public static final int BPORT = 2409;
+    static final String GRPNAME = "GRPNAME";
+    static final String DEVICEDATA = "DEVICEDATA";
+    static final String FRAG = "JOIN-GROUP-FRAG";
 
     String usrname;
 
@@ -89,9 +84,10 @@ public class MainActivity extends Activity implements JoinGroupDialogFragment.Jo
                                 Toast.LENGTH_LONG).show();
                     else {
 
-                        String ipaddr = getIPAddress();
+                        String ipaddr = KrakenMisc.getIPAddress();
                         String gname = gtv.getText().toString();
-                        DeviceData dd = new DeviceData(susr, ipaddr, PORT, BPORT);
+                        DeviceData dd = new DeviceData(susr, ipaddr, KrakenMisc.SERVICE_PORT,
+                                KrakenMisc.BROADCAST_PORT);
                         Intent intent = new Intent(this, GraphActivity.class);
 
                         Log.i(this.getLocalClassName(), "group name: " + gname);
@@ -101,11 +97,11 @@ public class MainActivity extends Activity implements JoinGroupDialogFragment.Jo
                         intent.putExtra(GRPNAME, gname);
                         intent.putExtra(DEVICEDATA, dd);
                         startActivity(intent);
-                }
+                    }
 
                 } else if (id == R.id.jgrp) {
 
-                    usrname = susr;     // Save the name for the next activity instance
+                    usrname = susr;     // Save the name for the next activity instance (GraphActivity)
                     Hackojo ho = new Hackojo(new DeviceData(), null);
                     Log.i(this.getLocalClassName(), "Connection to the directory server");
                     ho.runOperation(Hackojo.GROUP_OP);
@@ -144,43 +140,16 @@ public class MainActivity extends Activity implements JoinGroupDialogFragment.Jo
         fragment.show(getFragmentManager(), FRAG);
     }
 
-    // TODO: 06/02/2017 Put this function in a separate class (commonOperations)
-    private String getIPAddress() {
-        String ip = null;
-        try {
-            Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
-            while (interfaces.hasMoreElements()) {
-                NetworkInterface iface = interfaces.nextElement();
-                // filters out 127.0.0.1 and inactive interfaces
-                if (iface.isLoopback() || !iface.isUp())
-                    continue;
-
-                Enumeration<InetAddress> addresses = iface.getInetAddresses();
-                if (addresses.hasMoreElements()) {
-                    InetAddress addr = addresses.nextElement();
-                    ip = addr.getHostAddress();
-                    Log.i(this.getLocalClassName(), iface.getDisplayName() + " " + ip);
-                    break;
-                }
-            }
-
-        } catch (SocketException e) {
-            throw new RuntimeException(e);
-        } finally {
-            return ip;
-        }
-
-    }
-
     @Override
     public void onItemSelected(DialogInterface dialog, String gname) {
 
-        if(dialog == null || gname == null || gname.isEmpty())
-            Log.e(this.getLocalClassName(),"Cannot handle this event");
+        if (dialog == null || gname == null || gname.isEmpty())
+            Log.e(this.getLocalClassName(), "Cannot handle this event");
         else {
 
             Hackojo hackojo = null;
-            DeviceData d = new DeviceData(usrname, getIPAddress(), PORT, BPORT);
+            DeviceData d = new DeviceData(usrname, KrakenMisc.getIPAddress(), KrakenMisc.SERVICE_PORT,
+                    KrakenMisc.BROADCAST_PORT);
             Intent intent = new Intent(this, GraphActivity.class);
 
             try {
@@ -190,7 +159,7 @@ public class MainActivity extends Activity implements JoinGroupDialogFragment.Jo
                 e.printStackTrace();
             } finally {
 
-                if(hackojo != null) {
+                if (hackojo != null) {
 
                     hackojo.runOperation(Hackojo.JOIN_GROUP_OP);
                     intent.putExtra(GRPNAME, gname);
