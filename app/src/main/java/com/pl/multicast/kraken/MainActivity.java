@@ -24,11 +24,15 @@ public class MainActivity extends Activity {
 
     public static final String GRPNAME = "GRPNAME";
     public static final String DEVICEDATA = "DEVICEDATA";
+    public static final String FRAG = "JOIN-GROUP-FRAG";
+
+    private JoinGroupDialogFragment fragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        fragment = null;
     }
 
     @Override
@@ -69,10 +73,6 @@ public class MainActivity extends Activity {
                 Toast.makeText(this, "Empty string", Toast.LENGTH_SHORT).show();
             else {
 
-                String ipaddr = getIPAddress();
-                Intent intent = new Intent(this, GraphActivity.class);
-                susr += "@" + Build.MODEL;
-
                 if (id == R.id.cgrp) {
 
                     EditText gtv = (EditText) findViewById(R.id.grp);
@@ -82,26 +82,31 @@ public class MainActivity extends Activity {
                                 Toast.LENGTH_LONG).show();
                     else {
 
+                        susr += "@" + Build.MODEL;
+                        String ipaddr = getIPAddress();
                         String gname = gtv.getText().toString();
                         DeviceData dd = new DeviceData(susr, ipaddr, 2408, 2409);
+                        Intent intent = new Intent(this, GraphActivity.class);
+
                         Log.i(this.getLocalClassName(), "group name: " + gname);
                         Log.i(this.getLocalClassName(), "device: " + dd.toString());
 
                         new Hackojo(dd, gname).runOperation(Hackojo.CREATE_GROUP_OP);
                         intent.putExtra(GRPNAME, gname);
                         intent.putExtra(DEVICEDATA, dd);
+                        startActivity(intent);
                     }
 
                 } else if (id == R.id.jgrp) {
 
                     // TODO: 05/02/2017 join a group in the server
-                    return;
+                    Log.i(this.getLocalClassName(), "dialog");
+                    fragment = new JoinGroupDialogFragment();
+                    fragment.show(getFragmentManager(), FRAG);
+
                 } else {
                     Log.i(this.getLocalClassName(), "Bad view");
-                    return;
                 }
-
-                startActivity(intent);
             }
         }
     }
