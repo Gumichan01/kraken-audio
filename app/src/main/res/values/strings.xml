@@ -8,6 +8,7 @@
     <!-- Join group -->
     <string name="avgrp">Available group(s)</string>
     <string name="cancel">Cancel</string>
+    <string name="nogrp">No group available</string>
 
     <string name="title_section1">Section 1</string>
     <string name="title_section2">Section 2</string>

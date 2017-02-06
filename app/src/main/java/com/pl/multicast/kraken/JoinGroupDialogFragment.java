@@ -12,11 +12,23 @@ import android.util.Log;
  */
 public class JoinGroupDialogFragment extends DialogFragment {
 
+    private static final String NAMES = "NAMES";
+
+    public static JoinGroupDialogFragment newInstance(String[] names) {
+
+        JoinGroupDialogFragment f = new JoinGroupDialogFragment();
+        Bundle args = new Bundle();
+        args.putStringArray(NAMES, names);
+        f.setArguments(args);
+        return f;
+    }
+
 
     @Override
     public Dialog onCreateDialog(Bundle saveInstanceState) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        String[] items = getArguments().getStringArray(NAMES);
 
         // Title
         builder.setTitle(R.string.avgrp);
@@ -30,29 +42,34 @@ public class JoinGroupDialogFragment extends DialogFragment {
         });
 
         // TODO: 06/02/2017 Retrieve the list of groups in order to send it into the dialog
-        builder.setItems(new String[]{"Read", "Write", "Delete", "Create"}, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
+        if (items == null)
+            builder.setMessage(R.string.nogrp);
+        else {
 
-                switch (which) {
-                    case 0:
-                        Log.i(this.getClass().getName(), "Read");
-                        break;
+            builder.setItems(items, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
 
-                    case 1:
-                        Log.i(this.getClass().getName(), "Write");
-                        break;
+                    switch (which) {
+                        case 0:
+                            Log.i(this.getClass().getName(), "Read");
+                            break;
 
-                    case 2:
-                        Log.i(this.getClass().getName(), "Delete");
-                        break;
+                        case 1:
+                            Log.i(this.getClass().getName(), "Write");
+                            break;
 
-                    case 3:
-                        Log.i(this.getClass().getName(), "Create");
-                        break;
+                        case 2:
+                            Log.i(this.getClass().getName(), "Delete");
+                            break;
+
+                        case 3:
+                            Log.i(this.getClass().getName(), "Create");
+                            break;
+                    }
                 }
-            }
-        });
+            });
+        }
 
         return builder.create();
     }

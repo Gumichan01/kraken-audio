@@ -12,12 +12,14 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.pl.multicast.kraken.datum.DeviceData;
+import com.pl.multicast.kraken.datum.GroupData;
 
 import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
+import java.util.List;
 
 
 public class MainActivity extends Activity {
@@ -26,13 +28,10 @@ public class MainActivity extends Activity {
     public static final String DEVICEDATA = "DEVICEDATA";
     public static final String FRAG = "JOIN-GROUP-FRAG";
 
-    private JoinGroupDialogFragment fragment;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        fragment = null;
     }
 
     @Override
@@ -101,7 +100,7 @@ public class MainActivity extends Activity {
 
                     // TODO: 05/02/2017 join a group in the server
                     Log.i(this.getLocalClassName(), "dialog");
-                    fragment = new JoinGroupDialogFragment();
+                    JoinGroupDialogFragment fragment = JoinGroupDialogFragment.newInstance(new String[]{"Read", "Write", "Delete", "Create"});
                     fragment.show(getFragmentManager(), FRAG);
 
                 } else {
@@ -109,6 +108,12 @@ public class MainActivity extends Activity {
                 }
             }
         }
+    }
+
+    private void showDialog(List<GroupData> groups) {
+
+        //List<String> gnames = null
+        // TODO: 06/02/2017 AlertDialog here
     }
 
     private String getIPAddress() {
