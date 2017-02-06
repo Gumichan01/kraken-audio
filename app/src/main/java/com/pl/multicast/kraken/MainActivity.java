@@ -63,6 +63,14 @@ public class MainActivity extends Activity implements JoinGroupDialogFragment.Jo
         int id = v.getId();
         EditText tv = (EditText) findViewById(R.id.usr);
 
+        if(!KrakenMisc.isNetworkAvailable()){
+
+            // TODO: 06/02/2017 Display a toast (Kenny has to do that task)
+
+            return; // DO NOT REMOVE IT
+        }
+            
+
         if (tv == null)
             Log.e(this.getLocalClassName(), "Internal error - usr: no edit text");
         else {

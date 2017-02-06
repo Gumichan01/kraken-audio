@@ -12,7 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Class that contains miscellaneous variables and function
+ * Class that contains miscellaneous variables and functions
  */
 public class KrakenMisc {
 
@@ -44,6 +44,12 @@ public class KrakenMisc {
         } finally {
             return ip;
         }
+    }
+
+    public static boolean isNetworkAvailable(){
+
+        // TODO: 06/02/2017 Kenny has to do this task
+        return true;
     }
 
     // Function used in GraphActivity
