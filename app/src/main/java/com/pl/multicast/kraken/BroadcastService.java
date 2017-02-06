@@ -33,6 +33,7 @@ public class BroadcastService implements Runnable {
     private static final String SPACE = " ";
 
     private static final int LISTEN_NBTOK = 2;
+    private static final int SRV_DELAY = 8000;
 
     private GraphActivity gactivity;
     private BroadcastData bdata;
@@ -48,22 +49,38 @@ public class BroadcastService implements Runnable {
 
         try {
             ServerSocket s = new ServerSocket(KrakenMisc.SERVICE_PORT);
+            s.setSoTimeout(SRV_DELAY);
 
-            Log.i("GROUP", "Service - Server launched");
+            Log.i(this.getClass().getName(), "Service - Server launched");
 
-            while (bdata.getRun()) {
+            while (true) {
 
-                Socket sock = s.accept();
+                Socket sock = null;
+
+                try{
+                    sock = s.accept();
+                } catch (Exception e){
+                    Log.e(this.getClass().getName(), "Service - Timeout");
+                }
+
+                if(Thread.currentThread().isInterrupted()){
+
+                    if(sock != null)
+                        sock.close();
+
+                    s.close();
+                    break;
+                }
 
                 if (sock == null)
-                    break;
+                    continue;
 
-                Log.i("GROUP", "Service - Connection from @" + sock.getInetAddress().getHostAddress() + ":" + sock.getPort());
+                Log.i(this.getClass().getName(), "Service - Connection from @" + sock.getInetAddress().getHostAddress() + ":" + sock.getPort());
                 PrintWriter w = new PrintWriter(new OutputStreamWriter(sock.getOutputStream()));
                 BufferedReader r = new BufferedReader(new InputStreamReader(sock.getInputStream()));
 
                 String rstring = r.readLine();
-                Log.i("GROUP", "Service - received this message: " + rstring);
+                Log.i(this.getClass().getName(), "Service - received this message: " + rstring);
 
                 // Listen to the broadcaster (request)
                 if (rstring.contains(LISTEN_CMD)) {
@@ -103,11 +120,11 @@ public class BroadcastService implements Runnable {
                 });
 
                 w.flush();
-                Log.i("GROUP", "Service - Close the client socket");
+                Log.i(this.getClass().getName(), "Service - Close the client socket");
                 sock.close();
             }
 
-            s.close();
+            Log.i(this.getClass().getName(), "Service - Server down");
 
         } catch (IOException e) {
 
@@ -126,14 +143,14 @@ public class BroadcastService implements Runnable {
 
         if (i < ld.size()) {
 
-            Log.i("GROUP", ld.get(i).toString());
+            Log.i(this.getClass().getName(), ld.get(i).toString());
             dev = ld.get(i);
         } else
             return false;
 
         bdata.rmSender(dev);
         bdata.addListener(dev);
-        Log.i("GROUP", "Service - Register listener: ok");
+        Log.i(this.getClass().getName(), "Service - Register listener: ok");
         return true;
     }
 
@@ -153,7 +170,7 @@ public class BroadcastService implements Runnable {
 
         bdata.rmListener(dev);
         bdata.addSender(dev);
-        Log.i("GROUP", "Service - Unregister register listener: ok");
+        Log.i(this.getClass().getName(), "Service - Unregister register listener: ok");
         return true;
     }
 
