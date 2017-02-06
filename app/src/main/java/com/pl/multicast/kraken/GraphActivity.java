@@ -18,7 +18,6 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.pl.multicast.kraken.datum.DeviceData;
-import com.pl.multicast.kraken.datum.GroupData;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
@@ -26,11 +25,12 @@ import java.util.Iterator;
 import java.util.List;
 
 
-
 public class GraphActivity extends Activity
         implements NavDrawer.NavigationDrawerCallbacks {
 
     private static ArrayList<String> ltext = new ArrayList<>();
+    // Communication point
+    Hackojo hack;
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
@@ -42,9 +42,6 @@ public class GraphActivity extends Activity
     private String mTitle;
     private String username;
     private String gname;
-
-    // Communication point
-    Hackojo hack;
 
     // Threads
     //private UDPSender st;
@@ -104,47 +101,23 @@ public class GraphActivity extends Activity
         if (ld != null) {
 
             Iterator<DeviceData> it = ld.iterator();
+            DeviceData dev = null;
 
             while (it.hasNext()) {
                 DeviceData dd = it.next();
                 Log.i(this.getLocalClassName(), dd.toString());
+                if (dd.getName().equals(username)) dev = dd;
             }
 
-            //ld.add(0, new DeviceData(username, "", 0, 0));
+            if (dev != null) ld.remove(dev);
+            ld.add(0, new DeviceData(username, "", 0, 0));
             navigationSenders.updateContent(ld.toArray());
-            //navigationReceivers.updateContent(ld.toArray());
 
         } else
             Log.i("GROUP_CONTENT", "no device");
 
         /// ONLY FOR TESTING THE BROADCAST
         /*
-
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException i) {
-            i.printStackTrace();
-        }
-
-        List<DeviceData> ld = nt.getDevices();
-
-        if (ld != null) {
-
-            Iterator<DeviceData> it = ld.iterator();
-
-            while (it.hasNext()) {
-                DeviceData dd = it.next();
-                std.addSender(dd);
-                //std.addListener(dd);
-            }
-
-            ld.add(0, new DeviceData(username, "", 0, 0));
-            navigationSenders.updateContent(ld.toArray());
-            //navigationReceivers.updateContent(ld.toArray());
-
-        } else
-            Log.i("GROUP_CONTENT", "no device");
-
         UDPReceiver udpr = new UDPReceiver(this, std);
         udpr.launchReceiver();*/
         //udpr.sendMessage(new DeviceData("toto", "192.168.43.222", 2408, 2409), "LISTEN gt-i8190n\r\n");
@@ -201,7 +174,9 @@ public class GraphActivity extends Activity
 
     public void onSectionAttached(int number) {
 
-        List<DeviceData> ld = null;//nt.getDevices();
+        List<DeviceData> ld = hack.getDevices();
+
+        Log.i(this.getLocalClassName(), "onSectionAttached - " + number);
 
         switch (number) {
             case 1:

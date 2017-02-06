@@ -14,13 +14,6 @@ import android.util.Log;
 public class JoinGroupDialogFragment extends DialogFragment {
 
     private static final String NAMES = "NAMES";
-
-    public interface JoinGroupDialogListener {
-
-        public void onItemSelected(DialogInterface dialog, String gname);
-    }
-
-
     JoinGroupDialogListener jlistener;
 
     public static JoinGroupDialogFragment newInstance(String[] names) {
@@ -70,7 +63,6 @@ public class JoinGroupDialogFragment extends DialogFragment {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
 
-                    // TODO: 06/02/2017 JoinGroupDialogListener
                     jlistener.onItemSelected(dialog, items[which]);
                 }
             });
@@ -82,7 +74,7 @@ public class JoinGroupDialogFragment extends DialogFragment {
     }
 
     @Override
-    public void onAttach(Activity activity){
+    public void onAttach(Activity activity) {
         super.onAttach(activity);
 
         try {
@@ -92,7 +84,11 @@ public class JoinGroupDialogFragment extends DialogFragment {
         } catch (ClassCastException ce) {
             throw new ClassCastException(activity.toString() + "must implement JoinGroupDialogListener");
         }
+    }
 
+    public interface JoinGroupDialogListener {
+
+        public void onItemSelected(DialogInterface dialog, String gname);
     }
 
 }

@@ -85,7 +85,7 @@ public class MainActivity extends Activity implements JoinGroupDialogFragment.Jo
                     EditText gtv = (EditText) findViewById(R.id.grp);
 
                     if (gtv == null || gtv.getText().toString().isEmpty())
-                        Toast.makeText(this, "Empty string\n In order to create a group, you must specify the name",
+                        Toast.makeText(this, "Please specify the group name to create a group",
                                 Toast.LENGTH_LONG).show();
                     else {
 
