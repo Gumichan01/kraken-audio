@@ -22,6 +22,8 @@ public class KrakenMisc {
     public static final int TXT_ID = 1024;
 
     public static String getIPAddress() {
+
+        final String PERCENT = "%";
         String ip = null;
         try {
             Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
@@ -35,6 +37,12 @@ public class KrakenMisc {
                 if (addresses.hasMoreElements()) {
                     InetAddress addr = addresses.nextElement();
                     ip = addr.getHostAddress();
+
+                    // In some device using ipv6, a '%' character followed by
+                    // the name of the interface can be contained
+                    if(ip.indexOf(PERCENT) > -1)
+                        ip = ip.substring(0,ip.indexOf(PERCENT));
+
                     Log.i(KRAKEN_MISC, iface.getDisplayName() + " " + ip);
                     break;
                 }
