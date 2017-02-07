@@ -51,12 +51,6 @@ public class BroadcastService implements Runnable {
         broadcaster = new UDPSender(dd);
     }
 
-    public synchronized UDPSender getBroadcaster() {
-
-        return broadcaster;
-    }
-
-
     public synchronized Handler getThreadHandler() {
 
         return broadcaster.getHandler();
@@ -100,26 +94,10 @@ public class BroadcastService implements Runnable {
                 String rstring = r.readLine();
                 Log.i(this.getClass().getName(), "Service - received this message: " + rstring);
 
-                // Listen to the broadcaster (request)
-                if (rstring.contains(LISTEN_CMD)) {
+                // Listen to the broadcaster OR stop listening (request)
+                if (rstring.contains(LISTEN_CMD) || rstring.contains(STOP_CMD)) {
 
-                    Pattern p = Pattern.compile(SPACE);
-                    String[] ss = p.split(rstring);
-
-                    if (ss.length != LISTEN_NBTOK)
-                        w.write(BADR);
-                    else
-                        w.write(registerListener(ss[1]) ? ACK : FAIL);
-
-                } else if (rstring.contains(STOP_CMD)) {    // Stop listening (request)
-
-                    Pattern p = Pattern.compile(SPACE);
-                    String[] ss = p.split(rstring);
-
-                    if (ss.length != LISTEN_NBTOK)
-                        w.write(BADR);
-                    else
-                        w.write(unregisterListener(ss[1]) ? ACK : FAIL);
+                    w.write(basicResponse(rstring));
 
                 } else if (rstring.contains(LISTB_CMD)) {
 
@@ -191,6 +169,22 @@ public class BroadcastService implements Runnable {
         Log.i(this.getClass().getName(), "Service - Unregister register listener: ok");
         return true;
     }
+
+    private String basicResponse(String rstring) {
+
+        Pattern p = Pattern.compile(SPACE);
+        String[] ss = p.split(rstring);
+
+        if (ss.length != LISTEN_NBTOK)
+            return BADR;
+        else {
+            if(rstring.contains(LISTEN_CMD))
+                return (registerListener(ss[1]) ? ACK : FAIL);
+            else
+                return (unregisterListener(ss[1]) ? ACK : FAIL);
+        }
+    }
+
 
     private String listOfBroadcaster() {
 
