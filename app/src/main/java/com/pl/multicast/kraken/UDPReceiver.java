@@ -27,19 +27,24 @@ public class UDPReceiver {
     private Thread receiver;
     private GraphActivity graph;
     private boolean launched;
+    private Thread thread;
 
     public UDPReceiver(GraphActivity g, BroadcastData b) {
+
         std = b;
         launched = false;
         graph = g;
+        thread = null;
     }
 
-    public void launchReceiver() {
+    public void launch() {
 
         if (launched)
             return;
 
-        new Thread(new Runnable() {
+        launched = true;
+
+        thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 DatagramSocket udpsock = null;
@@ -51,7 +56,6 @@ public class UDPReceiver {
 
                     while (true) {
 
-                        // TODO: 07/02/2017 Check if the thread where the code is executed has been interrupted
                         if (udpsock == null) {
                             break;
                         }
@@ -75,7 +79,16 @@ public class UDPReceiver {
                         } catch (IOException e) {
                             Log.e(this.getClass().getName(), "UDP receiver - No UDP socket created");
                         }
+
+                        if(Thread.currentThread().isInterrupted()){
+
+                            Log.i(this.getClass().getName(), "UDP receiver - Interrupted");
+                            udpsock.close();
+                            break;
+                        }
                     }
+
+                    Log.i(this.getClass().getName(), "UDP receiver - End of thread");
 
                 } catch (SocketException e) {
                     Log.i(this.getClass().getName(), "UDP receiver - No UDP socket created");
@@ -86,14 +99,34 @@ public class UDPReceiver {
                         udpsock.close();
                 }
             }
-        }).start();
+        });
+        thread.start();
     }
 
-    public void sendMessage(final DeviceData d, final String str) {
+    public void stop() {
+
+        thread.interrupt();
+    }
+
+    public void listenRequest(final DeviceData d){
+        Log.i(this.getClass().getName(), "UDP receiver - listen request");
+        sendMessageRequest(d, BroadcastService.LISTEN_CMD);
+    }
+
+    public void stopRequest(final DeviceData d){
+
+        Log.i(this.getClass().getName(), "UDP receiver - stop request");
+        sendMessageRequest(d, BroadcastService.STOP_CMD);
+    }
+
+    private void sendMessageRequest(final DeviceData d, final String str) {
 
         new Thread(new Runnable() {
             @Override
             public void run() {
+
+                String rstring = "";
+
                 try {
                     Log.i(this.getClass().getName(), "UDP receiver - connection to " + d.getAddr() + ":" + d.getPort());
                     Socket s = new Socket(d.getAddr(), d.getPort());
@@ -103,7 +136,7 @@ public class UDPReceiver {
                     writer.write(str);
                     writer.flush();
 
-                    String rstring = reader.readLine();
+                    rstring = reader.readLine();
                     Log.i(this.getClass().getName(), "UDP receiver - msg: " + rstring);
 
                 } catch (IOException e) {

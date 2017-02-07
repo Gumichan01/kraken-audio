@@ -92,6 +92,17 @@ public class BroadcastData {
         listeners.remove(listener);
     }
 
+    public synchronized DeviceData getSenderOf(String s) {
+
+        for (DeviceData d : senders) {
+
+            if(d.getName().equals(s))
+                return d;
+        }
+
+        return null;
+    }
+
     @Deprecated
     public synchronized void stopServer() {
 

@@ -49,6 +49,8 @@ public class GraphActivity extends Activity
     // Thread
     private Thread bserviceth;    // broadcast service
     private BroadcastService bs;
+    // Receiver
+    private UDPReceiver recv;
     // Data
     private BroadcastData std;
 
@@ -77,8 +79,8 @@ public class GraphActivity extends Activity
             throw new RuntimeException(e);
         }
 
-        //st = new UDPSender(std);
-        //st.start();
+        /** Receiver */
+        recv = new UDPReceiver(this,std);
 
         /** Fragment creation */
         navigationSenders = (NavDrawer)
@@ -126,6 +128,7 @@ public class GraphActivity extends Activity
         super.onStop();
         Log.i(this.getLocalClassName(), "Stop the activity");
         bserviceth.interrupt();
+        recv.stop();
         hack.runOperation(Hackojo.QUIT_GROUP_OP);
     }
 
@@ -181,9 +184,15 @@ public class GraphActivity extends Activity
         Log.i(this.getLocalClassName(), "List updated. Added the following text: " + text);
     }
 
+    // Update the list of devices
     public void update(boolean first) {
 
         hack.runOperation(Hackojo.DEVICE_OP);
+        updateWithoutConnection(first);
+    }
+
+    public void updateWithoutConnection(boolean first){
+
         List<DeviceData> br = hack.getDevices();
         std.clearSenders();
 
@@ -206,28 +215,17 @@ public class GraphActivity extends Activity
         }
 
         navigationSenders.updateContent(KrakenMisc.adaptList(br, username).toArray());
-
-        /*ArrayList<DeviceData> ls = std.getSenders();
-        ArrayList<DeviceData> ll = std.getListeners();
-
-        ls.add(0, new DeviceData(username, "", 0, 0));
-        ll.add(0, new DeviceData(username, "", 0, 0));
-
-        navigationSenders.updateContent(ls.toArray());
-        navigationReceivers.updateContent(ll.toArray());*/
     }
 
     /**
      * Action Bar
-     **/
-
+     */
     public void restoreActionBar() {
         ActionBar actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setTitle(mTitle);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -245,8 +243,7 @@ public class GraphActivity extends Activity
 
     /**
      * Option Items
-     **/
-
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -258,12 +255,21 @@ public class GraphActivity extends Activity
         if (id == R.id.action_update) {
             Log.i(this.getLocalClassName(), "update action");
 
-            Toast.makeText(getApplicationContext(), R.string.msg_updating, Toast.LENGTH_LONG).show();
+            // TODO: 07/02/2017 The update has to be done in another thread (the graphic part in th UI)
             update(false);
+            Toast.makeText(getApplicationContext(), R.string.msg_updating, Toast.LENGTH_LONG).show();
             return true;
 
         } else if (id == R.id.action_listen) {
             Log.i(this.getLocalClassName(), "listen action");
+            if(!mTitle.equals(username)) {
+                // TODO: 07/02/2017 listen request
+                String slistener = mTitle;
+                DeviceData d = std.getSenderOf(slistener);
+                mTitle = username;
+                recv.listenRequest(d);
+            }
+
             return true;
 
         } else if (id == R.id.action_stop) {

@@ -27,13 +27,22 @@ import java.util.regex.Pattern;
  */
 public class BroadcastService implements Runnable {
 
-    public static final String ACK = "ACK\r\n";
+
+    // Keywords
     public static final String LISTEN_CMD = "LISTEN";
     public static final String STOP_CMD = "STOP";
     public static final String LISTB_CMD = "LISTB";
     public static final String LISTL_CMD = "LISTL";
-    public static final String BADR = "BADR\r\n";
-    public static final String FAIL = "FAIL\r\n";
+    //Commands
+    private static final String LISTEN = "LISTEN\r\n";
+    private static final String STOP = "STOP\r\n";
+    private static final String LISTB = "LIST\r\n";
+    private static final String LISTL = "LISTL\r\n";
+    // Result
+    public static final String ACK_RES = "ACK\r\n";
+    public static final String BADR_RES = "BADR\r\n";
+    public static final String FAIL_RES = "FAIL\r\n";
+    // Seperator
     private static final String SPACE = " ";
 
     private static final int LISTEN_NBTOK = 2;
@@ -95,17 +104,17 @@ public class BroadcastService implements Runnable {
                 Log.i(this.getClass().getName(), "Service - received this message: " + rstring);
 
                 // Listen to the broadcaster OR stop listening (request)
-                if (rstring.contains(LISTEN_CMD) || rstring.contains(STOP_CMD)) {
+                if (rstring.contains(LISTEN) || rstring.contains(STOP)) {
 
                     w.write(basicResponse(rstring));
                     uiUpdateWithoutConnection();
 
-                } else if (rstring.contains(LISTB_CMD)) {
+                } else if (rstring.contains(LISTB)) {
 
                     w.write(listOfBroadcaster());
                     uiUpdate();
 
-                } else if (rstring.contains(LISTL_CMD)) {
+                } else if (rstring.contains(LISTL)) {
 
                     w.write(listOfListener());
                     uiUpdate();
@@ -193,12 +202,12 @@ public class BroadcastService implements Runnable {
         String[] ss = p.split(rstring);
 
         if (ss.length != LISTEN_NBTOK)
-            return BADR;
+            return BADR_RES;
         else {
-            if(rstring.contains(LISTEN_CMD))
-                return (registerListener(ss[1]) ? ACK : FAIL);
+            if(rstring.contains(LISTEN))
+                return (registerListener(ss[1]) ? ACK_RES : FAIL_RES);
             else
-                return (unregisterListener(ss[1]) ? ACK : FAIL);
+                return (unregisterListener(ss[1]) ? ACK_RES : FAIL_RES);
         }
     }
 
