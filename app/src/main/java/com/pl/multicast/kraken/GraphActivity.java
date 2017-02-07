@@ -284,8 +284,15 @@ public class GraphActivity extends Activity
         } else if (id == R.id.action_listen) {
             Log.i(this.getLocalClassName(), "listen action");
             if(!mTitle.equals(username)) {
-                recv.listenRequest(prepareRequest(), username);
-            }
+                DeviceData d = prepareRequest();
+                recv.listenRequest(d, username);
+                Log.i(this.getLocalClassName(), "listening to " + d.getName());
+                Toast.makeText(getApplicationContext(), "You are listening to '" + d.getName() + "'",
+                        Toast.LENGTH_LONG).show();
+            } else
+                Toast.makeText(getApplicationContext(), "You cannot listen to yourself, idiot!",
+                        Toast.LENGTH_LONG).show();
+
 
             return true;
 
@@ -293,7 +300,9 @@ public class GraphActivity extends Activity
             Log.i(this.getLocalClassName(), "stop action");
             if(!mTitle.equals(username)) {
                 recv.stopRequest(prepareRequest(), username);
-            }
+            } else
+                Toast.makeText(getApplicationContext(), "You cannot stop yourself, (o_O) idiot!",
+                        Toast.LENGTH_LONG).show();
             return true;
         }
 
