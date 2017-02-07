@@ -19,6 +19,7 @@ public class KrakenMisc {
     private static final String KRAKEN_MISC = "common.KrakenMisc";
     public static final int SERVICE_PORT = 2408;
     public static final int BROADCAST_PORT = 2409;
+    public static final int TXT_ID = 1024;
 
     public static String getIPAddress() {
         String ip = null;
