@@ -83,7 +83,6 @@ public class GraphActivity extends Activity
         /** Fragment creation */
         navigationSenders = (NavDrawer)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
-
         navigationReceivers = (NavDrawer)
                 getFragmentManager().findFragmentById(R.id.navigation_drawerR);
 
@@ -91,7 +90,6 @@ public class GraphActivity extends Activity
         navigationSenders.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
-
         // Set up the drawer (right side)
         navigationReceivers.setUp(
                 R.id.navigation_drawerR,
@@ -118,8 +116,6 @@ public class GraphActivity extends Activity
         /*
         UDPReceiver udpr = new UDPReceiver(this, std);
         udpr.launchReceiver();*/
-        //udpr.sendMessage(new DeviceData("toto", "192.168.43.222", 2408, 2409), "LISTEN gt-i8190n\r\n");
-        //udpr.sendMessage(new DeviceData("toto", "192.168.43.1", 2408, 2409), "LISTEN kenny\r\n");
     }
 
 
@@ -142,7 +138,6 @@ public class GraphActivity extends Activity
         Log.i(this.getLocalClassName(), "Stop the activity");
         bserviceth.interrupt();
         hack.runOperation(Hackojo.QUIT_GROUP_OP);
-
     }
 
     @Override
@@ -153,23 +148,6 @@ public class GraphActivity extends Activity
                 .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
                 .commit();
     }
-
-    public void update() {
-
-        /*ArrayList<DeviceData> ls = std.getSenders();
-        ArrayList<DeviceData> ll = std.getListeners();
-
-        ls.add(0, new DeviceData(username, "", 0, 0));
-        ll.add(0, new DeviceData(username, "", 0, 0));
-
-        navigationSenders.updateContent(ls.toArray());
-        navigationReceivers.updateContent(ll.toArray());*/
-    }
-
-    public String getUSR() {
-        return username;
-    }
-
 
     public void onSectionAttached(int number) {
 
@@ -190,7 +168,7 @@ public class GraphActivity extends Activity
 
 
     /**
-     * Button action
+     * Button actions
      **/
     public void broadcastText(View v) {
 
@@ -207,13 +185,26 @@ public class GraphActivity extends Activity
         Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
     }
 
+    // Update the list view
     public void receiveText(String text) {
 
         ListView lstv = (ListView) findViewById(R.id.txtrecv);
         ltext.add(text);
-        lstv.setAdapter(new ArrayAdapter<String>(getApplicationContext(), R.layout.text_recv, ltext));
+        lstv.setAdapter(new ArrayAdapter<>(getApplicationContext(), R.layout.text_recv, ltext));
         lstv.setVisibility(View.VISIBLE);
         Log.i(this.getLocalClassName(), "List updated. Added the following text: " + text);
+    }
+
+    public void update() {
+
+        /*ArrayList<DeviceData> ls = std.getSenders();
+        ArrayList<DeviceData> ll = std.getListeners();
+
+        ls.add(0, new DeviceData(username, "", 0, 0));
+        ll.add(0, new DeviceData(username, "", 0, 0));
+
+        navigationSenders.updateContent(ls.toArray());
+        navigationReceivers.updateContent(ll.toArray());*/
     }
 
     /**
@@ -256,6 +247,10 @@ public class GraphActivity extends Activity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_update) {
             Log.i(this.getLocalClassName(), "update action");
+
+            Toast.makeText(getApplicationContext(), R.string.msg_updating, Toast.LENGTH_LONG).show();
+            hack.runOperation(Hackojo.DEVICE_OP);
+
             return true;
 
         } else if (id == R.id.action_listen) {

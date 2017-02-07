@@ -72,7 +72,7 @@ public class BroadcastService implements Runnable {
                 try{
                     sock = s.accept();
                 } catch (Exception e){
-                    Log.e(this.getClass().getName(), "Service - Timeout");
+                    Log.v(this.getClass().getName(), "Service - Timeout");
                 }
 
                 if(Thread.currentThread().isInterrupted()){
