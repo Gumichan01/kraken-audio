@@ -81,6 +81,7 @@ public class GraphActivity extends Activity
 
         /** Receiver */
         recv = new UDPReceiver(this,std);
+        recv.launch();
 
         /** Fragment creation */
         navigationSenders = (NavDrawer)
@@ -268,7 +269,8 @@ public class GraphActivity extends Activity
                 String slistener = new String(mTitle);
                 DeviceData d = std.getSenderOf(slistener);
                 mTitle = username;
-                recv.listenRequest(d);
+                Log.i(this.getLocalClassName(), slistener + " | " + d.toString() +  " | " + mTitle);
+                recv.listenRequest(d, username);
             }
 
             return true;
