@@ -265,7 +265,7 @@ public class GraphActivity extends Activity
             Log.i(this.getLocalClassName(), "listen action");
             if(!mTitle.equals(username)) {
                 // TODO: 07/02/2017 listen request
-                String slistener = mTitle;
+                String slistener = new String(mTitle);
                 DeviceData d = std.getSenderOf(slistener);
                 mTitle = username;
                 recv.listenRequest(d);
