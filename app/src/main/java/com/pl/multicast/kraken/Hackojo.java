@@ -1,6 +1,8 @@
 package com.pl.multicast.kraken;
 
 
+import android.util.Log;
+
 import com.pl.multicast.kraken.clt.ClientDevice;
 import com.pl.multicast.kraken.datum.DeviceData;
 import com.pl.multicast.kraken.datum.GroupData;
@@ -44,15 +46,19 @@ public class Hackojo {
                     ddata = cd.deviceList(gname);
                 } else if (idop == JOIN_GROUP_OP) {
                     // join a group
-                    if (cd.joinGroup(gname) == false)
+                    if (cd.joinGroup(gname) == false) {
+                        Log.e(this.getClass().getName(),"Cannot join " + gname);
                         cd.createGroup(gname);
+                    }
                 } else if (idop == QUIT_GROUP_OP) {
                     // quit a group
                     cd.quitGroup(gname);
                 } else if (idop == CREATE_GROUP_OP) {
                     // create a groups
-                    if (cd.createGroup(gname) == false)
+                    if (cd.createGroup(gname) == false){
+                        Log.e(this.getClass().getName(),"Cannot create " + gname);
                         cd.joinGroup(gname);
+                    }
                 }
             }
         });
