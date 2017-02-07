@@ -198,7 +198,6 @@ public class GraphActivity extends Activity
         String s = edt.getText().toString();
         Log.i(this.getLocalClassName(), "Send the following text: " + s);
         // Send message to the thread responsible of broadcasting the message
-        //bs.getBroadcaster().sendText(s);
         Message m = new Message();
         m.what = KrakenMisc.TXT_ID;
         m.obj = s;

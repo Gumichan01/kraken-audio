@@ -21,8 +21,7 @@ import java.util.ArrayList;
  */
 public class UDPSender {
 
-    // TODO: 06/02/2017 UDPSender receive the text to send to GraphActivity
-    // TODO: 06/02/2017 UDPSender send a message if and only if the activity notify it 
+    // TODO: 06/02/2017 fix the issue with the handler (minor bug)
 
     public static final int OBS = 42;
     DatagramSocket broadcastsock;
