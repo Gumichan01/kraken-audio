@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.pl.multicast.kraken.common.KrakenMisc;
 import com.pl.multicast.kraken.datum.DeviceData;
+import com.pl.multicast.kraken.parser.MessageParser;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -110,13 +111,13 @@ public class UDPReceiver {
 
     public void listenRequest(final DeviceData d){
         Log.i(this.getClass().getName(), "UDP receiver - listen request");
-        sendMessageRequest(d, BroadcastService.LISTEN_CMD);
+        sendMessageRequest(d, BroadcastService.LISTEN + " " +  d.getName() + MessageParser.EOL);
     }
 
     public void stopRequest(final DeviceData d){
 
         Log.i(this.getClass().getName(), "UDP receiver - stop request");
-        sendMessageRequest(d, BroadcastService.STOP_CMD);
+        sendMessageRequest(d, BroadcastService.STOP_CMD + " " +  d.getName() + MessageParser.EOL);
     }
 
     private void sendMessageRequest(final DeviceData d, final String str) {

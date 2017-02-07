@@ -34,8 +34,8 @@ public class BroadcastService implements Runnable {
     public static final String LISTB_CMD = "LISTB\r\n";
     public static final String LISTL_CMD = "LISTL\r\n";
     // Keyword
-    private static final String LISTEN = "LISTEN";
-    private static final String STOP = "STOP";
+    public static final String LISTEN = "LISTEN";
+    public static final String STOP = "STOP";
     private static final String LISTB = "LIST";
     private static final String LISTL = "LISTL";
     // Result
@@ -205,7 +205,7 @@ public class BroadcastService implements Runnable {
         Pattern p = Pattern.compile(SPACE);
         String[] ss = p.split(rstring);
 
-        Log.i(this.getClass().getName(), "Service - " + rstring + " | " + ss[0] + " - " + ss[1]);
+        //Log.i(this.getClass().getName(), "Service - " + rstring + " | " + ss[0] + " - " + ss[1]);
 
         if (ss.length != LISTEN_NBTOK)
             return BADR_RES;
