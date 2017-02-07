@@ -28,16 +28,16 @@ import java.util.regex.Pattern;
 public class BroadcastService implements Runnable {
 
 
-    // Keywords
-    public static final String LISTEN_CMD = "LISTEN";
-    public static final String STOP_CMD = "STOP";
-    public static final String LISTB_CMD = "LISTB";
-    public static final String LISTL_CMD = "LISTL";
-    //Commands
-    private static final String LISTEN = "LISTEN\r\n";
-    private static final String STOP = "STOP\r\n";
-    private static final String LISTB = "LIST\r\n";
-    private static final String LISTL = "LISTL\r\n";
+    // Commands
+    public static final String LISTEN_CMD = "LISTEN\r\n";
+    public static final String STOP_CMD = "STOP\r\n";
+    public static final String LISTB_CMD = "LISTB\r\n";
+    public static final String LISTL_CMD = "LISTL\r\n";
+    // Keyword
+    private static final String LISTEN = "LISTEN";
+    private static final String STOP = "STOP";
+    private static final String LISTB = "LIST";
+    private static final String LISTL = "LISTL";
     // Result
     public static final String ACK_RES = "ACK\r\n";
     public static final String BADR_RES = "BADR\r\n";
@@ -106,19 +106,23 @@ public class BroadcastService implements Runnable {
                 // Listen to the broadcaster OR stop listening (request)
                 if (rstring.contains(LISTEN) || rstring.contains(STOP)) {
 
+                    Log.i(this.getClass().getName(), "LISTEN OR STOP");
                     w.write(basicResponse(rstring));
                     uiUpdateWithoutConnection();
 
                 } else if (rstring.contains(LISTB)) {
 
+                    Log.i(this.getClass().getName(), "LISTB");
                     w.write(listOfBroadcaster());
                     uiUpdate();
 
                 } else if (rstring.contains(LISTL)) {
 
+                    Log.i(this.getClass().getName(), "LISTL");
                     w.write(listOfListener());
                     uiUpdate();
-                }
+                } else
+                    Log.i(this.getClass().getName(), "error");
 
                 w.flush();
                 Log.i(this.getClass().getName(), "Service - Close the client socket");
@@ -200,6 +204,8 @@ public class BroadcastService implements Runnable {
 
         Pattern p = Pattern.compile(SPACE);
         String[] ss = p.split(rstring);
+
+        Log.i(this.getClass().getName(), "Service - " + rstring + " | " + ss[0] + " - " + ss[1]);
 
         if (ss.length != LISTEN_NBTOK)
             return BADR_RES;

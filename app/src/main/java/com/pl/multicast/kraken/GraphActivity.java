@@ -128,7 +128,8 @@ public class GraphActivity extends Activity
         super.onStop();
         Log.i(this.getLocalClassName(), "Stop the activity");
         bserviceth.interrupt();
-        recv.stop();
+        if(recv != null)
+            recv.stop();
         hack.runOperation(Hackojo.QUIT_GROUP_OP);
     }
 
