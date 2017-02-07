@@ -98,6 +98,7 @@ public class BroadcastService implements Runnable {
                 if (rstring.contains(LISTEN_CMD) || rstring.contains(STOP_CMD)) {
 
                     w.write(basicResponse(rstring));
+                    uiUpdateWithoutConnection();
 
                 } else if (rstring.contains(LISTB_CMD)) {
 
@@ -130,6 +131,16 @@ public class BroadcastService implements Runnable {
             @Override
             public void run() {
                 gactivity.update(false);
+            }
+        });
+    }
+
+    private void uiUpdateWithoutConnection() {
+
+        gactivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                gactivity.updateWithoutConnection(false);
             }
         });
     }
