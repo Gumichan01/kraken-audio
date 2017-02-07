@@ -81,6 +81,7 @@ public class GraphActivity extends Activity
 
         /** Receiver */
         recv = new UDPReceiver(this,std);
+        recv.launch();
 
         /** Fragment creation */
         navigationSenders = (NavDrawer)
@@ -208,14 +209,33 @@ public class GraphActivity extends Activity
         if(!first) {
 
             List<DeviceData> lt = std.getListeners();
+            Iterator<DeviceData> it = br.iterator();
 
-            for(DeviceData d : lt)
-                br.remove(d);
+            while(it.hasNext()){
+
+                DeviceData d = it.next();
+                for(DeviceData dd : lt){
+
+                    if(dd.getName().equals(d.getName())){
+                        it.remove();
+                        break;
+                    }
+                }
+            }
 
             navigationReceivers.updateContent(KrakenMisc.adaptList(lt, username).toArray());
         }
 
         navigationSenders.updateContent(KrakenMisc.adaptList(br, username).toArray());
+    }
+
+    private DeviceData prepareRequest(){
+
+        String slistener = new String(mTitle);
+        DeviceData d = std.getSenderOf(slistener);
+        mTitle = username;
+        Log.i(this.getLocalClassName(), slistener + " | " + d.toString() +  " | " + mTitle);
+        return d;
     }
 
     /**
@@ -264,17 +284,25 @@ public class GraphActivity extends Activity
         } else if (id == R.id.action_listen) {
             Log.i(this.getLocalClassName(), "listen action");
             if(!mTitle.equals(username)) {
-                // TODO: 07/02/2017 listen request
-                String slistener = new String(mTitle);
-                DeviceData d = std.getSenderOf(slistener);
-                mTitle = username;
-                recv.listenRequest(d);
-            }
+                DeviceData d = prepareRequest();
+                recv.listenRequest(d, username);
+                Log.i(this.getLocalClassName(), "listening to " + d.getName());
+                Toast.makeText(getApplicationContext(), "You are listening to '" + d.getName() + "'",
+                        Toast.LENGTH_LONG).show();
+            } else
+                Toast.makeText(getApplicationContext(), "You cannot listen to yourself, idiot!",
+                        Toast.LENGTH_LONG).show();
+
 
             return true;
 
         } else if (id == R.id.action_stop) {
             Log.i(this.getLocalClassName(), "stop action");
+            if(!mTitle.equals(username)) {
+                recv.stopRequest(prepareRequest(), username);
+            } else
+                Toast.makeText(getApplicationContext(), "You cannot stop yourself, (o_O) idiot!",
+                        Toast.LENGTH_LONG).show();
             return true;
         }
 

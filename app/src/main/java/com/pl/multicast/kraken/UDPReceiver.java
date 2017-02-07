@@ -62,7 +62,7 @@ public class UDPReceiver {
                         }
 
                         for (int i = 0; i < data.length; i++) {
-                            data[i] = '#';
+                            data[i] = ' ';
                         }
 
                         try {
@@ -109,15 +109,16 @@ public class UDPReceiver {
         thread.interrupt();
     }
 
-    public void listenRequest(final DeviceData d){
+    public void listenRequest(final DeviceData d, final String usrname){
         Log.i(this.getClass().getName(), "UDP receiver - listen request");
-        sendMessageRequest(d, BroadcastService.LISTEN + " " +  d.getName() + MessageParser.EOL);
+        Log.i(this.getClass().getName(), "UDP receiver - " + d.toString());
+        sendMessageRequest(d, BroadcastService.LISTEN + " " + usrname + MessageParser.EOL);
     }
 
-    public void stopRequest(final DeviceData d){
+    public void stopRequest(final DeviceData d, final String usrname){
 
         Log.i(this.getClass().getName(), "UDP receiver - stop request");
-        sendMessageRequest(d, BroadcastService.STOP_CMD + " " +  d.getName() + MessageParser.EOL);
+        sendMessageRequest(d, BroadcastService.STOP_CMD + " " +  usrname + MessageParser.EOL);
     }
 
     private void sendMessageRequest(final DeviceData d, final String str) {
