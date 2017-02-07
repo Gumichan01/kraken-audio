@@ -5,6 +5,8 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,6 +26,7 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Observable;
 
 
 public class GraphActivity extends Activity
@@ -33,7 +36,7 @@ public class GraphActivity extends Activity
     // Communication point
     Hackojo hack;
     /**
-     * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
+     * Fragment managing the behaviours, interactions and presentation of the navigation drawer.
      */
     private NavDrawer navigationSenders;
     private NavDrawer navigationReceivers;
@@ -43,11 +46,9 @@ public class GraphActivity extends Activity
     private String mTitle;
     private String username;
     private String gname;
-
-    // Threads
-    //private UDPSender st;
-    private Thread bservice;    // broadcast service
-
+    // Thread
+    private Thread bserviceth;    // broadcast service
+    private BroadcastService bs;
     // Data
     private BroadcastData std;
 
@@ -62,19 +63,22 @@ public class GraphActivity extends Activity
         username = d.getName();
         mTitle = username;
 
+        // Load the broadcast data
+        std = new BroadcastData();
+
+        /** Service server */
+        bs = new BroadcastService(this, std);
+        bserviceth = new Thread(bs);
+        bserviceth.start();
+
         try {
             hack = new Hackojo(d, gname);
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         }
 
-        std = new BroadcastData();
         //st = new UDPSender(std);
         //st.start();
-
-        /** Service server */
-        bservice = new Thread(new BroadcastService(this, std));
-        bservice.start();
 
         /** Fragment creation */
         navigationSenders = (NavDrawer)
@@ -136,7 +140,7 @@ public class GraphActivity extends Activity
 
         super.onStop();
         Log.i(this.getLocalClassName(), "Stop the activity");
-        bservice.interrupt();
+        bserviceth.interrupt();
         hack.runOperation(Hackojo.QUIT_GROUP_OP);
 
     }
@@ -193,7 +197,12 @@ public class GraphActivity extends Activity
         EditText edt = (EditText) findViewById(R.id.txtsend);
         String s = edt.getText().toString();
         Log.i(this.getLocalClassName(), "Send the following text: " + s);
-        //std.setText(s);
+        // Send message to the thread responsible of broadcasting the message
+        //bs.getBroadcaster().sendText(s);
+        Message m = new Message();
+        m.what = KrakenMisc.TXT_ID;
+        m.obj = s;
+        bs.getThreadHandler().sendMessage(m);
         Log.i(this.getLocalClassName(), "Send text END");
 
         Toast.makeText(this, s, Toast.LENGTH_SHORT).show();

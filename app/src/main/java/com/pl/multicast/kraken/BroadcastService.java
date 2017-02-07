@@ -1,5 +1,7 @@
 package com.pl.multicast.kraken;
 
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 
 import com.pl.multicast.kraken.common.KrakenMisc;
@@ -15,6 +17,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.regex.Pattern;
 
 
@@ -24,12 +28,12 @@ import java.util.regex.Pattern;
 public class BroadcastService implements Runnable {
 
     public static final String ACK = "ACK\r\n";
-    private static final String LISTEN_CMD = "LISTEN";
-    private static final String STOP_CMD = "STOP";
-    private static final String LISTB_CMD = "LISTB";
-    private static final String LISTL_CMD = "LISTL";
-    private static final String BADR = "BADR\r\n";
-    private static final String FAIL = "FAIL\r\n";
+    public static final String LISTEN_CMD = "LISTEN";
+    public static final String STOP_CMD = "STOP";
+    public static final String LISTB_CMD = "LISTB";
+    public static final String LISTL_CMD = "LISTL";
+    public static final String BADR = "BADR\r\n";
+    public static final String FAIL = "FAIL\r\n";
     private static final String SPACE = " ";
 
     private static final int LISTEN_NBTOK = 2;
@@ -37,16 +41,30 @@ public class BroadcastService implements Runnable {
 
     private GraphActivity gactivity;
     private BroadcastData bdata;
+    private UDPSender broadcaster;
+
 
     public BroadcastService(GraphActivity g, BroadcastData dd) {
         super();
         gactivity = g;
         bdata = dd;
+        broadcaster = new UDPSender(dd);
+    }
+
+    public synchronized UDPSender getBroadcaster() {
+
+        return broadcaster;
     }
 
 
+    public synchronized Handler getThreadHandler() {
+
+        return broadcaster.getHandler();
+    }
+
     public void run() {
 
+        // Launch the service server
         try {
             ServerSocket s = new ServerSocket(KrakenMisc.SERVICE_PORT);
             s.setSoTimeout(SRV_DELAY);
@@ -132,7 +150,7 @@ public class BroadcastService implements Runnable {
         }
     }
 
-    public boolean registerListener(String s) {
+    private boolean registerListener(String s) {
 
         DeviceData dev = null;
         List<DeviceData> ld = bdata.getSenders();
@@ -154,7 +172,7 @@ public class BroadcastService implements Runnable {
         return true;
     }
 
-    public boolean unregisterListener(String s) {
+    private boolean unregisterListener(String s) {
 
         DeviceData dev = null;
         List<DeviceData> ld = bdata.getListeners();
@@ -174,12 +192,12 @@ public class BroadcastService implements Runnable {
         return true;
     }
 
-    public String listOfBroadcaster() {
+    private String listOfBroadcaster() {
 
         return listOfDevice(bdata.getSenders().iterator());
     }
 
-    public String listOfListener() {
+    private String listOfListener() {
 
         return listOfDevice(bdata.getListeners().iterator());
     }
