@@ -1,5 +1,8 @@
 package com.pl.multicast.kraken.common;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.Log;
 
 import com.pl.multicast.kraken.datum.DeviceData;
@@ -58,6 +61,14 @@ public class KrakenMisc {
     public static boolean isNetworkAvailable(){
 
         // TODO: 06/02/2017 Kenny has to do this task
+        /*ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+
+        if(networkInfo != null && networkInfo.isAvailable() && networkInfo.isConnected()){
+            boolean wifi = networkInfo.getType() == ConnectivityManager.TYPE_WIFI;
+            Log.d("NetworkState", "L'interface de connexion active est du Wifi : " + wifi);
+
+        }*/
         return true;
     }
 
