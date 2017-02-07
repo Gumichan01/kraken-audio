@@ -98,19 +98,8 @@ public class GraphActivity extends Activity
         navigationSenders.updateContent(new String[]{username});
         navigationReceivers.updateContent(new String[]{username});
 
-        /** Get devices */
-        hack.runOperation(Hackojo.DEVICE_OP);
-        List<DeviceData> ld = hack.getDevices();
-
-        if (ld != null) {
-
-            for(DeviceData dev: ld)
-                std.addSender(dev);
-
-            navigationSenders.updateContent(KrakenMisc.adaptList(ld, username).toArray());
-
-        } else
-            Log.i(this.getLocalClassName(), "no device");
+        /** Update the broadcast devices */
+        update(true);
 
         /// ONLY FOR TESTING THE BROADCAST
         /*
@@ -166,10 +155,7 @@ public class GraphActivity extends Activity
         }
     }
 
-
-    /**
-     * Button actions
-     **/
+    // Broadcast the text
     public void broadcastText(View v) {
 
         EditText edt = (EditText) findViewById(R.id.txtsend);
@@ -195,7 +181,31 @@ public class GraphActivity extends Activity
         Log.i(this.getLocalClassName(), "List updated. Added the following text: " + text);
     }
 
-    public void update() {
+    public void update(boolean first) {
+
+        hack.runOperation(Hackojo.DEVICE_OP);
+        List<DeviceData> br = hack.getDevices();
+        std.clearSenders();
+
+        if (br != null) {
+
+            for(DeviceData dev: br)
+                std.addSender(dev);
+
+        } else
+            Log.i(this.getLocalClassName(), "no device");
+
+        if(!first) {
+
+            List<DeviceData> lt = std.getListeners();
+
+            for(DeviceData d : lt)
+                br.remove(d);
+
+            navigationReceivers.updateContent(KrakenMisc.adaptList(lt, username).toArray());
+        }
+
+        navigationSenders.updateContent(KrakenMisc.adaptList(br, username).toArray());
 
         /*ArrayList<DeviceData> ls = std.getSenders();
         ArrayList<DeviceData> ll = std.getListeners();
@@ -249,8 +259,7 @@ public class GraphActivity extends Activity
             Log.i(this.getLocalClassName(), "update action");
 
             Toast.makeText(getApplicationContext(), R.string.msg_updating, Toast.LENGTH_LONG).show();
-            hack.runOperation(Hackojo.DEVICE_OP);
-
+            update(false);
             return true;
 
         } else if (id == R.id.action_listen) {

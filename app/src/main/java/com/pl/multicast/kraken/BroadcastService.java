@@ -102,18 +102,13 @@ public class BroadcastService implements Runnable {
                 } else if (rstring.contains(LISTB_CMD)) {
 
                     w.write(listOfBroadcaster());
+                    uiUpdate();
 
                 } else if (rstring.contains(LISTL_CMD)) {
 
                     w.write(listOfListener());
+                    uiUpdate();
                 }
-
-                gactivity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        gactivity.update();
-                    }
-                });
 
                 w.flush();
                 Log.i(this.getClass().getName(), "Service - Close the client socket");
@@ -126,6 +121,17 @@ public class BroadcastService implements Runnable {
 
             e.printStackTrace();
         }
+    }
+
+
+    private void uiUpdate() {
+
+        gactivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                gactivity.update(false);
+            }
+        });
     }
 
     private boolean registerListener(String s) {

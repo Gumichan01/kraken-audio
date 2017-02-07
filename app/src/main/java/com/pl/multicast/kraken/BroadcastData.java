@@ -63,6 +63,18 @@ public class BroadcastData {
         senders.remove(sender);
     }
 
+    public synchronized void clearSenders() {
+
+        Log.i(this.getClass().getName(), "Sync - clear senders");
+        senders.clear();
+    }
+
+    public synchronized void clearListeners() {
+
+        Log.i(this.getClass().getName(), "Sync - clear listeners");
+        listeners.clear();
+    }
+
     public synchronized ArrayList<DeviceData> getListeners() {
 
         return listeners;
