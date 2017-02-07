@@ -209,14 +209,33 @@ public class GraphActivity extends Activity
         if(!first) {
 
             List<DeviceData> lt = std.getListeners();
+            Iterator<DeviceData> it = br.iterator();
 
-            for(DeviceData d : lt)
-                br.remove(d);
+            while(it.hasNext()){
+
+                DeviceData d = it.next();
+                for(DeviceData dd : lt){
+
+                    if(dd.getName().equals(d.getName())){
+                        it.remove();
+                        break;
+                    }
+                }
+            }
 
             navigationReceivers.updateContent(KrakenMisc.adaptList(lt, username).toArray());
         }
 
         navigationSenders.updateContent(KrakenMisc.adaptList(br, username).toArray());
+    }
+
+    private DeviceData prepareRequest(){
+
+        String slistener = new String(mTitle);
+        DeviceData d = std.getSenderOf(slistener);
+        mTitle = username;
+        Log.i(this.getLocalClassName(), slistener + " | " + d.toString() +  " | " + mTitle);
+        return d;
     }
 
     /**
@@ -265,18 +284,16 @@ public class GraphActivity extends Activity
         } else if (id == R.id.action_listen) {
             Log.i(this.getLocalClassName(), "listen action");
             if(!mTitle.equals(username)) {
-                // TODO: 07/02/2017 listen request
-                String slistener = new String(mTitle);
-                DeviceData d = std.getSenderOf(slistener);
-                mTitle = username;
-                Log.i(this.getLocalClassName(), slistener + " | " + d.toString() +  " | " + mTitle);
-                recv.listenRequest(d, username);
+                recv.listenRequest(prepareRequest(), username);
             }
 
             return true;
 
         } else if (id == R.id.action_stop) {
             Log.i(this.getLocalClassName(), "stop action");
+            if(!mTitle.equals(username)) {
+                recv.stopRequest(prepareRequest(), username);
+            }
             return true;
         }
 
