@@ -254,9 +254,19 @@ public class GraphActivity extends Activity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_update) {
+            Log.i(this.getLocalClassName(), "update action");
+            return true;
+
+        } else if (id == R.id.action_listen) {
+            Log.i(this.getLocalClassName(), "listen action");
+            return true;
+
+        } else if (id == R.id.action_stop) {
+            Log.i(this.getLocalClassName(), "stop action");
             return true;
         }
+
 
         return super.onOptionsItemSelected(item);
     }
