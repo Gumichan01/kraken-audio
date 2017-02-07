@@ -49,8 +49,9 @@ public class UDPReceiver {
                     byte[] data = new byte[DATAPCK_SIZE];
                     DatagramPacket p = new DatagramPacket(data, data.length);
 
-                    while (std.getRun()) {
+                    while (true) {
 
+                        // TODO: 07/02/2017 Check if the thread where the code is executed has been interrupted
                         if (udpsock == null) {
                             break;
                         }
@@ -62,7 +63,7 @@ public class UDPReceiver {
                         try {
                             udpsock.receive(p);
                             final String rstring = new String(p.getData());
-                            Log.i("GROUP", "UDP receiver - " + rstring);
+                            Log.i(this.getClass().getName(), "UDP receiver - " + rstring);
 
                             graph.runOnUiThread(new Runnable() {
                                 @Override
@@ -72,14 +73,13 @@ public class UDPReceiver {
                             });
 
                         } catch (IOException e) {
-                            e.printStackTrace();
+                            Log.e(this.getClass().getName(), "UDP receiver - No UDP socket created");
                         }
                     }
 
                 } catch (SocketException e) {
-                    Log.i("GROUP", "UDP receiver - No UDP socket created");
-                    Log.i("GROUP", "UDP receiver - " + e.getMessage());
-                    e.printStackTrace();
+                    Log.i(this.getClass().getName(), "UDP receiver - No UDP socket created");
+                    Log.e(this.getClass().getName(), "UDP receiver - " + e.getMessage());
                 } finally {
 
                     if (udpsock != null)
@@ -95,7 +95,7 @@ public class UDPReceiver {
             @Override
             public void run() {
                 try {
-                    Log.i("GROUP", "UDP receiver - connection to " + d.getAddr() + ":" + d.getPort());
+                    Log.i(this.getClass().getName(), "UDP receiver - connection to " + d.getAddr() + ":" + d.getPort());
                     Socket s = new Socket(d.getAddr(), d.getPort());
 
                     PrintWriter writer = new PrintWriter(new OutputStreamWriter(s.getOutputStream()));
@@ -104,7 +104,7 @@ public class UDPReceiver {
                     writer.flush();
 
                     String rstring = reader.readLine();
-                    Log.i("GROUP", "UDP receiver - msg: " + rstring);
+                    Log.i(this.getClass().getName(), "UDP receiver - msg: " + rstring);
 
                 } catch (IOException e) {
                     e.printStackTrace();
