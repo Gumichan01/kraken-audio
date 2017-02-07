@@ -9,44 +9,40 @@ import java.util.ArrayList;
 
 
 /**
- * Created by Luxon on 19/01/2017.
+ * Class that contains information about
  */
 public class BroadcastData {
 
-    private volatile boolean running; // TODO: 06/02/2017 Remove this variable
+    // TODO: 06/02/2017 Refactorize this class (kenny)
+
+    @Deprecated
+    private volatile boolean running;
+    @Deprecated
     private volatile String text;
+    @Deprecated
     private volatile boolean send_text;
     private volatile ArrayList<DeviceData> senders;
     private volatile ArrayList<DeviceData> listeners;
 
     public BroadcastData() {
 
-        text = "TEST";
+        text = "#";
         running = true;
         send_text = false;
         senders = new ArrayList<>();
         listeners = new ArrayList<>();
     }
 
-    public synchronized boolean getRun() {
-
-        return running;
-    }
-
-    public synchronized void setRun(boolean r) {
-
-        Log.i("GROUP", "Sync - running");
-        running = r;
-    }
-
+    @Deprecated
     public synchronized String getText() {
 
         return text;
     }
 
+    @Deprecated
     public synchronized void setText(String t) {
 
-        Log.i("GROUP", "Sync - set text to send");
+        Log.i(this.getClass().getName(), "Sync - set text to send");
         text = t;
     }
 
@@ -57,13 +53,13 @@ public class BroadcastData {
 
     public synchronized void addSender(DeviceData sender) {
 
-        Log.i("GROUP", "Sync - added the sender: " + sender.toString());
+        Log.i(this.getClass().getName(), "Sync - added the sender: " + sender.toString());
         senders.add(sender);
     }
 
     public synchronized void rmSender(DeviceData sender) {
 
-        Log.i("GROUP", "Sync - remove the sender: " + sender.toString());
+        Log.i(this.getClass().getName(), "Sync - remove the sender: " + sender.toString());
         senders.remove(sender);
     }
 
@@ -74,19 +70,20 @@ public class BroadcastData {
 
     public synchronized void addListener(DeviceData listener) {
 
-        Log.i("GROUP", "Sync - added the listener: " + listener.toString());
+        Log.i(this.getClass().getName(), "Sync - added the listener: " + listener.toString());
         listeners.add(listener);
     }
 
     public synchronized void rmListener(DeviceData listener) {
 
-        Log.i("GROUP", "Sync - remove the listener: " + listener.toString());
+        Log.i(this.getClass().getName(), "Sync - remove the listener: " + listener.toString());
         listeners.remove(listener);
     }
 
+    @Deprecated
     public synchronized void stopServer() {
 
-        Log.i("GROUP", "Sync - SHUT down the server");
+        Log.i(this.getClass().getName(), "Sync - SHUT down the server");
         running = false;
     }
 

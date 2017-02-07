@@ -68,7 +68,7 @@ public class GraphActivity extends Activity
             throw new RuntimeException(e);
         }
 
-        std = new BroadcastData();  // TODO: 06/02/2017 Refactorize it
+        std = new BroadcastData();
         //st = new UDPSender(std);
         //st.start();
 
