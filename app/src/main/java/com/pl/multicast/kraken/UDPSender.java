@@ -1,13 +1,16 @@
 package com.pl.multicast.kraken;
 
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 
+import com.pl.multicast.kraken.common.KrakenMisc;
 import com.pl.multicast.kraken.datum.DeviceData;
 
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
 import java.util.ArrayList;
@@ -16,83 +19,102 @@ import java.util.ArrayList;
 /**
  * This class is reponsible of sending message using UDP
  */
-public class UDPSender extends Thread {
+public class UDPSender {
 
-    // TODO: 06/02/2017 Refactorize this class (UDPSendr is no longer a subclass of Thread)
-    // TODO: 06/02/2017 UDPSender is an Observer of GraphActivity and BoadcastService
+    // TODO: 06/02/2017 UDPSender receive the text to send to GraphActivity
     // TODO: 06/02/2017 UDPSender send a message if and only if the activity notify it 
 
-    private static final int SVTPORT = 2409;
-    private static String svthost = "";
-    private boolean running;
-    private String text;
-    private String ptext;
+    public static final int OBS = 42;
+    DatagramSocket broadcastsock;
     private BroadcastData std;
+    private static Handler bshandler;
 
     public UDPSender(BroadcastData s) {
 
-        super();
         std = s;
-        svthost = null;//clt.ClientDevice.SVHOST;
+        broadcastsock = null;
+        bshandler = new Handler(){
 
-    }
+            public void handleMessage(Message msg) {
 
-    public void run() {
+                Log.i(this.getClass().getName(), "msg - what: " + msg.what);
+                Log.i(this.getClass().getName(), "msg - obj: " + (msg.obj != null ? msg.obj.getClass().getName() : "NULL"));
 
-        String ptext = "";
-        boolean tosend;
+                if(msg.what == KrakenMisc.TXT_ID && msg.obj != null){
+
+                    Log.i(this.getClass().getName(), "msg - OK");
+
+                    try{
+                        final String text = (String) msg.obj;
+                        Log.i(this.getClass().getName(), "broadcast");
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                sendText(text);
+                            }
+                        }).start();
+
+
+                    } catch (ClassCastException ce){
+                        Log.e(this.getClass().getName(), "msg - cannot get the text: " + ce.getMessage());
+                    }
+                }
+            }
+        };
 
         try {
-            DatagramSocket srvsock = new DatagramSocket();
-            Log.i("GROUP", "Server @" + InetAddress.getLocalHost().toString());
+            broadcastsock = new DatagramSocket();
+        } catch (SocketException e) {
+            Log.e(this.getClass().getName(), e.getMessage());
+        }
+    }
 
-            while (std.getRun()) {
+    public Handler getHandler(){
 
-                byte[] data;
-                DatagramPacket p;
+        return bshandler;
+    }
 
-                text = std.getText();
-                data = text.getBytes();
-                ArrayList<DeviceData> listeners = std.getListeners();
+    private void sendText(final String text) {
 
-                if (!text.equals(ptext)) {
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    DatagramPacket p;
+                    byte[] data = text.getBytes();
+                    ArrayList<DeviceData> listeners = std.getListeners();
 
                     for (DeviceData dev : listeners) {
 
-                        Log.i("GROUP", "SEND data to " + dev.getName());
+                        Log.i(this.getClass().getName(), "SEND data to " + dev.getName());
                         try {
                             p = new DatagramPacket(data, data.length,
                                     new InetSocketAddress(dev.getAddr(), dev.getBroadcastPort()));
-                            srvsock.send(p);
-                        } catch (SocketException e) {
-                            e.printStackTrace();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        ptext = text;
-                        Log.i("GROUP", "DONE");
-                    }
-                }
 
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException ie) {
-                    ie.printStackTrace();
+                            if (broadcastsock != null)
+                                broadcastsock.send(p);
+
+                        } catch (IOException e) {
+                            Log.e(this.getClass().getName(), e.getMessage());
+                        }
+                    }
+                    Log.i(this.getClass().getName(), "DONE");
+
+                } catch (SecurityException | NullPointerException se) {
+
+                    se.printStackTrace();
+
+                } catch (Exception u) {
+
+                    u.printStackTrace();
                 }
             }
-            Log.i("GROUP", "shut the server down");
-
-        } catch (IOException e) {
-
+        });
+        t.start();
+        try {
+            t.join();
+        } catch (InterruptedException e) {
             e.printStackTrace();
-
-        } catch (SecurityException | NullPointerException se) {
-
-            se.printStackTrace();
-
-        } catch (Exception u) {
-
-            u.printStackTrace();
         }
     }
 }
