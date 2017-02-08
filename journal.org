@@ -1,3 +1,18 @@
+* <2017-02-08>
+** Fait:
+   - Un demo avec du texte! Bravo!
+** A faire:
+   - Supprimer "update", utiliser des notifications?
+   - Indiquer qui on écoute
+   - Avoir une vue globale du circuit
+   - Faire une étude comparative des bibliothèques de
+     streaming et/ou traitements sonores en Java
+* <2017-02-01>
+** Fait:
+   - Passage à HTTP
+   - Dockerfile
+** A faire:
+   - Demo!
 * <2017-01-25>
 ** Fait:
    - A essayer de programmer un client HTTP à la main.
