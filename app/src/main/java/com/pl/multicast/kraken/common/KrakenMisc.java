@@ -58,18 +58,13 @@ public class KrakenMisc {
         }
     }
 
-    public static boolean isNetworkAvailable(){
+    public static boolean isNetworkAvailable(Context context){
 
         // TODO: 06/02/2017 Kenny has to do this task
-        /*ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
-        if(networkInfo != null && networkInfo.isAvailable() && networkInfo.isConnected()){
-            boolean wifi = networkInfo.getType() == ConnectivityManager.TYPE_WIFI;
-            Log.d("NetworkState", "L'interface de connexion active est du Wifi : " + wifi);
-
-        }*/
-        return true;
+        return networkInfo != null && networkInfo.isConnected();
     }
 
     // Function used in GraphActivity
