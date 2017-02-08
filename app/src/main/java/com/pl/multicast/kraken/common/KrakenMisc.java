@@ -63,7 +63,7 @@ public class KrakenMisc {
         // TODO: 06/02/2017 Kenny has to do this task
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-
+    
         return networkInfo != null && networkInfo.isConnected();
     }
 
