@@ -81,7 +81,7 @@ public class UDPReceiver {
                             Log.e(this.getClass().getName(), "UDP receiver - No UDP socket created");
                         }
 
-                        if(Thread.currentThread().isInterrupted()){
+                        if (Thread.currentThread().isInterrupted()) {
 
                             Log.i(this.getClass().getName(), "UDP receiver - Interrupted");
                             udpsock.close();
@@ -109,16 +109,16 @@ public class UDPReceiver {
         thread.interrupt();
     }
 
-    public void listenRequest(final DeviceData d, final String usrname){
+    public void listenRequest(final DeviceData d, final String usrname) {
         Log.i(this.getClass().getName(), "UDP receiver - listen request");
         Log.i(this.getClass().getName(), "UDP receiver - " + d.toString());
         sendMessageRequest(d, BroadcastService.LISTEN + " " + usrname + MessageParser.EOL);
     }
 
-    public void stopRequest(final DeviceData d, final String usrname){
+    public void stopRequest(final DeviceData d, final String usrname) {
 
         Log.i(this.getClass().getName(), "UDP receiver - stop request");
-        sendMessageRequest(d, BroadcastService.STOP_CMD + " " +  usrname + MessageParser.EOL);
+        sendMessageRequest(d, BroadcastService.STOP_CMD + " " + usrname + MessageParser.EOL);
     }
 
     private void sendMessageRequest(final DeviceData d, final String str) {

@@ -1,7 +1,6 @@
 package com.pl.multicast.kraken;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
@@ -64,14 +63,13 @@ public class MainActivity extends Activity implements JoinGroupDialogFragment.Jo
         int id = v.getId();
         EditText tv = (EditText) findViewById(R.id.usr);
 
-        if(!KrakenMisc.isNetworkAvailable(getApplicationContext())){
+        if (!KrakenMisc.isNetworkAvailable(getApplicationContext())) {
 
-            // TODO: 06/02/2017 Display a toast (Kenny has to do that task)
-            Log.e(this.getLocalClassName(),"No Internet connection");
-            Toast.makeText(getApplicationContext(),"No Internet connection",Toast.LENGTH_SHORT).show();
-            return; // DO NOT REMOVE IT
+            Log.e(this.getLocalClassName(), "No Internet connection");
+            Toast.makeText(getApplicationContext(), "No Internet connection", Toast.LENGTH_SHORT).show();
+            return;
         }
-        Log.i(this.getLocalClassName(),"Internet connection available");
+        Log.i(this.getLocalClassName(), "Internet connection available");
 
         if (tv == null)
             Log.e(this.getLocalClassName(), "Internal error - usr: no edit text");

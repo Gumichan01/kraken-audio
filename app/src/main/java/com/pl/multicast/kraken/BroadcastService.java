@@ -1,7 +1,6 @@
 package com.pl.multicast.kraken;
 
 import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -18,8 +17,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.regex.Pattern;
 
 
@@ -37,12 +34,12 @@ public class BroadcastService implements Runnable {
     // Keyword
     public static final String LISTEN = "LISTEN";
     public static final String STOP = "STOP";
-    private static final String LISTB = "LIST";
-    private static final String LISTL = "LISTL";
     // Result
     public static final String ACK_RES = "ACK\r\n";
     public static final String BADR_RES = "BADR\r\n";
     public static final String FAIL_RES = "FAIL\r\n";
+    private static final String LISTB = "LIST";
+    private static final String LISTL = "LISTL";
     // Seperator
     private static final String SPACE = " ";
 
@@ -79,15 +76,15 @@ public class BroadcastService implements Runnable {
 
                 Socket sock = null;
 
-                try{
+                try {
                     sock = s.accept();
-                } catch (Exception e){
+                } catch (Exception e) {
                     Log.v(this.getClass().getName(), "Service - Timeout");
                 }
 
-                if(Thread.currentThread().isInterrupted()){
+                if (Thread.currentThread().isInterrupted()) {
 
-                    if(sock != null)
+                    if (sock != null)
                         sock.close();
 
                     s.close();
@@ -181,7 +178,7 @@ public class BroadcastService implements Runnable {
         gactivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(gactivity.getApplicationContext(), "\"" +  dev.getName() + "\" is listening to you", Toast.LENGTH_LONG).show();
+                Toast.makeText(gactivity.getApplicationContext(), "\"" + dev.getName() + "\" is listening to you", Toast.LENGTH_LONG).show();
             }
         });
         return true;
@@ -219,12 +216,10 @@ public class BroadcastService implements Runnable {
         Pattern p = Pattern.compile(SPACE);
         String[] ss = p.split(rstring);
 
-        //Log.i(this.getClass().getName(), "Service - " + rstring + " | " + ss[0] + " - " + ss[1]);
-
         if (ss.length != LISTEN_NBTOK)
             return BADR_RES;
         else {
-            if(rstring.contains(LISTEN))
+            if (rstring.contains(LISTEN))
                 return (registerListener(ss[1]) ? ACK_RES : FAIL_RES);
             else
                 return (unregisterListener(ss[1]) ? ACK_RES : FAIL_RES);

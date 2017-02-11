@@ -19,10 +19,10 @@ import java.util.List;
  */
 public class KrakenMisc {
 
-    private static final String KRAKEN_MISC = "common.KrakenMisc";
     public static final int SERVICE_PORT = 2408;
     public static final int BROADCAST_PORT = 2409;
     public static final int TXT_ID = 1024;
+    private static final String KRAKEN_MISC = "common.KrakenMisc";
 
     public static String getIPAddress() {
 
@@ -43,8 +43,8 @@ public class KrakenMisc {
 
                     // In some device using ipv6, a '%' character followed by
                     // the name of the interface can be contained
-                    if(ip.indexOf(PERCENT) > -1)
-                        ip = ip.substring(0,ip.indexOf(PERCENT));
+                    if (ip.indexOf(PERCENT) > -1)
+                        ip = ip.substring(0, ip.indexOf(PERCENT));
 
                     Log.i(KRAKEN_MISC, iface.getDisplayName() + " " + ip);
                     break;
@@ -58,12 +58,10 @@ public class KrakenMisc {
         }
     }
 
-    public static boolean isNetworkAvailable(Context context){
+    public static boolean isNetworkAvailable(Context context) {
 
-        // TODO: 06/02/2017 Kenny has to do this task
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-    
         return networkInfo != null && networkInfo.isConnected();
     }
 

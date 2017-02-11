@@ -7,7 +7,6 @@ import com.pl.multicast.kraken.datum.DeviceData;
 import java.util.ArrayList;
 
 
-
 /**
  * Class that contains information about
  */
@@ -96,7 +95,7 @@ public class BroadcastData {
 
         for (DeviceData d : senders) {
 
-            if(d.getName().equals(s))
+            if (d.getName().equals(s))
                 return d;
         }
 

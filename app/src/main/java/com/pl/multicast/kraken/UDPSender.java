@@ -8,7 +8,6 @@ import com.pl.multicast.kraken.common.KrakenMisc;
 import com.pl.multicast.kraken.datum.DeviceData;
 
 import java.io.IOException;
-import java.lang.ref.WeakReference;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
@@ -24,26 +23,26 @@ public class UDPSender {
     // TODO: 06/02/2017 fix the issue with the handler (minor bug)
 
     public static final int OBS = 42;
+    private static Handler bshandler;
     DatagramSocket broadcastsock;
     private BroadcastData std;
-    private static Handler bshandler;
 
     public UDPSender(BroadcastData s) {
 
         std = s;
         broadcastsock = null;
-        bshandler = new Handler(){
+        bshandler = new Handler() {
 
             public void handleMessage(Message msg) {
 
                 Log.i(this.getClass().getName(), "msg - what: " + msg.what);
                 Log.i(this.getClass().getName(), "msg - obj: " + (msg.obj != null ? msg.obj.getClass().getName() : "NULL"));
 
-                if(msg.what == KrakenMisc.TXT_ID && msg.obj != null){
+                if (msg.what == KrakenMisc.TXT_ID && msg.obj != null) {
 
                     Log.i(this.getClass().getName(), "msg - OK");
 
-                    try{
+                    try {
                         final String text = (String) msg.obj;
                         Log.i(this.getClass().getName(), "broadcast");
                         new Thread(new Runnable() {
@@ -54,7 +53,7 @@ public class UDPSender {
                         }).start();
 
 
-                    } catch (ClassCastException ce){
+                    } catch (ClassCastException ce) {
                         Log.e(this.getClass().getName(), "msg - cannot get the text: " + ce.getMessage());
                     }
                 }
@@ -68,7 +67,7 @@ public class UDPSender {
         }
     }
 
-    public Handler getHandler(){
+    public Handler getHandler() {
 
         return bshandler;
     }
