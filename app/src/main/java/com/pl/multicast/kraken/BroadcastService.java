@@ -25,21 +25,16 @@ import java.util.regex.Pattern;
  */
 public class BroadcastService implements Runnable {
 
-
-    // Commands
-    public static final String LISTEN_CMD = "LISTEN\r\n";
-    public static final String STOP_CMD = "STOP\r\n";
-    public static final String LISTB_CMD = "LISTB\r\n";
-    public static final String LISTL_CMD = "LISTL\r\n";
     // Keyword
     public static final String LISTEN = "LISTEN";
     public static final String STOP = "STOP";
+    private static final String LISTB = "LISTB";
+    private static final String LISTL = "LISTL";
+    public static final String UPDATE = "UPDATE";
     // Result
     public static final String ACK_RES = "ACK\r\n";
     public static final String BADR_RES = "BADR\r\n";
     public static final String FAIL_RES = "FAIL\r\n";
-    private static final String LISTB = "LIST";
-    private static final String LISTL = "LISTL";
     // Seperator
     private static final String SPACE = " ";
 
@@ -102,21 +97,25 @@ public class BroadcastService implements Runnable {
                 Log.i(this.getClass().getName(), "Service - received this message: " + rstring);
 
                 // Listen to the broadcaster OR stop listening (request)
-                if (rstring.contains(LISTEN) || rstring.contains(STOP)) {
+                if (rstring.contains(LISTEN) || rstring.contains(STOP) || rstring.contains(UPDATE)) {
 
-                    Log.i(this.getClass().getName(), "LISTEN OR STOP");
+                    Log.i(this.getClass().getName(), "LISTEN OR STOP OR UPDATE");
                     w.write(basicResponse(rstring));
-                    uiUpdateWithoutConnection();
+
+                    if(rstring.contains(UPDATE))
+                        uiUpdate();
+                    else
+                        uiUpdateWithoutConnection();
 
                 } else if (rstring.contains(LISTB)) {
 
-                    Log.i(this.getClass().getName(), "LISTB");
+                    Log.i(this.getClass().getName(), LISTB);
                     w.write(listOfBroadcaster());
                     uiUpdate();
 
                 } else if (rstring.contains(LISTL)) {
 
-                    Log.i(this.getClass().getName(), "LISTL");
+                    Log.i(this.getClass().getName(), LISTL);
                     w.write(listOfListener());
                     uiUpdate();
                 } else
@@ -211,6 +210,7 @@ public class BroadcastService implements Runnable {
         return true;
     }
 
+
     private String basicResponse(String rstring) {
 
         Pattern p = Pattern.compile(SPACE);
@@ -221,8 +221,10 @@ public class BroadcastService implements Runnable {
         else {
             if (rstring.contains(LISTEN))
                 return (registerListener(ss[1]) ? ACK_RES : FAIL_RES);
-            else
+            else if (rstring.contains(STOP))
                 return (unregisterListener(ss[1]) ? ACK_RES : FAIL_RES);
+            else
+                return ACK_RES;
         }
     }
 

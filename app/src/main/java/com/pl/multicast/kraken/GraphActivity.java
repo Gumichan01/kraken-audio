@@ -101,6 +101,7 @@ public class GraphActivity extends Activity
 
         /** Update the broadcast devices */
         update(true);
+        notifyDevices();
 
         /// ONLY FOR TESTING THE BROADCAST
         /*
@@ -182,6 +183,15 @@ public class GraphActivity extends Activity
         lstv.setAdapter(new ArrayAdapter<>(getApplicationContext(), R.layout.text_recv, ltext));
         lstv.setVisibility(View.VISIBLE);
         Log.i(this.getLocalClassName(), "List updated. Added the following text: " + text);
+    }
+
+    public void notifyDevices() {
+
+        List<DeviceData> l = new ArrayList<>();
+        l.addAll(std.getSenders());
+        l.addAll(std.getListeners());
+
+        KrakenMisc.notifyDevices(username, l.iterator());
     }
 
     // Update the list of devices

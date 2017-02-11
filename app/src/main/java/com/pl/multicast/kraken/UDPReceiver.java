@@ -118,7 +118,7 @@ public class UDPReceiver {
     public void stopRequest(final DeviceData d, final String usrname) {
 
         Log.i(this.getClass().getName(), "UDP receiver - stop request");
-        sendMessageRequest(d, BroadcastService.STOP_CMD + " " + usrname + MessageParser.EOL);
+        sendMessageRequest(d, BroadcastService.STOP + " " + usrname + MessageParser.EOL);
     }
 
     private void sendMessageRequest(final DeviceData d, final String str) {
@@ -140,6 +140,7 @@ public class UDPReceiver {
 
                     rstring = reader.readLine();
                     Log.i(this.getClass().getName(), "UDP receiver - msg: " + rstring);
+                    s.close();
 
                 } catch (IOException e) {
                     e.printStackTrace();
