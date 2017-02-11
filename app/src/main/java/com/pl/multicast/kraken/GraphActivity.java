@@ -190,43 +190,60 @@ public class GraphActivity extends Activity
     public void update(boolean first) {
 
         hack.runOperation(Hackojo.DEVICE_OP);
+        std.clearSenders();
         updateWithoutConnection(first);
     }
 
-    public void updateWithoutConnection(boolean first){
+    public void updateWithoutConnection(boolean first) {
 
         List<DeviceData> br = hack.getDevices();
-        std.clearSenders();
+        List<DeviceData> ltl = std.getListeners();
+        List<DeviceData> lts = std.getSenders();
 
-        if (br != null) {
+        if(br == null) { Log.i(this.getLocalClassName(), "no device"); return;}
 
-            for(DeviceData dev: br)
+        if (first){
+            for (DeviceData dev : br)
                 std.addSender(dev);
+        } else {
 
-        } else
-            Log.i(this.getLocalClassName(), "no device");
-
-        if(!first) {
-
-            List<DeviceData> lt = std.getListeners();
+            // Update the existing broadcasters
             Iterator<DeviceData> it = br.iterator();
 
             while(it.hasNext()){
 
                 DeviceData d = it.next();
-                for(DeviceData dd : lt){
+                for(DeviceData dev : ltl){
 
-                    if(dd.getName().equals(d.getName())){
+                    if(dev.getName().equals(d.getName())){
                         it.remove();
                         break;
                     }
                 }
             }
 
-            navigationReceivers.updateContent(KrakenMisc.adaptList(lt, username).toArray());
+            // Add new broadcasters
+            it = br.iterator();
+
+            while(it.hasNext()){
+
+                boolean found = false;
+
+                DeviceData d = it.next();
+                for (DeviceData dev : lts){
+                    if(dev.getName().equals(d.getName())){
+                        found = true;
+                        break;
+                    }
+                }
+
+                if(!found)
+                    std.addSender(d);
+            }
         }
 
-        navigationSenders.updateContent(KrakenMisc.adaptList(br, username).toArray());
+        navigationReceivers.updateContent(KrakenMisc.adaptList(ltl, username).toArray());
+        navigationSenders.updateContent(KrakenMisc.adaptList(lts, username).toArray());
     }
 
     private DeviceData prepareRequest(){
