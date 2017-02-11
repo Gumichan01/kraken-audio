@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Message;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
@@ -26,7 +25,6 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Observable;
 
 
 public class GraphActivity extends Activity
@@ -80,7 +78,7 @@ public class GraphActivity extends Activity
         }
 
         /** Receiver */
-        recv = new UDPReceiver(this,std);
+        recv = new UDPReceiver(this, std);
         recv.launch();
 
         /** Fragment creation */
@@ -129,7 +127,7 @@ public class GraphActivity extends Activity
         super.onStop();
         Log.i(this.getLocalClassName(), "Stop the activity");
         bserviceth.interrupt();
-        if(recv != null)
+        if (recv != null)
             recv.stop();
         hack.runOperation(Hackojo.QUIT_GROUP_OP);
     }
@@ -200,45 +198,44 @@ public class GraphActivity extends Activity
         List<DeviceData> ltl = std.getListeners();
         List<DeviceData> lts = std.getSenders();
 
-        if(br == null) { Log.i(this.getLocalClassName(), "no device"); return;}
+        if (br == null) {
+            Log.i(this.getLocalClassName(), "no device");
+            return;
+        }
 
-        if (first){
+        if (first) {
             for (DeviceData dev : br)
                 std.addSender(dev);
         } else {
 
-            // Update the existing broadcasters
+            // Remove the devices that are listeners
             Iterator<DeviceData> it = br.iterator();
 
-            while(it.hasNext()){
+            while (it.hasNext()) {
 
+                boolean found = false;
+                boolean islistener = false;
                 DeviceData d = it.next();
-                for(DeviceData dev : ltl){
 
-                    if(dev.getName().equals(d.getName())){
+                for (DeviceData dev : ltl) {
+                    if (dev.getName().equals(d.getName())) {
                         it.remove();
+                        islistener = true;
                         break;
                     }
                 }
-            }
 
-            // Add new broadcasters
-            it = br.iterator();
+                if (islistener) continue;
 
-            while(it.hasNext()){
-
-                boolean found = false;
-
-                DeviceData d = it.next();
-                for (DeviceData dev : lts){
-                    if(dev.getName().equals(d.getName())){
+                // Add new broadcasters
+                for (DeviceData dev : lts) {
+                    if (dev.getName().equals(d.getName())) {
                         found = true;
                         break;
                     }
                 }
 
-                if(!found)
-                    std.addSender(d);
+                if (!found) std.addSender(d);
             }
         }
 
@@ -246,12 +243,13 @@ public class GraphActivity extends Activity
         navigationSenders.updateContent(KrakenMisc.adaptList(lts, username).toArray());
     }
 
-    private DeviceData prepareRequest(){
+
+    private DeviceData prepareRequest() {
 
         String slistener = new String(mTitle);
         DeviceData d = std.getSenderOf(slistener);
         mTitle = username;
-        Log.i(this.getLocalClassName(), slistener + " | " + d.toString() +  " | " + mTitle);
+        Log.i(this.getLocalClassName(), slistener + " | " + d.toString() + " | " + mTitle);
         return d;
     }
 
@@ -300,7 +298,7 @@ public class GraphActivity extends Activity
 
         } else if (id == R.id.action_listen) {
             Log.i(this.getLocalClassName(), "listen action");
-            if(!mTitle.equals(username)) {
+            if (!mTitle.equals(username)) {
                 DeviceData d = prepareRequest();
                 recv.listenRequest(d, username);
                 Log.i(this.getLocalClassName(), "listening to " + d.getName());
@@ -315,7 +313,7 @@ public class GraphActivity extends Activity
 
         } else if (id == R.id.action_stop) {
             Log.i(this.getLocalClassName(), "stop action");
-            if(!mTitle.equals(username)) {
+            if (!mTitle.equals(username)) {
                 recv.stopRequest(prepareRequest(), username);
             } else
                 Toast.makeText(getApplicationContext(), "You cannot stop yourself, (o_O) idiot!",
