@@ -181,7 +181,7 @@ public class BroadcastService implements Runnable {
         gactivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(gactivity.getApplicationContext(), dev.getName() + " is listening to you", Toast.LENGTH_LONG).show();
+                Toast.makeText(gactivity.getApplicationContext(), "\"" +  dev.getName() + "\" is listening to you", Toast.LENGTH_LONG).show();
             }
         });
         return true;
@@ -208,7 +208,7 @@ public class BroadcastService implements Runnable {
         gactivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(gactivity.getApplicationContext(), dev.getName() + " stopped listening to you", Toast.LENGTH_LONG).show();
+                Toast.makeText(gactivity.getApplicationContext(), "\"" + dev.getName() + "\" stopped listening to you", Toast.LENGTH_LONG).show();
             }
         });
         return true;
