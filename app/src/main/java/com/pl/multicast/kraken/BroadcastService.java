@@ -3,6 +3,7 @@ package com.pl.multicast.kraken;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.pl.multicast.kraken.common.KrakenMisc;
 import com.pl.multicast.kraken.datum.DeviceData;
@@ -160,7 +161,7 @@ public class BroadcastService implements Runnable {
 
     private boolean registerListener(String s) {
 
-        DeviceData dev = null;
+        final DeviceData dev;
         List<DeviceData> ld = bdata.getSenders();
         int i = 0;
 
@@ -177,12 +178,18 @@ public class BroadcastService implements Runnable {
         bdata.rmSender(dev);
         bdata.addListener(dev);
         Log.i(this.getClass().getName(), "Service - Register listener: ok");
+        gactivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(gactivity.getApplicationContext(), dev.getName() + " is listening to you", Toast.LENGTH_LONG).show();
+            }
+        });
         return true;
     }
 
     private boolean unregisterListener(String s) {
 
-        DeviceData dev = null;
+        final DeviceData dev;
         List<DeviceData> ld = bdata.getListeners();
         int i = 0;
 
@@ -197,6 +204,13 @@ public class BroadcastService implements Runnable {
         bdata.rmListener(dev);
         bdata.addSender(dev);
         Log.i(this.getClass().getName(), "Service - Unregister register listener: ok");
+
+        gactivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(gactivity.getApplicationContext(), dev.getName() + " stopped listening to you", Toast.LENGTH_LONG).show();
+            }
+        });
         return true;
     }
 
