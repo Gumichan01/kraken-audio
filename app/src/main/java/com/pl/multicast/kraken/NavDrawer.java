@@ -267,11 +267,6 @@ public class NavDrawer extends Fragment {
             return true;
         }
 
-        if (item.getItemId() == R.id.action_update) {
-            Toast.makeText(getActivity(), "Updating ... ", Toast.LENGTH_SHORT).show();
-            return true;
-        }
-
         return super.onOptionsItemSelected(item);
     }
 

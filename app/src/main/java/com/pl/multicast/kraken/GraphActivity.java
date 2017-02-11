@@ -298,15 +298,7 @@ public class GraphActivity extends Activity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_update) {
-            Log.i(this.getLocalClassName(), "update action");
-
-            // TODO: 07/02/2017 The update has to be done in another thread (the graphic part in th UI)
-            update(false);
-            Toast.makeText(getApplicationContext(), R.string.msg_updating, Toast.LENGTH_LONG).show();
-            return true;
-
-        } else if (id == R.id.action_listen) {
+        if (id == R.id.action_listen) {
             Log.i(this.getLocalClassName(), "listen action");
             if (!mTitle.equals(username)) {
                 DeviceData d = prepareRequest();
