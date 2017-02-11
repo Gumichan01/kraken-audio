@@ -135,6 +135,16 @@ public class BroadcastService implements Runnable {
     }
 
 
+    private void newDevice(final String devname){
+
+        gactivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(gactivity.getApplicationContext(), "\"" +  devname + "\" joined the group", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
     private void uiUpdate() {
 
         gactivity.runOnUiThread(new Runnable() {
@@ -224,7 +234,7 @@ public class BroadcastService implements Runnable {
             else if (rstring.contains(STOP))
                 return (unregisterListener(ss[1]) ? ACK_RES : FAIL_RES);
             else
-                return ACK_RES;
+                newDevice(ss[1]); return ACK_RES;
         }
     }
 
