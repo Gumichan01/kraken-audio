@@ -143,7 +143,7 @@ public class GraphActivity extends Activity
 
     public void onSectionAttached(int number) {
 
-        List<DeviceData> ld = hack.getDevices();
+        List<DeviceData> ld = std.getSenders();
 
         Log.i(this.getLocalClassName(), "onSectionAttached - " + number);
 
