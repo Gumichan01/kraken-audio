@@ -121,6 +121,7 @@ public class UDPReceiver {
         sendMessageRequest(d, BroadcastService.STOP + " " + usrname + MessageParser.EOL);
     }
 
+    // TODO: 13/02/2017 Message request in an asynchronous task 
     private void sendMessageRequest(final DeviceData d, final String str) {
 
         new Thread(new Runnable() {

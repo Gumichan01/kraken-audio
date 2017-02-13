@@ -33,6 +33,7 @@ public class Hackojo {
         cd = new ClientDevice(ddata.getName(), ddata.getAddr(), ddata.getPort(), ddata.getBroadcastPort());
     }
 
+    // TODO: 13/02/2017 Communication with the hackojo server in an asynchronous task
     public void runOperation(final int idop) {
 
         Thread t = new Thread(new Runnable() {

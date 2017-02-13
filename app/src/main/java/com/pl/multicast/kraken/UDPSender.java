@@ -72,6 +72,7 @@ public class UDPSender {
         return bshandler;
     }
 
+    // TODO: 13/02/2017 Remove the thread creation in sendText
     private void sendText(final String text) {
 
         Thread t = new Thread(new Runnable() {
