@@ -52,7 +52,7 @@ public class KrakenMisc {
 
                     // In some device using ipv6, a '%' character followed by
                     // the name of the interface can be contained
-                    if (ip.indexOf(PERCENT) > -1)
+                    if (ip.contains(PERCENT))
                         ip = ip.substring(0, ip.indexOf(PERCENT));
 
                     Log.i(KRAKEN_MISC, iface.getDisplayName() + " " + ip);
@@ -62,9 +62,9 @@ public class KrakenMisc {
 
         } catch (SocketException e) {
             throw new RuntimeException(e);
-        } finally {
-            return ip;
         }
+
+        return ip;
     }
 
     public static boolean isNetworkAvailable(Context context) {
