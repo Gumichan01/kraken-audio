@@ -130,7 +130,7 @@ public class GraphActivity extends Activity
         bserviceth.interrupt();
         if (recv != null)
             recv.stop();
-        hack.runOperation(Hackojo.QUIT_GROUP_OP);
+        hack.execute(Hackojo.QUIT_GROUP_OP);
     }
 
     @Override
