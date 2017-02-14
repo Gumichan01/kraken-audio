@@ -28,11 +28,17 @@ public class Hackojo extends AsyncTask<Integer,Integer,Boolean> {
     private List<GroupData> gdata;
     private List<DeviceData> ddata;
     private ClientDevice cd;
+    int op;
 
-    public Hackojo(DeviceData ddata, String gn) throws MalformedURLException {
+    public Hackojo(DeviceData ddata, String gn) {
 
         gname = gn;
-        cd = new ClientDevice(ddata.getName(), ddata.getAddr(), ddata.getPort(), ddata.getBroadcastPort());
+        try {
+            cd = new ClientDevice(ddata.getName(), ddata.getAddr(), ddata.getPort(), ddata.getBroadcastPort());
+        } catch (MalformedURLException e) {
+            Log.e(this.getClass().getName(), e.getMessage());
+            throw new RuntimeException(e);
+        }
     }
 
     // TODO: 13/02/2017 Communication with the hackojo server in an asynchronous task
@@ -91,6 +97,7 @@ public class Hackojo extends AsyncTask<Integer,Integer,Boolean> {
 
         boolean status;
         int idop = (params != null && params.length > 0 ? params[0] : INVALID_OP);
+        op = idop;
 
         if(idop == INVALID_OP) {
             Log.e(this.getClass().getName(),"Invalid operation identifier" );
@@ -130,4 +137,14 @@ public class Hackojo extends AsyncTask<Integer,Integer,Boolean> {
 
         return status;
     }
+
+    @Override
+    public void onPostExecute(Boolean result) {
+
+        if(result) {
+            Log.i(Hackojo.this.getClass().getName(),"post execute - " + op + ": SUCCESS");
+            Log.i(this.getClass().getName(),"post execute - " + op + ": SUCCESS");
+        }
+    }
+
 }
