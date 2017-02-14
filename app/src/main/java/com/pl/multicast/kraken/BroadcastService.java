@@ -93,6 +93,7 @@ public class BroadcastService implements Runnable {
                 PrintWriter w = new PrintWriter(new OutputStreamWriter(sock.getOutputStream()));
                 BufferedReader r = new BufferedReader(new InputStreamReader(sock.getInputStream()));
 
+                boolean toupdate = false;
                 String rstring = r.readLine();
                 Log.i(this.getClass().getName(), "Service - received this message: " + rstring);
 
@@ -101,29 +102,28 @@ public class BroadcastService implements Runnable {
 
                     Log.i(this.getClass().getName(), "LISTEN OR STOP OR UPDATE");
                     w.write(basicResponse(rstring));
-
-                    if(rstring.contains(UPDATE))
-                        uiUpdate();
-                    else
-                        uiUpdateWithoutConnection();
+                    toupdate = true;;
 
                 } else if (rstring.contains(LISTB)) {
 
                     Log.i(this.getClass().getName(), LISTB);
                     w.write(listOfBroadcaster());
-                    uiUpdate();
+                    toupdate = true;
 
                 } else if (rstring.contains(LISTL)) {
 
                     Log.i(this.getClass().getName(), LISTL);
                     w.write(listOfListener());
-                    uiUpdate();
+                    toupdate = true;
                 } else
                     Log.i(this.getClass().getName(), "error");
 
                 w.flush();
                 Log.i(this.getClass().getName(), "Service - Close the client socket");
                 sock.close();
+
+                if(toupdate)
+                    uiUpdate();
             }
 
             Log.i(this.getClass().getName(), "Service - Server down");
@@ -151,16 +151,6 @@ public class BroadcastService implements Runnable {
             @Override
             public void run() {
                 gactivity.update(false);
-            }
-        });
-    }
-
-    private void uiUpdateWithoutConnection() {
-
-        gactivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                gactivity.updateWithoutConnection(false);
             }
         });
     }
