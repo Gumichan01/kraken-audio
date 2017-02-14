@@ -99,8 +99,6 @@ public class Hackojo extends AsyncTask<Integer,Integer,Boolean> {
         int idop = (params != null && params.length > 0 ? params[0] : INVALID_OP);
         op = idop;
 
-        publishProgress(null);
-
         if(idop == INVALID_OP) {
             Log.e(this.getClass().getName(),"Invalid operation identifier" );
             return false;
@@ -108,6 +106,7 @@ public class Hackojo extends AsyncTask<Integer,Integer,Boolean> {
 
         if (idop == GROUP_OP) {
             // get the groups
+            publishProgress(null);
             gdata = cd.groupList();
             status = gdata != null;
         } else if (idop == DEVICE_OP) {
