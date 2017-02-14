@@ -21,7 +21,6 @@ import android.widget.Toast;
 import com.pl.multicast.kraken.common.KrakenMisc;
 import com.pl.multicast.kraken.datum.DeviceData;
 
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -32,7 +31,7 @@ public class GraphActivity extends Activity
 
     private static ArrayList<String> ltext = new ArrayList<>();
     // Communication point
-    Hackojo hack;
+    //private AsyncGraphTask hack;
     /**
      * Fragment managing the behaviours, interactions and presentation of the navigation drawer.
      */
@@ -44,6 +43,7 @@ public class GraphActivity extends Activity
     private String mTitle;
     private String username;
     private String gname;
+    private DeviceData d;
     // Thread
     private Thread bserviceth;    // broadcast service
     private BroadcastService bs;
@@ -58,14 +58,14 @@ public class GraphActivity extends Activity
         setContentView(R.layout.activity_graph);
 
         /** Retrieve data from the main activity */
-        DeviceData d = getIntent().getParcelableExtra(MainActivity.DEVICEDATA);
+        d = getIntent().getParcelableExtra(MainActivity.DEVICEDATA);
         gname = getIntent().getStringExtra(MainActivity.GRPNAME);
         username = d.getName();
         mTitle = username;
 
         /** Load the broadcast data and the communication point */
         std = new BroadcastData();
-        hack = new Hackojo(d, gname);
+        //hack = new AsyncGraphTask(d, gname);
 
         /** Service server */
         bs = new BroadcastService(this, std);
@@ -120,7 +120,7 @@ public class GraphActivity extends Activity
         bserviceth.interrupt();
         if (recv != null)
             recv.stop();
-        hack.execute(Hackojo.QUIT_GROUP_OP);
+        new AsyncGraphTask(d, gname).execute(Hackojo.QUIT_GROUP_OP);
     }
 
     @Override
@@ -187,12 +187,12 @@ public class GraphActivity extends Activity
     // Update the list of devices
     public void update(boolean first) {
 
-        hack.runOperation(Hackojo.DEVICE_OP);
-        std.clearSenders();
-        updateWithoutConnection(first);
+        AsyncGraphTask async = new AsyncGraphTask(d, gname);
+        async.setFirstUpdate(first);
+        async.execute(Hackojo.DEVICE_OP);
     }
 
-    public void updateWithoutConnection(boolean first) {
+    private void updateWithoutConnection(Hackojo hack, boolean first) {
 
         List<DeviceData> br = hack.getDevices();
         List<DeviceData> ltl = std.getListeners();
@@ -317,6 +317,10 @@ public class GraphActivity extends Activity
         return super.onOptionsItemSelected(item);
     }
 
+    ///
+    /// Inner classes
+    ///
+
     /**
      * A placeholder fragment containing a simple view.
      */
@@ -354,6 +358,44 @@ public class GraphActivity extends Activity
             super.onAttach(activity);
             ((GraphActivity) activity).onSectionAttached(
                     getArguments().getInt(ARG_SECTION_NUMBER));
+        }
+    }
+
+    /**
+     * AsyncGraphTask is a specialized Hackojo class (asynchronous task in the graph activity)
+     */
+    private class AsyncGraphTask extends Hackojo {
+
+        boolean first_update;
+
+        public AsyncGraphTask(DeviceData ddata, String gn) {
+            super(ddata, gn);
+        }
+
+        public void setFirstUpdate(boolean first) {
+
+            first_update = first;
+        }
+
+        @Override
+        public void onCancelled(Boolean result) {
+
+            Log.i(this.getClass().getName(), "Operation cancelled - " + op);
+            Toast.makeText(getApplicationContext(), R.string.opfail, Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onPostExecute(Boolean result) {
+
+            if (result) {
+                Log.i(this.getClass().getName(), "post execute - " + op + ": SUCCESS");
+
+                if (op == DEVICE_OP) {
+                    std.clearSenders();
+                    updateWithoutConnection(this, first_update);
+                }
+            } else
+                Toast.makeText(getApplicationContext(), R.string.opfail, Toast.LENGTH_SHORT).show();
         }
     }
 
