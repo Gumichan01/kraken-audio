@@ -100,8 +100,7 @@ public class MainActivity extends Activity implements JoinGroupDialogFragment.Jo
 
                         Log.i(this.getLocalClassName(), "group name: " + gname);
                         Log.i(this.getLocalClassName(), "device: " + dd.toString());
-                        // TODO: 14/02/2017 Refactorize it
-                        new Hackojo(dd, gname).execute(Hackojo.CREATE_GROUP_OP);
+                        new AsyncMainTask(dd, gname).execute(Hackojo.CREATE_GROUP_OP);
                         intent.putExtra(GRPNAME, gname);
                         intent.putExtra(DEVICEDATA, dd);
                         startActivity(intent);
@@ -111,10 +110,8 @@ public class MainActivity extends Activity implements JoinGroupDialogFragment.Jo
 
                     usrname = susr;     // Save the name for the next activity instance (GraphActivity)
                     Log.i(this.getLocalClassName(), "Connection to the directory server ...");
-                    new AsyncMainTask(new DeviceData(), null).execute(Hackojo.GROUP_OP);
                     Log.i(this.getLocalClassName(), "Generate the list of groups");
-                    //ho.runOperation(Hackojo.GROUP_OP);
-                    //showDialog(ho.getGroups());
+                    new AsyncMainTask(new DeviceData(), null).execute(Hackojo.GROUP_OP);
 
                 } else {
                     Log.i(this.getLocalClassName(), "Bad view");
@@ -175,7 +172,6 @@ public class MainActivity extends Activity implements JoinGroupDialogFragment.Jo
 
         @Override
         public void onProgressUpdate(Integer... progress){
-
             Toast.makeText(getApplicationContext(), R.string.groups, Toast.LENGTH_SHORT).show();
         }
 
@@ -188,7 +184,6 @@ public class MainActivity extends Activity implements JoinGroupDialogFragment.Jo
 
                 if(op == GROUP_OP)
                     MainActivity.this.showDialog(getGroups());
-
             } else
                 Toast.makeText(getApplicationContext(), R.string.opfail, Toast.LENGTH_SHORT).show();
         }
