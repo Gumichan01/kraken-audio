@@ -100,8 +100,8 @@ public class MainActivity extends Activity implements JoinGroupDialogFragment.Jo
 
                         Log.i(this.getLocalClassName(), "group name: " + gname);
                         Log.i(this.getLocalClassName(), "device: " + dd.toString());
-
-                        new Hackojo(dd, gname).runOperation(Hackojo.CREATE_GROUP_OP);
+                        // TODO: 14/02/2017 Refactorize it
+                        new Hackojo(dd, gname).execute(Hackojo.CREATE_GROUP_OP);
                         intent.putExtra(GRPNAME, gname);
                         intent.putExtra(DEVICEDATA, dd);
                         startActivity(intent);
@@ -110,11 +110,11 @@ public class MainActivity extends Activity implements JoinGroupDialogFragment.Jo
                 } else if (id == R.id.jgrp) {
 
                     usrname = susr;     // Save the name for the next activity instance (GraphActivity)
-                    Hackojo ho = new Hackojo(new DeviceData(), null);
-                    Log.i(this.getLocalClassName(), "Connection to the directory server");
-                    ho.runOperation(Hackojo.GROUP_OP);
+                    Log.i(this.getLocalClassName(), "Connection to the directory server ...");
+                    new AsyncMainTask(new DeviceData(), null).execute(Hackojo.GROUP_OP);
                     Log.i(this.getLocalClassName(), "Generate the list of groups");
-                    showDialog(ho.getGroups());
+                    //ho.runOperation(Hackojo.GROUP_OP);
+                    //showDialog(ho.getGroups());
 
                 } else {
                     Log.i(this.getLocalClassName(), "Bad view");
@@ -138,7 +138,7 @@ public class MainActivity extends Activity implements JoinGroupDialogFragment.Jo
                     strings.add(gd.getName());
             }
 
-            Log.i(this.getLocalClassName(), "There are a set of " + groups.size() + " group data");
+            Log.i(this.getLocalClassName(), "There is a set of " + groups.size() + " group data");
             Log.i(this.getLocalClassName(), "There are " + strings.size() + " real groups");
             String[] sarray = new String[strings.size()];
             strings.toArray(sarray);
@@ -155,26 +155,37 @@ public class MainActivity extends Activity implements JoinGroupDialogFragment.Jo
             Log.e(this.getLocalClassName(), "Cannot handle this event");
         else {
 
-            Hackojo hackojo = null;
             DeviceData d = new DeviceData(usrname, KrakenMisc.getIPAddress(), KrakenMisc.SERVICE_PORT,
                     KrakenMisc.BROADCAST_PORT);
+
             Intent intent = new Intent(this, GraphActivity.class);
-
-            try {
-                hackojo = new Hackojo(d, gname);
-
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } finally {
-
-                if (hackojo != null) {
-
-                    hackojo.runOperation(Hackojo.JOIN_GROUP_OP);
-                    intent.putExtra(GRPNAME, gname);
-                    intent.putExtra(DEVICEDATA, d);
-                    startActivity(intent);
-                }
-            }
+            new AsyncMainTask(d, gname).execute(Hackojo.JOIN_GROUP_OP);
+            intent.putExtra(GRPNAME, gname);
+            intent.putExtra(DEVICEDATA, d);
+            startActivity(intent);
         }
     }
+
+    /** AsyncMainTask is a specialized Hackojo class (asynchronous task in the main activity) */
+    private class AsyncMainTask extends Hackojo {
+
+        public AsyncMainTask(DeviceData ddata, String gn) {
+            super(ddata, gn);
+        }
+
+        @Override
+        public void onPostExecute(Boolean result) {
+
+            if(result) {
+                Log.i(this.getClass().getName(), "post execute - " + op + ": SUCCESS");
+
+                if(op == GROUP_OP)
+                    MainActivity.this.showDialog(getGroups());
+
+            } else
+                Log.e(this.getClass().getName(),"post execute: FAILURE");
+        }
+    }
+
 }
+
