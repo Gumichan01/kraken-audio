@@ -49,7 +49,7 @@ public class ClientDevice {
         StringBuilder stbuild = null;
 
         try {
-            Log.i("kraken-NETWORK", msg);
+            Log.i(this.getClass().getName(), msg);
 
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod(HTTP_METHOD);
@@ -64,7 +64,7 @@ public class ClientDevice {
 
             if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
 
-                Log.i("kraken-NETWORK", "valid request\n");
+                Log.i(this.getClass().getName(), "valid request\n");
 
                 reader = new BufferedReader(new InputStreamReader(
                         connection.getInputStream()));
@@ -76,10 +76,10 @@ public class ClientDevice {
                     stbuild.append(line).append(MessageParser.EOL);
                 }
 
-                Log.i("kraken-NETWORK", stbuild.toString());
+                Log.i(this.getClass().getName(), stbuild.toString());
 
             } else {
-                Log.e("kraken-NETWORK", "response code: "
+                Log.e(this.getClass().getName(), "response code: "
                         + connection.getResponseCode());
             }
 
