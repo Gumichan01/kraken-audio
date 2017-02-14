@@ -8,6 +8,8 @@
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="nogrp">No group available</string>
+    <string name="groups">Retrieveing the groups from the server …</string>
+    <string name="opfail">Cannot execute the requested operation</string>
 
     <string name="navigation_drawer_open">Open navigationr</string>
     <string name="navigation_drawer_close">Close navigation</string>
@@ -17,6 +19,6 @@
     <string name="action_listen">Listen</string>
     <string name="action_stop">Stop</string>
 
-    <string name="msg_updating">Upadting ...</string>
+    <!--<string name="msg_updating">Upadting ...</string>-->
 
 </resources>

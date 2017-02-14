@@ -99,6 +99,8 @@ public class Hackojo extends AsyncTask<Integer,Integer,Boolean> {
         int idop = (params != null && params.length > 0 ? params[0] : INVALID_OP);
         op = idop;
 
+        publishProgress(null);
+
         if(idop == INVALID_OP) {
             Log.e(this.getClass().getName(),"Invalid operation identifier" );
             return false;

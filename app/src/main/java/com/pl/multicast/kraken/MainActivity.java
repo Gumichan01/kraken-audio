@@ -174,6 +174,13 @@ public class MainActivity extends Activity implements JoinGroupDialogFragment.Jo
         }
 
         @Override
+        public void onProgressUpdate(Integer... progress){
+
+            Toast.makeText(getApplicationContext(), R.string.groups, Toast.LENGTH_SHORT).show();
+        }
+
+
+        @Override
         public void onPostExecute(Boolean result) {
 
             if(result) {
@@ -183,7 +190,7 @@ public class MainActivity extends Activity implements JoinGroupDialogFragment.Jo
                     MainActivity.this.showDialog(getGroups());
 
             } else
-                Log.e(this.getClass().getName(),"post execute: FAILURE");
+                Toast.makeText(getApplicationContext(), R.string.opfail, Toast.LENGTH_SHORT).show();
         }
     }
 
