@@ -57,25 +57,20 @@ public class GraphActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_graph);
 
-        // Retrieve data from the main activity
+        /** Retrieve data from the main activity */
         DeviceData d = getIntent().getParcelableExtra(MainActivity.DEVICEDATA);
         gname = getIntent().getStringExtra(MainActivity.GRPNAME);
         username = d.getName();
         mTitle = username;
 
-        // Load the broadcast data
+        /** Load the broadcast data and the communication point */
         std = new BroadcastData();
+        hack = new Hackojo(d, gname);
 
         /** Service server */
         bs = new BroadcastService(this, std);
         bserviceth = new Thread(bs);
         bserviceth.start();
-
-        try {
-            hack = new Hackojo(d, gname);
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
-        }
 
         /** Receiver */
         recv = new UDPReceiver(this, std);
@@ -102,11 +97,6 @@ public class GraphActivity extends Activity
         /** Update the broadcast devices */
         update(true);
         notifyDevices();
-
-        /// ONLY FOR TESTING THE BROADCAST
-        /*
-        UDPReceiver udpr = new UDPReceiver(this, std);
-        udpr.launchReceiver();*/
     }
 
 
