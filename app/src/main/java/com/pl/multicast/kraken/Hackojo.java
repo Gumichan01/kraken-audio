@@ -138,13 +138,4 @@ public class Hackojo extends AsyncTask<Integer,Integer,Boolean> {
         return status;
     }
 
-    @Override
-    public void onPostExecute(Boolean result) {
-
-        if(result) {
-            Log.i(Hackojo.this.getClass().getName(),"post execute - " + op + ": SUCCESS");
-            Log.i(this.getClass().getName(),"post execute - " + op + ": SUCCESS");
-        }
-    }
-
 }
