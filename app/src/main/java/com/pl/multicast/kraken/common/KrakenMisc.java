@@ -3,21 +3,12 @@ package com.pl.multicast.kraken.common;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.util.Log;
 
-import com.pl.multicast.kraken.BroadcastService;
 import com.pl.multicast.kraken.datum.DeviceData;
-import com.pl.multicast.kraken.parser.MessageParser;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
-import java.net.Socket;
 import java.net.SocketException;
 import java.util.Enumeration;
 import java.util.Iterator;
@@ -74,7 +65,7 @@ public class KrakenMisc {
         return networkInfo != null && networkInfo.isConnected();
     }
 
-    public static void notifyDevices(String username,Iterator<DeviceData> it) {
+    public static void notifyDevices(String username, Iterator<DeviceData> it) {
 
         new NotifyTask(username).execute(it);
     }

@@ -2,27 +2,27 @@ package com.pl.multicast.kraken.datum;
 
 public class GroupData {
 
-	private String gname;
-	private int nbdev;
+    private String gname;
+    private int nbdev;
 
-	public GroupData(String name, int nb) {
+    public GroupData(String name, int nb) {
 
-		gname = name;
-		nbdev = nb;
-	}
+        gname = name;
+        nbdev = nb;
+    }
 
-	public String getName() {
+    public String getName() {
 
-		return gname;
-	}
+        return gname;
+    }
 
-	public int getNumberOfDevices() {
+    public int getNumberOfDevices() {
 
-		return nbdev;
-	}
+        return nbdev;
+    }
 
-	public String toString(){
-		
-		return gname + " " + nbdev;
-	}
+    public String toString() {
+
+        return gname + " " + nbdev;
+    }
 }

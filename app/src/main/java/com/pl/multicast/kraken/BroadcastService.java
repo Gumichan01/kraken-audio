@@ -28,13 +28,13 @@ public class BroadcastService implements Runnable {
     // Keyword
     public static final String LISTEN = "LISTEN";
     public static final String STOP = "STOP";
-    private static final String LISTB = "LISTB";
-    private static final String LISTL = "LISTL";
     public static final String UPDATE = "UPDATE";
     // Result
     public static final String ACK_RES = "ACK\r\n";
     public static final String BADR_RES = "BADR\r\n";
     public static final String FAIL_RES = "FAIL\r\n";
+    private static final String LISTB = "LISTB";
+    private static final String LISTL = "LISTL";
     // Seperator
     private static final String SPACE = " ";
 
@@ -102,7 +102,8 @@ public class BroadcastService implements Runnable {
 
                     Log.i(this.getClass().getName(), "LISTEN OR STOP OR UPDATE");
                     w.write(basicResponse(rstring));
-                    toupdate = true;;
+                    toupdate = true;
+                    ;
 
                 } else if (rstring.contains(LISTB)) {
 
@@ -122,7 +123,7 @@ public class BroadcastService implements Runnable {
                 Log.i(this.getClass().getName(), "Service - Close the client socket");
                 sock.close();
 
-                if(toupdate)
+                if (toupdate)
                     uiUpdate();
             }
 
@@ -135,12 +136,12 @@ public class BroadcastService implements Runnable {
     }
 
 
-    private void newDevice(final String devname){
+    private void newDevice(final String devname) {
 
         gactivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(gactivity.getApplicationContext(), "\"" +  devname + "\" joined the group", Toast.LENGTH_LONG).show();
+                Toast.makeText(gactivity.getApplicationContext(), "\"" + devname + "\" joined the group", Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -224,7 +225,8 @@ public class BroadcastService implements Runnable {
             else if (rstring.contains(STOP))
                 return (unregisterListener(ss[1]) ? ACK_RES : FAIL_RES);
             else
-                newDevice(ss[1]); return ACK_RES;
+                newDevice(ss[1]);
+            return ACK_RES;
         }
     }
 

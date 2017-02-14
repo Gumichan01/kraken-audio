@@ -163,7 +163,9 @@ public class MainActivity extends Activity implements JoinGroupDialogFragment.Jo
         }
     }
 
-    /** AsyncMainTask is a specialized Hackojo class (asynchronous task in the main activity) */
+    /**
+     * AsyncMainTask is a specialized Hackojo class (asynchronous task in the main activity)
+     */
     private class AsyncMainTask extends Hackojo {
 
         public AsyncMainTask(DeviceData ddata, String gn) {
@@ -171,7 +173,7 @@ public class MainActivity extends Activity implements JoinGroupDialogFragment.Jo
         }
 
         @Override
-        public void onProgressUpdate(Integer... progress){
+        public void onProgressUpdate(Integer... progress) {
             Toast.makeText(getApplicationContext(), R.string.groups, Toast.LENGTH_SHORT).show();
         }
 
@@ -179,10 +181,10 @@ public class MainActivity extends Activity implements JoinGroupDialogFragment.Jo
         @Override
         public void onPostExecute(Boolean result) {
 
-            if(result) {
+            if (result) {
                 Log.i(this.getClass().getName(), "post execute - " + op + ": SUCCESS");
 
-                if(op == GROUP_OP)
+                if (op == GROUP_OP)
                     MainActivity.this.showDialog(getGroups());
             } else
                 Toast.makeText(getApplicationContext(), R.string.opfail, Toast.LENGTH_SHORT).show();

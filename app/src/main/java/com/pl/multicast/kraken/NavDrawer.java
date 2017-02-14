@@ -19,7 +19,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.pl.multicast.kraken.datum.DeviceData;
 
@@ -117,9 +116,9 @@ public class NavDrawer extends Fragment {
     /// Update the content of the fragment for each connected device
     public void updateContent(Object[] content) {
 
-        String [] scontent = new String[content.length];
+        String[] scontent = new String[content.length];
 
-        for(int i = 0; i < content.length; i++){
+        for (int i = 0; i < content.length; i++) {
             scontent[i] = ((DeviceData) content[i]).getName();
         }
 

@@ -36,7 +36,7 @@ public class NotifyTask extends AsyncTask<Iterator<DeviceData>, Integer, Void> {
 
             DeviceData d = it.next();
 
-            if(d.getName().equals(uname))
+            if (d.getName().equals(uname))
                 continue;
 
             try {

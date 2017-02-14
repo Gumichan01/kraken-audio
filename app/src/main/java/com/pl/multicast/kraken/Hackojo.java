@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * Created by Luxon on 16/01/2017.
  */
-public class Hackojo extends AsyncTask<Integer,Integer,Boolean> {
+public class Hackojo extends AsyncTask<Integer, Integer, Boolean> {
 
     public static final int INVALID_OP = -1;
     public static final int GROUP_OP = 0;
@@ -23,12 +23,11 @@ public class Hackojo extends AsyncTask<Integer,Integer,Boolean> {
     public static final int JOIN_GROUP_OP = 2;
     public static final int QUIT_GROUP_OP = 3;
     public static final int CREATE_GROUP_OP = 4;
-
+    int op;
     private String gname;
     private List<GroupData> gdata;
     private List<DeviceData> ddata;
     private ClientDevice cd;
-    int op;
 
     public Hackojo(DeviceData ddata, String gn) {
 
@@ -58,7 +57,7 @@ public class Hackojo extends AsyncTask<Integer,Integer,Boolean> {
                 } else if (idop == JOIN_GROUP_OP) {
                     // join a group
                     if (cd.joinGroup(gname) == false) {
-                        Log.e(this.getClass().getName(),"Cannot join " + gname);
+                        Log.e(this.getClass().getName(), "Cannot join " + gname);
                         cd.createGroup(gname);
                     }
                 } else if (idop == QUIT_GROUP_OP) {
@@ -66,8 +65,8 @@ public class Hackojo extends AsyncTask<Integer,Integer,Boolean> {
                     cd.quitGroup(gname);
                 } else if (idop == CREATE_GROUP_OP) {
                     // create a groups
-                    if (cd.createGroup(gname) == false){
-                        Log.e(this.getClass().getName(),"Cannot create " + gname);
+                    if (cd.createGroup(gname) == false) {
+                        Log.e(this.getClass().getName(), "Cannot create " + gname);
                         cd.joinGroup(gname);
                     }
                 }
@@ -99,8 +98,8 @@ public class Hackojo extends AsyncTask<Integer,Integer,Boolean> {
         int idop = (params != null && params.length > 0 ? params[0] : INVALID_OP);
         op = idop;
 
-        if(idop == INVALID_OP) {
-            Log.e(this.getClass().getName(),"Invalid operation identifier" );
+        if (idop == INVALID_OP) {
+            Log.e(this.getClass().getName(), "Invalid operation identifier");
             return false;
         }
 
@@ -116,7 +115,7 @@ public class Hackojo extends AsyncTask<Integer,Integer,Boolean> {
         } else if (idop == JOIN_GROUP_OP) {
             // join a group
             if (!cd.joinGroup(gname)) {
-                Log.e(this.getClass().getName(),"Cannot join " + gname);
+                Log.e(this.getClass().getName(), "Cannot join " + gname);
                 status = cd.createGroup(gname);
             } else
                 status = true;
@@ -125,14 +124,13 @@ public class Hackojo extends AsyncTask<Integer,Integer,Boolean> {
             status = cd.quitGroup(gname);
         } else if (idop == CREATE_GROUP_OP) {
             // create a groups
-            if (!cd.createGroup(gname)){
-                Log.e(this.getClass().getName(),"Cannot create " + gname);
+            if (!cd.createGroup(gname)) {
+                Log.e(this.getClass().getName(), "Cannot create " + gname);
                 status = cd.joinGroup(gname);
             } else
                 status = true;
-        }
-        else{
-            Log.e(this.getClass().getName(),"Invalid operation identifier" );
+        } else {
+            Log.e(this.getClass().getName(), "Invalid operation identifier");
             status = false;
         }
 

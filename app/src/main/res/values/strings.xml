@@ -19,6 +19,4 @@
     <string name="action_listen">Listen</string>
     <string name="action_stop">Stop</string>
 
-    <!--<string name="msg_updating">Upadting ...</string>-->
-
 </resources>

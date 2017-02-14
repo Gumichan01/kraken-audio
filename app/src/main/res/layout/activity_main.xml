@@ -74,10 +74,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="Join Group"
             android:onClick="mix"
+            android:text="Join Group"
             android:textSize="18dp" />
 
-        </LinearLayout>
+    </LinearLayout>
 
 </LinearLayout>
