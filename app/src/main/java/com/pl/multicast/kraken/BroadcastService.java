@@ -35,7 +35,7 @@ public class BroadcastService implements Runnable {
     public static final String FAIL_RES = "FAIL\r\n";
     private static final String LISTB = "LISTB";
     private static final String LISTL = "LISTL";
-    // Seperator
+    // Separator
     private static final String SPACE = " ";
 
     private static final int LISTEN_NBTOK = 2;
