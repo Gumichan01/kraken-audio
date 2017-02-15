@@ -57,44 +57,49 @@ public class Hackojo extends AsyncTask<Integer, Integer, Boolean> {
         int idop = (params != null && params.length > 0 ? params[0] : INVALID_OP);
         op = idop;
 
-        if (idop == INVALID_OP) {
-            Log.e(this.getClass().getName(), "Invalid operation identifier");
-            return false;
-        }
+        switch (idop) {
 
-        // TODO: 15/02/2017 refactorize it in a switch statement?
-        if (idop == GROUP_OP) {
-            // get the groups
-            publishProgress(null);
-            gdata = cd.groupList();
-            status = gdata != null;
-        } else if (idop == DEVICE_OP) {
-            // get the devices of a group
-            ddata = cd.deviceList(gname);
-            status = ddata != null;
-        } else if (idop == JOIN_GROUP_OP) {
-            // join a group
-            if (!cd.joinGroup(gname)) {
-                Log.e(this.getClass().getName(), "Cannot join " + gname);
-                status = cd.createGroup(gname);
-            } else
-                status = true;
-        } else if (idop == QUIT_GROUP_OP) {
-            // quit a group
-            status = cd.quitGroup(gname);
-        } else if (idop == CREATE_GROUP_OP) {
-            // create a groups
-            if (!cd.createGroup(gname)) {
-                Log.e(this.getClass().getName(), "Cannot create " + gname);
-                status = cd.joinGroup(gname);
-            } else
-                status = true;
-        } else {
-            Log.e(this.getClass().getName(), "Invalid operation identifier");
-            status = false;
-        }
+            case GROUP_OP:
+                // get the groups
+                publishProgress(null);
+                gdata = cd.groupList();
+                status = gdata != null;
+                break;
 
+            case DEVICE_OP:
+                // get the devices of a group
+                ddata = cd.deviceList(gname);
+                status = ddata != null;
+                break;
+
+            case JOIN_GROUP_OP:
+                // join a group
+                if (!cd.joinGroup(gname)) {
+                    Log.e(this.getClass().getName(), "Cannot join " + gname);
+                    status = cd.createGroup(gname);
+                } else
+                    status = true;
+                break;
+
+            case QUIT_GROUP_OP:
+                // quit a group
+                status = cd.quitGroup(gname);
+                break;
+
+            case CREATE_GROUP_OP:
+                // create a groups
+                if (!cd.createGroup(gname)) {
+                    Log.e(this.getClass().getName(), "Cannot create " + gname);
+                    status = cd.joinGroup(gname);
+                } else
+                    status = true;
+                break;
+
+            default:
+                Log.e(this.getClass().getName(), "Invalid operation identifier");
+                status = false;
+                break;
+        }
         return status;
     }
-
 }
