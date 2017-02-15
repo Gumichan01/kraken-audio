@@ -83,6 +83,7 @@ public class BroadcastService implements Runnable {
                         sock.close();
 
                     s.close();
+                    broadcaster.close();
                     break;
                 }
 
@@ -103,7 +104,6 @@ public class BroadcastService implements Runnable {
                     Log.i(this.getClass().getName(), "LISTEN OR STOP OR UPDATE");
                     w.write(basicResponse(rstring));
                     toupdate = true;
-                    ;
 
                 } else if (rstring.contains(LISTB)) {
 

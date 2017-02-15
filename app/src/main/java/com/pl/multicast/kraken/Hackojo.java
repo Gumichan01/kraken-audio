@@ -62,6 +62,7 @@ public class Hackojo extends AsyncTask<Integer, Integer, Boolean> {
             return false;
         }
 
+        // TODO: 15/02/2017 refactorize it in a switch statement?
         if (idop == GROUP_OP) {
             // get the groups
             publishProgress(null);

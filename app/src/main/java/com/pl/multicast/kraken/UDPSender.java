@@ -72,6 +72,13 @@ public class UDPSender {
         return bshandler;
     }
 
+    public void close() {
+
+
+        if(broadcastsock != null)
+            broadcastsock.close();
+    }
+
     // TODO: 13/02/2017 Remove the thread creation in sendText
     private void sendText(final String text) {
 
