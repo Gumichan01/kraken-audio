@@ -203,7 +203,7 @@ public class GraphActivity extends Activity
         }
     }
 
-    private void updateWithoutConnection(Hackojo hack, boolean first) {
+    private void updateGroupContent(Hackojo hack, boolean first) {
 
         List<DeviceData> br = hack.getDevices();
         List<DeviceData> ltl = std.getListeners();
@@ -257,7 +257,7 @@ public class GraphActivity extends Activity
 
     private DeviceData prepareRequest() {
 
-        String slistener = new String(mTitle);
+        String slistener = mTitle;
         DeviceData d = std.getSenderOf(slistener);
         mTitle = username;
         Log.i(this.getLocalClassName(), slistener + " | " + d.toString() + " | " + mTitle);
@@ -403,7 +403,7 @@ public class GraphActivity extends Activity
 
                 if (op == DEVICE_OP) {
                     std.clearSenders();
-                    updateWithoutConnection(this, first_update);
+                    updateGroupContent(this, first_update);
                 }
             } else
                 Toast.makeText(getApplicationContext(), R.string.opfail, Toast.LENGTH_SHORT).show();

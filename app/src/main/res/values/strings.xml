@@ -19,4 +19,5 @@
     <string name="action_listen">Listen</string>
     <string name="action_stop">Stop</string>
 
+    <string name="gunetwork">Cannot update the group content - network unavailable</string>
 </resources>
