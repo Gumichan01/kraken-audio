@@ -23,9 +23,9 @@ import java.net.SocketException;
 public class UDPReceiver {
 
     private static final int DATAPCK_SIZE = 32;
+    private static final int RECV_TIMEOUT = 2000;
 
     private BroadcastData std;
-    private Thread receiver;
     private GraphActivity graph;
     private boolean launched;
     private Thread thread;
@@ -52,6 +52,8 @@ public class UDPReceiver {
 
                 try {
                     udpsock = new DatagramSocket(KrakenMisc.BROADCAST_PORT);
+                    udpsock.setSoTimeout(RECV_TIMEOUT);
+
                     byte[] data = new byte[DATAPCK_SIZE];
                     DatagramPacket p = new DatagramPacket(data, data.length);
 
@@ -78,7 +80,7 @@ public class UDPReceiver {
                             });
 
                         } catch (IOException e) {
-                            Log.e(this.getClass().getName(), "UDP receiver - No UDP socket created");
+                            Log.v(this.getClass().getName(), "UDP receiver - " + e.getMessage());
                         }
 
                         if (Thread.currentThread().isInterrupted()) {

@@ -39,7 +39,7 @@ public class BroadcastService implements Runnable {
     private static final String SPACE = " ";
 
     private static final int LISTEN_NBTOK = 2;
-    private static final int SRV_DELAY = 8000;
+    private static final int SRV_DELAY = 2000;
 
     private GraphActivity gactivity;
     private BroadcastData bdata;
