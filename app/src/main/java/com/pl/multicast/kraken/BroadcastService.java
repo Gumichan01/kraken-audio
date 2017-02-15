@@ -235,9 +235,9 @@ public class BroadcastService implements Runnable {
                 return (registerListener(ss[1]) ? ACK_RES : FAIL_RES);
             else if (rstring.contains(STOP))
                 return (unregisterListener(ss[1]) ? ACK_RES : FAIL_RES);
-            else if(rstring.contains(UPDATE))
+            else if (rstring.contains(UPDATE))
                 newDevice(ss[1]);
-            else if(rstring.contains(QUIT))
+            else if (rstring.contains(QUIT))
                 rmDevice(ss[1]);
 
             return ACK_RES;

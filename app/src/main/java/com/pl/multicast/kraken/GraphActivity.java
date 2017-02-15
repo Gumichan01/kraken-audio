@@ -186,7 +186,7 @@ public class GraphActivity extends Activity
         l.addAll(std.getSenders());
         l.addAll(std.getListeners());
 
-        KrakenMisc.notifyDevices(username, l.iterator());
+        KrakenMisc.notifyUpdateDevices(username, l.iterator());
     }
 
     // Update the list of devices
@@ -404,7 +404,9 @@ public class GraphActivity extends Activity
                 if (op == DEVICE_OP) {
                     std.clearSenders();
                     updateGroupContent(this, first_update);
-                }
+                } else if( op == QUIT_GROUP_OP)
+                    KrakenMisc.notifyQuitDevices(username,getDevices().iterator());
+
             } else
                 Toast.makeText(getApplicationContext(), R.string.opfail, Toast.LENGTH_SHORT).show();
         }
