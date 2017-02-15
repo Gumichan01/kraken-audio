@@ -38,7 +38,7 @@ public class RunClient implements HttpHandler {
 		response = null;
 		int res = HttpURLConnection.HTTP_OK;
 		String req = t.getRequestMethod();
-		System.out.println(" - " + req + " - ");
+		//System.out.println(" - " + req + " - ");
 
 		if (req.equals(REQ_GET) || req.equals(REQ_POST)) {
 
@@ -55,7 +55,7 @@ public class RunClient implements HttpHandler {
 
 				if (h != null) {
 
-					Iterator<String> it = h.keySet().iterator();
+					/*Iterator<String> it = h.keySet().iterator();
 
 					while (it.hasNext()) {
 
@@ -65,7 +65,7 @@ public class RunClient implements HttpHandler {
 
 							System.out.println(k + ": " + v.toString());
 						}
-					}
+					}*/
 
 					// Use the length of the content
 					if (h.containsKey(PROP_CONT)) {
@@ -84,7 +84,7 @@ public class RunClient implements HttpHandler {
 					strbuf = "";
 				else {
 					strbuf = new String(buffer).substring(0, read);
-					System.out.print(t.getRemoteAddress().toString() + ": " + strbuf);
+					//System.out.print(t.getRemoteAddress().toString() + ": " + strbuf);
 				}
 
 				parser = new MessageParser(strbuf);
