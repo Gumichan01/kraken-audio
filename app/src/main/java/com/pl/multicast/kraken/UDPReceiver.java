@@ -1,5 +1,6 @@
 package com.pl.multicast.kraken;
 
+import android.os.AsyncTask;
 import android.util.Log;
 
 import com.pl.multicast.kraken.common.KrakenMisc;
@@ -123,32 +124,43 @@ public class UDPReceiver {
         sendMessageRequest(d, BroadcastService.STOP + " " + usrname + MessageParser.EOL);
     }
 
-    // TODO: 13/02/2017 Message request in an asynchronous task 
-    private void sendMessageRequest(final DeviceData d, final String str) {
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
+    private void sendMessageRequest(final DeviceData dev, final String req) {
+        new ASyncUDPReceiveRequest(dev, req).execute();
+    }
 
-                String rstring = "";
+    private static class ASyncUDPReceiveRequest extends AsyncTask<Void, Void, Void> {
 
-                try {
-                    Log.i(this.getClass().getName(), "UDP receiver - connection to " + d.getAddr() + ":" + d.getPort());
-                    Socket s = new Socket(d.getAddr(), d.getPort());
+        private DeviceData dev;
+        private String request;
 
-                    PrintWriter writer = new PrintWriter(new OutputStreamWriter(s.getOutputStream()));
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(s.getInputStream()));
-                    writer.write(str);
-                    writer.flush();
+        public ASyncUDPReceiveRequest(DeviceData d, String req) {
 
-                    rstring = reader.readLine();
-                    Log.i(this.getClass().getName(), "UDP receiver - msg: " + rstring);
-                    s.close();
+            super();
+            dev = d;
+            request = req;
+        }
 
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            try {
+                Log.i(this.getClass().getName(), "UDP receiver - connection to " + dev.getAddr() + ":" + dev.getPort());
+                Socket s = new Socket(dev.getAddr(), dev.getPort());
+
+                PrintWriter writer = new PrintWriter(new OutputStreamWriter(s.getOutputStream()));
+                BufferedReader reader = new BufferedReader(new InputStreamReader(s.getInputStream()));
+                writer.write(request);
+                writer.flush();
+
+                String rstring = reader.readLine();
+                Log.i(this.getClass().getName(), "UDP receiver - msg: " + rstring);
+                s.close();
+
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        }).start();
+            return null;
+        }
     }
 }
