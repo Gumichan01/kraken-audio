@@ -3,7 +3,6 @@ package com.pl.multicast.kraken.common;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.pl.multicast.kraken.BroadcastService;
 import com.pl.multicast.kraken.datum.DeviceData;
 import com.pl.multicast.kraken.parser.MessageParser;
 
@@ -20,10 +19,13 @@ import java.util.Iterator;
  */
 public class NotifyTask extends AsyncTask<Iterator<DeviceData>, Integer, Void> {
 
+    private String hreq;
     private String uname;
 
-    public NotifyTask(String username) {
+    public NotifyTask(String hreq, String username) {
         super();
+
+        this.hreq = hreq;
         uname = username;
     }
 
@@ -46,7 +48,7 @@ public class NotifyTask extends AsyncTask<Iterator<DeviceData>, Integer, Void> {
 
                 PrintWriter writer = new PrintWriter(new OutputStreamWriter(s.getOutputStream()));
                 BufferedReader reader = new BufferedReader(new InputStreamReader(s.getInputStream()));
-                writer.write(BroadcastService.UPDATE + " " + d.getName() + MessageParser.EOL);
+                writer.write(hreq + " " + d.getName() + MessageParser.EOL);
                 writer.flush();
 
                 String rstring = reader.readLine();

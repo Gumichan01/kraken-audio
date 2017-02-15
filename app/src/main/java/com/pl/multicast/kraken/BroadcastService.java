@@ -29,6 +29,7 @@ public class BroadcastService implements Runnable {
     public static final String LISTEN = "LISTEN";
     public static final String STOP = "STOP";
     public static final String UPDATE = "UPDATE";
+    public static final String QUIT = "QUIT";
     // Result
     public static final String ACK_RES = "ACK\r\n";
     public static final String BADR_RES = "BADR\r\n";
@@ -146,6 +147,16 @@ public class BroadcastService implements Runnable {
         });
     }
 
+    private void rmDevice(final String devname) {
+
+        gactivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(gactivity.getApplicationContext(), "\"" + devname + "\" left the group", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
     private void uiUpdate() {
 
         gactivity.runOnUiThread(new Runnable() {
@@ -224,8 +235,11 @@ public class BroadcastService implements Runnable {
                 return (registerListener(ss[1]) ? ACK_RES : FAIL_RES);
             else if (rstring.contains(STOP))
                 return (unregisterListener(ss[1]) ? ACK_RES : FAIL_RES);
-            else
+            else if(rstring.contains(UPDATE))
                 newDevice(ss[1]);
+            else if(rstring.contains(QUIT))
+                rmDevice(ss[1]);
+
             return ACK_RES;
         }
     }
