@@ -1,5 +1,6 @@
 package com.pl.multicast.kraken;
 
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -45,14 +46,7 @@ public class UDPSender {
                     try {
                         final String text = (String) msg.obj;
                         Log.i(this.getClass().getName(), "broadcast");
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                sendText(text);
-                            }
-                        }).start();
-
-
+                        sendText(text);
                     } catch (ClassCastException ce) {
                         Log.e(this.getClass().getName(), "msg - cannot get the text: " + ce.getMessage());
                     }
@@ -75,52 +69,62 @@ public class UDPSender {
     public void close() {
 
 
-        if(broadcastsock != null)
+        if (broadcastsock != null)
             broadcastsock.close();
     }
 
-    // TODO: 13/02/2017 Remove the thread creation in sendText
     private void sendText(final String text) {
+        new AsyncUDPSenderRoutine().execute(text);
+    }
 
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    DatagramPacket p;
-                    byte[] data = text.getBytes();
-                    ArrayList<DeviceData> listeners = std.getListeners();
+    private class AsyncUDPSenderRoutine extends AsyncTask<String, Void, Void> {
 
-                    for (DeviceData dev : listeners) {
+        public AsyncUDPSenderRoutine() {
+            super();
+        }
 
-                        Log.i(this.getClass().getName(), "SEND data to " + dev.getName());
-                        try {
-                            p = new DatagramPacket(data, data.length,
-                                    new InetSocketAddress(dev.getAddr(), dev.getBroadcastPort()));
+        @Override
+        protected Void doInBackground(String... params) {
 
-                            if (broadcastsock != null)
-                                broadcastsock.send(p);
+            if (params == null || params.length < 1) {
 
-                        } catch (IOException e) {
-                            Log.e(this.getClass().getName(), e.getMessage());
-                        }
-                    }
-                    Log.i(this.getClass().getName(), "DONE");
-
-                } catch (SecurityException | NullPointerException se) {
-
-                    se.printStackTrace();
-
-                } catch (Exception u) {
-
-                    u.printStackTrace();
-                }
+                Log.e(this.getClass().getName(), "Cannot send data at all - MUST NEVER HAPPEN");
+                return null;
             }
-        });
-        t.start();
-        try {
-            t.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+
+            String text = params[0];
+
+            try {
+                DatagramPacket p;
+                byte[] data = text.getBytes();
+                ArrayList<DeviceData> listeners = std.getListeners();
+
+                for (DeviceData dev : listeners) {
+
+                    Log.i(this.getClass().getName(), "SEND data to " + dev.getName());
+                    try {
+                        p = new DatagramPacket(data, data.length,
+                                new InetSocketAddress(dev.getAddr(), dev.getBroadcastPort()));
+
+                        if (broadcastsock != null)
+                            broadcastsock.send(p);
+
+                    } catch (IOException e) {
+                        Log.e(this.getClass().getName(), e.getMessage());
+                    }
+                }
+                Log.i(this.getClass().getName(), "DONE");
+
+            } catch (SecurityException | NullPointerException se) {
+
+                se.printStackTrace();
+
+            } catch (Exception u) {
+
+                u.printStackTrace();
+            }
+
+            return null;
         }
     }
 }
