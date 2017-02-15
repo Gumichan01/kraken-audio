@@ -40,47 +40,6 @@ public class Hackojo extends AsyncTask<Integer, Integer, Boolean> {
         }
     }
 
-    // TODO: 13/02/2017 Communication with the hackojo server in an asynchronous task
-
-    @Deprecated
-    public void runOperation(final int idop) {
-
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                if (idop == GROUP_OP) {
-                    // get the groups
-                    gdata = cd.groupList();
-                } else if (idop == DEVICE_OP) {
-                    // get the devices of a group
-                    ddata = cd.deviceList(gname);
-                } else if (idop == JOIN_GROUP_OP) {
-                    // join a group
-                    if (cd.joinGroup(gname) == false) {
-                        Log.e(this.getClass().getName(), "Cannot join " + gname);
-                        cd.createGroup(gname);
-                    }
-                } else if (idop == QUIT_GROUP_OP) {
-                    // quit a group
-                    cd.quitGroup(gname);
-                } else if (idop == CREATE_GROUP_OP) {
-                    // create a groups
-                    if (cd.createGroup(gname) == false) {
-                        Log.e(this.getClass().getName(), "Cannot create " + gname);
-                        cd.joinGroup(gname);
-                    }
-                }
-            }
-        });
-
-        t.start();
-        try {
-            t.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
     public synchronized List<GroupData> getGroups() {
 
         return gdata;
