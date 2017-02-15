@@ -12,37 +12,13 @@ import java.util.ArrayList;
  */
 public class BroadcastData {
 
-    // TODO: 06/02/2017 Refactorize this class (kenny)
-
-    @Deprecated
-    private volatile boolean running;
-    @Deprecated
-    private volatile String text;
-    @Deprecated
-    private volatile boolean send_text;
     private volatile ArrayList<DeviceData> senders;
     private volatile ArrayList<DeviceData> listeners;
 
     public BroadcastData() {
 
-        text = "#";
-        running = true;
-        send_text = false;
         senders = new ArrayList<>();
         listeners = new ArrayList<>();
-    }
-
-    @Deprecated
-    public synchronized String getText() {
-
-        return text;
-    }
-
-    @Deprecated
-    public synchronized void setText(String t) {
-
-        Log.i(this.getClass().getName(), "Sync - set text to send");
-        text = t;
     }
 
     public synchronized ArrayList<DeviceData> getSenders() {
@@ -66,12 +42,6 @@ public class BroadcastData {
 
         Log.i(this.getClass().getName(), "Sync - clear senders");
         senders.clear();
-    }
-
-    public synchronized void clearListeners() {
-
-        Log.i(this.getClass().getName(), "Sync - clear listeners");
-        listeners.clear();
     }
 
     public synchronized ArrayList<DeviceData> getListeners() {
@@ -101,13 +71,4 @@ public class BroadcastData {
 
         return null;
     }
-
-    @Deprecated
-    public synchronized void stopServer() {
-
-        Log.i(this.getClass().getName(), "Sync - SHUT down the server");
-        running = false;
-    }
-
-
 }
