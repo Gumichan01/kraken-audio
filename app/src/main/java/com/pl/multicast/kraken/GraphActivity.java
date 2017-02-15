@@ -377,7 +377,7 @@ public class GraphActivity extends Activity
      */
     private class AsyncGraphTask extends Hackojo {
 
-        boolean first_update;
+        private boolean first_update;
 
         public AsyncGraphTask(DeviceData ddata, String gn) {
             super(ddata, gn);
@@ -404,8 +404,15 @@ public class GraphActivity extends Activity
                 if (op == DEVICE_OP) {
                     std.clearSenders();
                     updateGroupContent(this, first_update);
-                } else if( op == QUIT_GROUP_OP)
-                    KrakenMisc.notifyQuitDevices(username,getDevices().iterator());
+
+                } else if (op == QUIT_GROUP_OP) {
+
+                    Log.i(this.getClass().getName(), "post execute - quit the group");
+                    // Get the devices
+                    Log.i(this.getClass().getName(), "post execute - notify the devices (quit)");
+                    KrakenMisc.notifyQuitDevices(username, std.getSenders().iterator());
+                    KrakenMisc.notifyQuitDevices(username, std.getListeners().iterator());
+                }
 
             } else
                 Toast.makeText(getApplicationContext(), R.string.opfail, Toast.LENGTH_SHORT).show();

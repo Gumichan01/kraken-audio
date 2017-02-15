@@ -100,9 +100,9 @@ public class BroadcastService implements Runnable {
                 Log.i(this.getClass().getName(), "Service - received this message: " + rstring);
 
                 // Listen to the broadcaster OR stop listening (request)
-                if (rstring.contains(LISTEN) || rstring.contains(STOP) || rstring.contains(UPDATE)) {
+                if (rstring.contains(LISTEN) || rstring.contains(STOP) || rstring.contains(UPDATE)
+                        || rstring.contains(QUIT)) {
 
-                    Log.i(this.getClass().getName(), "LISTEN OR STOP OR UPDATE");
                     w.write(basicResponse(rstring));
                     toupdate = true;
 
