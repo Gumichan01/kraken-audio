@@ -118,9 +118,14 @@ public class GraphActivity extends Activity
         super.onStop();
         Log.i(this.getLocalClassName(), "Stop the activity");
         bserviceth.interrupt();
+
         if (recv != null)
             recv.stop();
-        new AsyncGraphTask(d, gname).execute(Hackojo.QUIT_GROUP_OP);
+
+        if (KrakenMisc.isNetworkAvailable(getApplicationContext()))
+            new AsyncGraphTask(d, gname).execute(Hackojo.QUIT_GROUP_OP);
+        else
+            Log.e(this.getLocalClassName(), "Cannot quit the group - network unavailable");
     }
 
     @Override
@@ -187,9 +192,15 @@ public class GraphActivity extends Activity
     // Update the list of devices
     public void update(boolean first) {
 
-        AsyncGraphTask async = new AsyncGraphTask(d, gname);
-        async.setFirstUpdate(first);
-        async.execute(Hackojo.DEVICE_OP);
+        if (KrakenMisc.isNetworkAvailable(getApplicationContext())) {
+
+            AsyncGraphTask async = new AsyncGraphTask(d, gname);
+            async.setFirstUpdate(first);
+            async.execute(Hackojo.DEVICE_OP);
+        } else {
+            Log.e(this.getLocalClassName(), "Cannot update the group content - network unavailable");
+            Toast.makeText(getApplicationContext(), R.string.gunetwork, Toast.LENGTH_LONG).show();
+        }
     }
 
     private void updateWithoutConnection(Hackojo hack, boolean first) {
