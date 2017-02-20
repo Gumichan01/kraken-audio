@@ -183,7 +183,7 @@ public class BroadcastService implements Runnable {
         } else
             return false;
 
-        bdata.rmSender(dev);
+        bdata.rmBroadcaster(dev);
         bdata.addListener(dev);
         Log.i(this.getClass().getName(), "Service - Register listener: ok");
         gactivity.runOnUiThread(new Runnable() {
@@ -210,7 +210,7 @@ public class BroadcastService implements Runnable {
             return false;
 
         bdata.rmListener(dev);
-        bdata.addSender(dev);
+        bdata.addBroadcaster(dev);
         Log.i(this.getClass().getName(), "Service - Unregister register listener: ok");
 
         gactivity.runOnUiThread(new Runnable() {

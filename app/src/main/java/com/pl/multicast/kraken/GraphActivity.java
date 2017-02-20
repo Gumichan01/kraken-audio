@@ -216,7 +216,7 @@ public class GraphActivity extends Activity
 
         if (first) {
             for (DeviceData dev : br)
-                std.addSender(dev);
+                std.addBroadcaster(dev);
         } else {
 
             // Remove the devices that are listeners
@@ -246,7 +246,7 @@ public class GraphActivity extends Activity
                     }
                 }
 
-                if (!found) std.addSender(d);
+                if (!found) std.addBroadcaster(d);
             }
         }
 
@@ -258,7 +258,7 @@ public class GraphActivity extends Activity
     private DeviceData prepareRequest() {
 
         String slistener = mTitle;
-        DeviceData d = std.getSenderOf(slistener);
+        DeviceData d = std.getBroadcasterOf(slistener);
         mTitle = username;
         Log.i(this.getLocalClassName(), slistener + " | " + d.toString() + " | " + mTitle);
         return d;
@@ -402,7 +402,7 @@ public class GraphActivity extends Activity
                 Log.i(this.getClass().getName(), "post execute - " + op + ": SUCCESS");
 
                 if (op == DEVICE_OP) {
-                    std.clearSenders();
+                    std.clearBroadcasters();
                     updateGroupContent(this, first_update);
 
                 } else if (op == QUIT_GROUP_OP) {

@@ -12,36 +12,36 @@ import java.util.ArrayList;
  */
 public class BroadcastData {
 
-    private volatile ArrayList<DeviceData> senders;
+    private volatile ArrayList<DeviceData> broadcasters;
     private volatile ArrayList<DeviceData> listeners;
 
     public BroadcastData() {
 
-        senders = new ArrayList<>();
+        broadcasters = new ArrayList<>();
         listeners = new ArrayList<>();
     }
 
     public synchronized ArrayList<DeviceData> getSenders() {
 
-        return senders;
+        return broadcasters;
     }
 
-    public synchronized void addSender(DeviceData sender) {
+    public synchronized void addBroadcaster(DeviceData sender) {
 
         Log.i(this.getClass().getName(), "Sync - added the sender: " + sender.toString());
-        senders.add(sender);
+        broadcasters.add(sender);
     }
 
-    public synchronized void rmSender(DeviceData sender) {
+    public synchronized void rmBroadcaster(DeviceData sender) {
 
         Log.i(this.getClass().getName(), "Sync - remove the sender: " + sender.toString());
-        senders.remove(sender);
+        broadcasters.remove(sender);
     }
 
-    public synchronized void clearSenders() {
+    public synchronized void clearBroadcasters() {
 
-        Log.i(this.getClass().getName(), "Sync - clear senders");
-        senders.clear();
+        Log.i(this.getClass().getName(), "Sync - clear broadcasters");
+        broadcasters.clear();
     }
 
     public synchronized ArrayList<DeviceData> getListeners() {
@@ -61,9 +61,9 @@ public class BroadcastData {
         listeners.remove(listener);
     }
 
-    public synchronized DeviceData getSenderOf(String s) {
+    public synchronized DeviceData getBroadcasterOf(String s) {
 
-        for (DeviceData d : senders) {
+        for (DeviceData d : broadcasters) {
 
             if (d.getName().equals(s))
                 return d;
