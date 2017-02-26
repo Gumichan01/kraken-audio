@@ -439,7 +439,9 @@ public class GraphActivity extends Activity
                 if (op == DEVICE_OP) {
                     std.clearBroadcasters();
                     updateGroupContent(this, first_update);
-                    notifyDevices();
+
+                    if(first_update)
+                        notifyDevices();
 
                 } else if (op == QUIT_GROUP_OP) {
 

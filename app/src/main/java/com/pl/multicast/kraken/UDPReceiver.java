@@ -2,6 +2,7 @@ package com.pl.multicast.kraken;
 
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.pl.multicast.kraken.common.KrakenMisc;
 import com.pl.multicast.kraken.datum.DeviceData;
@@ -129,7 +130,7 @@ public class UDPReceiver {
         new ASyncUDPReceiveRequest(dev, req).execute();
     }
 
-    private static class ASyncUDPReceiveRequest extends AsyncTask<Void, Void, Void> {
+    private class ASyncUDPReceiveRequest extends AsyncTask<Void, Void, Boolean> {
 
         private DeviceData dev;
         private String request;
@@ -142,7 +143,7 @@ public class UDPReceiver {
         }
 
         @Override
-        protected Void doInBackground(Void... params) {
+        protected Boolean doInBackground(Void... params) {
 
             try {
                 Log.i(this.getClass().getName(), "UDP receiver - connection to " + dev.getAddr() + ":" + dev.getPort());
@@ -156,11 +157,32 @@ public class UDPReceiver {
                 String rstring = reader.readLine();
                 Log.i(this.getClass().getName(), "UDP receiver - msg: " + rstring);
                 s.close();
+                return rstring.contains(BroadcastService.ACK);
 
             } catch (IOException e) {
                 e.printStackTrace();
+                return false;
             }
-            return null;
+        }
+
+        @Override
+        public void onPostExecute(Boolean result) {
+
+            if (result) {
+                Log.i(this.getClass().getName(), "post execute - " + request + " - SUCCESS");
+
+                if(request.contains(BroadcastService.LISTEN)) {
+                    UDPReceiver.this.std.addRealBroadcaster(dev.getName());
+                    graph.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            graph.update(false);
+                        }
+                    });
+                }
+
+            } else
+                Log.e(this.getClass().getName(), "post execute - " + request + " - FAILURE");
         }
     }
 }
