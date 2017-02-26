@@ -30,6 +30,7 @@ public class BroadcastService implements Runnable {
     public static final String STOP = "STOP";
     public static final String UPDATE = "UPDATE";
     public static final String QUIT = "QUIT";
+    public static final String ACK = "ACK";
     // Result
     public static final String ACK_RES = "ACK\r\n";
     public static final String BADR_RES = "BADR\r\n";

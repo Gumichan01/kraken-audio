@@ -13,11 +13,13 @@ import java.util.ArrayList;
 public class BroadcastData {
 
     private volatile ArrayList<DeviceData> broadcasters;
+    private volatile ArrayList<String> rbroadcasters; // TODO: 20/02/2017 Changed the type
     private volatile ArrayList<DeviceData> listeners;
 
     public BroadcastData() {
 
         broadcasters = new ArrayList<>();
+        rbroadcasters = new ArrayList<>();
         listeners = new ArrayList<>();
     }
 
@@ -71,4 +73,30 @@ public class BroadcastData {
 
         return null;
     }
+
+    public synchronized void addRealBroadcaster(String realbroadcaster) {
+        Log.i(this.getClass().getName(), "Sync - added the real broadcaster: " + realbroadcaster);
+
+        if(!isRealBroadcaster(realbroadcaster))
+            rbroadcasters.add(realbroadcaster);
+
+    }
+
+    public synchronized void rmRealBroadcaster(String realbroadcaster) {
+        Log.i(this.getClass().getName(), "Sync - removed the real broadcaster: " + realbroadcaster);
+        rbroadcasters.remove(realbroadcaster);
+    }
+
+    public synchronized boolean isRealBroadcaster(String bdev) {
+
+        // TODO: 20/02/2017 Check if the broadcaster is listened by the current device
+
+        for(String s: rbroadcasters){
+
+            if(s.equals(bdev))
+                return true;
+        }
+        return false;
+    }
+
 }
