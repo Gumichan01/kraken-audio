@@ -25,6 +25,7 @@ public class NotifyTask extends AsyncTask<Iterator<DeviceData>, Integer, Void> {
     public NotifyTask(String hreq, String username) {
         super();
 
+        Log.i(this.getClass().getName(), "Notify - init " + username);
         this.hreq = hreq;
         uname = username;
     }
@@ -32,6 +33,7 @@ public class NotifyTask extends AsyncTask<Iterator<DeviceData>, Integer, Void> {
     @Override
     protected Void doInBackground(Iterator<DeviceData>... params) {
 
+        Log.i(this.getClass().getName(), "Notify - background task");
         Iterator<DeviceData> it = params[0];
 
         while (it.hasNext()) {
@@ -43,8 +45,9 @@ public class NotifyTask extends AsyncTask<Iterator<DeviceData>, Integer, Void> {
 
             try {
 
-                Log.i(this.getClass().getName(), "Notify - " + d.getAddr() + ":" + d.getPort());
+                Log.i(this.getClass().getName(), "Notify - " + d.getName() + " " + d.getAddr() + ":" + d.getPort());
                 Socket s = new Socket(d.getAddr(), d.getPort());
+                s.setSoTimeout(1000);
 
                 PrintWriter writer = new PrintWriter(new OutputStreamWriter(s.getOutputStream()));
                 BufferedReader reader = new BufferedReader(new InputStreamReader(s.getInputStream()));
@@ -59,6 +62,7 @@ public class NotifyTask extends AsyncTask<Iterator<DeviceData>, Integer, Void> {
                 e.printStackTrace();
             }
         }
+        Log.i(this.getClass().getName(), "Notify - background task #END");
 
         return null;
     }

@@ -19,6 +19,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.pl.multicast.kraken.common.KrakenMisc;
+import com.pl.multicast.kraken.common.NotifyTask;
 import com.pl.multicast.kraken.datum.DeviceData;
 
 import java.util.ArrayList;
@@ -96,7 +97,7 @@ public class GraphActivity extends Activity
 
         /** Update the broadcast devices */
         update(true);
-        notifyDevices();
+        //notifyDevices();
     }
 
 
@@ -186,7 +187,25 @@ public class GraphActivity extends Activity
         l.addAll(std.getSenders());
         l.addAll(std.getListeners());
 
-        KrakenMisc.notifyUpdateDevices(username, l.iterator());
+        Log.i(this.getLocalClassName(), "Notify every devices by " + username);
+        notifyUpdateDevices(username, l.iterator());
+    }
+
+    private void notifyUpdateDevices(String username, Iterator<DeviceData> it) {
+
+        notifyDevices(BroadcastService.UPDATE, username, it);
+    }
+
+    private void notifyQuitDevices(String username, Iterator<DeviceData> it) {
+
+        notifyDevices(BroadcastService.QUIT, username, it);
+    }
+
+
+    private void notifyDevices(String hreq, String username, Iterator<DeviceData> it) {
+
+        NotifyTask nt = new NotifyTask(hreq, username);
+        nt.execute(it);
     }
 
     // Update the list of devices
@@ -250,11 +269,22 @@ public class GraphActivity extends Activity
             }
         }
 
-        navigationReceivers.updateContent(KrakenMisc.adaptList(ltl, username).toArray());
+        List<DeviceData> dlist = KrakenMisc.adaptList(ltl, username);
+        String [] dnames = new String[dlist.size()];
+
+        for(int i = 0; i< dnames.length; i++) {
+
+            dnames[i] = dlist.get(i).getName();
+            if(std.isRealBroadcaster(dnames[i]))
+                dnames[i] += "#";
+        }
+
+
+        navigationReceivers.updateContent(dnames);
         navigationSenders.updateContent(KrakenMisc.adaptList(lts, username).toArray());
     }
 
-
+    /** Prepare the request getting the device data to listen */
     private DeviceData prepareRequest() {
 
         String slistener = mTitle;
@@ -298,15 +328,19 @@ public class GraphActivity extends Activity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_listen) {
+
             Log.i(this.getLocalClassName(), "listen action");
+
             if (!mTitle.equals(username)) {
+
                 DeviceData d = prepareRequest();
                 recv.listenRequest(d, username);
+
                 Log.i(this.getLocalClassName(), "listening to " + d.getName());
                 Toast.makeText(getApplicationContext(), "You are listening to '" + d.getName() + "'",
                         Toast.LENGTH_LONG).show();
+
             } else
                 Toast.makeText(getApplicationContext(), "You cannot listen to yourself, idiot!",
                         Toast.LENGTH_LONG).show();
@@ -315,7 +349,9 @@ public class GraphActivity extends Activity
             return true;
 
         } else if (id == R.id.action_stop) {
+
             Log.i(this.getLocalClassName(), "stop action");
+
             if (!mTitle.equals(username)) {
                 recv.stopRequest(prepareRequest(), username);
             } else
@@ -323,7 +359,6 @@ public class GraphActivity extends Activity
                         Toast.LENGTH_LONG).show();
             return true;
         }
-
 
         return super.onOptionsItemSelected(item);
     }
@@ -404,14 +439,14 @@ public class GraphActivity extends Activity
                 if (op == DEVICE_OP) {
                     std.clearBroadcasters();
                     updateGroupContent(this, first_update);
+                    notifyDevices();
 
                 } else if (op == QUIT_GROUP_OP) {
 
                     Log.i(this.getClass().getName(), "post execute - quit the group");
-                    // Get the devices
                     Log.i(this.getClass().getName(), "post execute - notify the devices (quit)");
-                    KrakenMisc.notifyQuitDevices(username, std.getSenders().iterator());
-                    KrakenMisc.notifyQuitDevices(username, std.getListeners().iterator());
+                    notifyQuitDevices(username, std.getSenders().iterator());
+                    notifyQuitDevices(username, std.getListeners().iterator());
                 }
 
             } else

@@ -66,24 +66,6 @@ public class KrakenMisc {
         return networkInfo != null && networkInfo.isConnected();
     }
 
-
-    public static void notifyUpdateDevices(String username, Iterator<DeviceData> it) {
-
-        notifyDevices(BroadcastService.UPDATE, username, it);
-    }
-
-    // TODO: 15/02/2017 Notify the devices when a user quit the group
-    public static void notifyQuitDevices(String username, Iterator<DeviceData> it) {
-
-        notifyDevices(BroadcastService.QUIT, username, it);
-    }
-
-
-    private static void notifyDevices(String hreq, String username, Iterator<DeviceData> it) {
-
-        new NotifyTask(hreq, username).execute(it);
-    }
-
     // Function used in GraphActivity
     public static List<DeviceData> adaptList(List<DeviceData> ld, String username) {
 
