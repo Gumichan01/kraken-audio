@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class BroadcastData {
 
     private volatile ArrayList<DeviceData> broadcasters;
-    private volatile ArrayList<String> rbroadcasters; // TODO: 20/02/2017 Changed the type
+    private volatile ArrayList<String> rbroadcasters;
     private volatile ArrayList<DeviceData> listeners;
 
     public BroadcastData() {
@@ -88,8 +88,6 @@ public class BroadcastData {
     }
 
     public synchronized boolean isRealBroadcaster(String bdev) {
-
-        // TODO: 20/02/2017 Check if the broadcaster is listened by the current device
 
         for(String s: rbroadcasters){
 

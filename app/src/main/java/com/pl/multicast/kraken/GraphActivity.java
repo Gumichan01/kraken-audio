@@ -296,7 +296,8 @@ public class GraphActivity extends Activity
         }
 
         Log.i(this.getLocalClassName(), "display list ↓");
-        Log.i(this.getLocalClassName(), dnames.toString());
+        for(String s: dnames) Log.i(this.getLocalClassName(), s + " ");
+        Log.i(this.getLocalClassName(), "display list ↑");
 
         return dnames;
     }
@@ -344,6 +345,8 @@ public class GraphActivity extends Activity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+
+        // TODO: 07/03/2017 Get the view where the item is linked to
 
         if (id == R.id.action_listen) {
 
