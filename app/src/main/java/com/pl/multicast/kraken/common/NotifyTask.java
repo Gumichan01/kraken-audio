@@ -51,11 +51,11 @@ public class NotifyTask extends AsyncTask<Iterator<DeviceData>, Integer, Void> {
 
                 PrintWriter writer = new PrintWriter(new OutputStreamWriter(s.getOutputStream()));
                 BufferedReader reader = new BufferedReader(new InputStreamReader(s.getInputStream()));
-                writer.write(hreq + " " + d.getName() + MessageParser.EOL);
+                writer.write(hreq + " " + uname + MessageParser.EOL);
                 writer.flush();
 
                 String rstring = reader.readLine();
-                Log.i(this.getClass().getName(), "Notify - msg: " + rstring);
+                Log.i(this.getClass().getName(), "Notify - msg received: " + rstring);
                 s.close();
 
             } catch (IOException e) {
