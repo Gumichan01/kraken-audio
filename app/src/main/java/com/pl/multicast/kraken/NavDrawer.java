@@ -127,7 +127,7 @@ public class NavDrawer extends Fragment {
 
     public void updateContent(String[] content) {
 
-        mDrawerListView.setAdapter(new ArrayAdapter<String>(
+        mDrawerListView.setAdapter(new ArrayAdapter<>(
                 getActionBar().getThemedContext(),
                 android.R.layout.simple_list_item_activated_2,
                 android.R.id.text1, content));
