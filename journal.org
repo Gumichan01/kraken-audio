@@ -1,3 +1,17 @@
+* <2017-03-01>
+** Fait:
+   - "Update" supprimer
+   - Evaluer quelques solutions audios mais pas concluant
+** A faire:
+   - Avoir une architecture propre pour bien l'identification
+     séparer des autres utilisateurs et les widgets.
+   - Avoir une vue globale du circuit
+   - Evaluer TarsosDSP
+   - Faire une nouvelle version ou chaque client stream
+     une alternance de deux octets choisis aleatoirement
+     et affiche les streams des autres clients.
+   - JE VEUX UNE DEMO!
+
 * <2017-02-08>
 ** Fait:
    - Un demo avec du texte! Bravo!
