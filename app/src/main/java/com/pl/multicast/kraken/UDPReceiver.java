@@ -175,7 +175,7 @@ public class UDPReceiver {
                     UDPReceiver.this.std.addRealBroadcaster(dev.getName());
                     updateGraphActivity();
 
-                } else if (request.contains(BroadcastService.QUIT)) {
+                } else if (request.contains(BroadcastService.STOP)) {
                     UDPReceiver.this.std.rmRealBroadcaster(dev.getName());
                     updateGraphActivity();
                 }
