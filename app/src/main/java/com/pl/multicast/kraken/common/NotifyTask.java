@@ -50,6 +50,7 @@ public class NotifyTask extends AsyncTask<Iterator<DeviceData>, Integer, Void> {
 
                 PrintWriter writer = new PrintWriter(new OutputStreamWriter(s.getOutputStream()));
                 BufferedReader reader = new BufferedReader(new InputStreamReader(s.getInputStream()));
+                Log.i(this.getClass().getName(), "Notify - msg sent: " + hreq + " " + uname + MessageParser.EOL);
                 writer.write(hreq + " " + uname + MessageParser.EOL);
                 writer.flush();
 
