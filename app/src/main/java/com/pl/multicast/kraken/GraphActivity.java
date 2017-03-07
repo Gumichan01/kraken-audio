@@ -42,16 +42,22 @@ public class GraphActivity extends Activity
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private String mTitle;
+
     private String username;
     private String gname;
     private DeviceData d;
+
+    /** Used to store the device display lists */
+    private String [] bdnames;      // list of the broadcaster devices displayed on the screen
+    private String [] rdnames;      // list of the receiver devices displayed on the screen
+
     // Thread
-    private Thread bserviceth;    // broadcast service
+    private Thread bserviceth;      // broadcast service thread
     private BroadcastService bs;
     // Receiver
     private UDPReceiver recv;
     // Data
-    private BroadcastData std;
+    private BroadcastData std;      // Data broadcasting information
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +69,8 @@ public class GraphActivity extends Activity
         gname = getIntent().getStringExtra(MainActivity.GRPNAME);
         username = d.getName();
         mTitle = username;
+        bdnames = null;
+        rdnames = null;
 
         /** Load the broadcast data and the communication point */
         std = new BroadcastData();
@@ -99,7 +107,6 @@ public class GraphActivity extends Activity
         update(true);
         //notifyDevices();
     }
-
 
     @Override
     public void onResume() {
@@ -229,7 +236,7 @@ public class GraphActivity extends Activity
         List<DeviceData> lts = std.getSenders();
 
         if (br == null) {
-            Log.i(this.getLocalClassName(), "no device");
+            Log.e(this.getLocalClassName(), "no device");
             return;
         }
 
@@ -269,19 +276,29 @@ public class GraphActivity extends Activity
             }
         }
 
-        List<DeviceData> dlist = KrakenMisc.adaptList(ltl, username);
+        bdnames = generateDisplayList(lts);
+        rdnames = generateDisplayList(ltl);
+        navigationSenders.updateContent(bdnames);
+        navigationReceivers.updateContent(rdnames);
+    }
+
+    /** Generate the list of the devices that will be displayed in the navigation drawers */
+    private String [] generateDisplayList(List<DeviceData> l){
+
+        List<DeviceData> dlist = KrakenMisc.adaptList(l, username);
         String [] dnames = new String[dlist.size()];
 
-        for(int i = 0; i< dnames.length; i++) {
+        for(int i = 0; i < dnames.length; i++) {
 
             dnames[i] = dlist.get(i).getName();
             if(std.isRealBroadcaster(dnames[i]))
                 dnames[i] += "#";
         }
 
+        Log.i(this.getLocalClassName(), "display list ↓");
+        Log.i(this.getLocalClassName(), dnames.toString());
 
-        navigationReceivers.updateContent(dnames);
-        navigationSenders.updateContent(KrakenMisc.adaptList(lts, username).toArray());
+        return dnames;
     }
 
     /** Prepare the request getting the device data to listen */
@@ -319,7 +336,7 @@ public class GraphActivity extends Activity
 
 
     /**
-     * Option Items
+     * Option Items — Specify what will happen when the user selects a button ("Listen" or "Stop")
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
