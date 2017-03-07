@@ -130,6 +130,7 @@ public class UDPReceiver {
         new ASyncUDPReceiveRequest(dev, req).execute();
     }
 
+
     private class ASyncUDPReceiveRequest extends AsyncTask<Void, Void, Boolean> {
 
         private DeviceData dev;
@@ -173,6 +174,15 @@ public class UDPReceiver {
 
                 if(request.contains(BroadcastService.LISTEN)) {
                     UDPReceiver.this.std.addRealBroadcaster(dev.getName());
+                    graph.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            graph.update(false);
+                        }
+                    });
+
+                } else if(request.contains(BroadcastService.QUIT)) {
+                    UDPReceiver.this.std.rmRealBroadcaster(dev.getName());
                     graph.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
