@@ -2,7 +2,6 @@ package com.pl.multicast.kraken;
 
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.pl.multicast.kraken.common.KrakenMisc;
 import com.pl.multicast.kraken.datum.DeviceData;
@@ -172,11 +171,11 @@ public class UDPReceiver {
             if (result) {
                 Log.i(this.getClass().getName(), "post execute - " + request + " - SUCCESS");
 
-                if(request.contains(BroadcastService.LISTEN)) {
+                if (request.contains(BroadcastService.LISTEN)) {
                     UDPReceiver.this.std.addRealBroadcaster(dev.getName());
                     updateGraphActivity();
 
-                } else if(request.contains(BroadcastService.QUIT)) {
+                } else if (request.contains(BroadcastService.QUIT)) {
                     UDPReceiver.this.std.rmRealBroadcaster(dev.getName());
                     updateGraphActivity();
                 }
@@ -185,7 +184,7 @@ public class UDPReceiver {
                 Log.e(this.getClass().getName(), "post execute - " + request + " - FAILURE");
         }
 
-        private void updateGraphActivity(){
+        private void updateGraphActivity() {
 
             graph.runOnUiThread(new Runnable() {
                 @Override

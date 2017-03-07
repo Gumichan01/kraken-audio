@@ -61,7 +61,7 @@ public class NotifyTask extends AsyncTask<Iterator<DeviceData>, Integer, Void> {
                 e.printStackTrace();
             }
         }
-        Log.i(this.getClass().getName(), "Notify - background task - " + hreq +" - #END");
+        Log.i(this.getClass().getName(), "Notify - background task - " + hreq + " - #END");
 
         return null;
     }

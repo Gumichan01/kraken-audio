@@ -47,9 +47,11 @@ public class GraphActivity extends Activity
     private String gname;
     private DeviceData d;
 
-    /** Used to store the device display lists */
-    private String [] bdnames;      // list of the broadcaster devices displayed on the screen
-    private String [] rdnames;      // list of the receiver devices displayed on the screen
+    /**
+     * Used to store the device display lists
+     */
+    private String[] bdnames;      // list of the broadcaster devices displayed on the screen
+    private String[] rdnames;      // list of the receiver devices displayed on the screen
 
     // Thread
     private Thread bserviceth;      // broadcast service thread
@@ -282,27 +284,31 @@ public class GraphActivity extends Activity
         navigationReceivers.updateContent(rdnames);
     }
 
-    /** Generate the list of the devices that will be displayed in the navigation drawers */
-    private String [] generateDisplayList(List<DeviceData> l){
+    /**
+     * Generate the list of the devices that will be displayed in the navigation drawers
+     */
+    private String[] generateDisplayList(List<DeviceData> l) {
 
         List<DeviceData> dlist = KrakenMisc.adaptList(l, username);
-        String [] dnames = new String[dlist.size()];
+        String[] dnames = new String[dlist.size()];
 
-        for(int i = 0; i < dnames.length; i++) {
+        for (int i = 0; i < dnames.length; i++) {
 
             dnames[i] = dlist.get(i).getName();
-            if(std.isRealBroadcaster(dnames[i]))
+            if (std.isRealBroadcaster(dnames[i]))
                 dnames[i] += "#";
         }
 
         Log.i(this.getLocalClassName(), "display list ↓");
-        for(String s: dnames) Log.i(this.getLocalClassName(), s + " ");
+        for (String s : dnames) Log.i(this.getLocalClassName(), s + " ");
         Log.i(this.getLocalClassName(), "display list ↑");
 
         return dnames;
     }
 
-    /** Prepare the request getting the device data to listen */
+    /**
+     * Prepare the request getting the device data to listen
+     */
     private DeviceData prepareRequest() {
 
         String slistener = mTitle;
@@ -460,7 +466,7 @@ public class GraphActivity extends Activity
                     std.clearBroadcasters();
                     updateGroupContent(this, first_update);
 
-                    if(first_update)
+                    if (first_update)
                         notifyDevices();
 
                 } else if (op == QUIT_GROUP_OP) {

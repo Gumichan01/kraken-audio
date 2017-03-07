@@ -77,7 +77,7 @@ public class BroadcastData {
     public synchronized void addRealBroadcaster(String realbroadcaster) {
         Log.i(this.getClass().getName(), "Sync - added the real broadcaster: " + realbroadcaster);
 
-        if(!isRealBroadcaster(realbroadcaster))
+        if (!isRealBroadcaster(realbroadcaster))
             rbroadcasters.add(realbroadcaster);
 
     }
@@ -89,9 +89,9 @@ public class BroadcastData {
 
     public synchronized boolean isRealBroadcaster(String bdev) {
 
-        for(String s: rbroadcasters){
+        for (String s : rbroadcasters) {
 
-            if(s.equals(bdev))
+            if (s.equals(bdev))
                 return true;
         }
         return false;
