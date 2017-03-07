@@ -174,25 +174,25 @@ public class UDPReceiver {
 
                 if(request.contains(BroadcastService.LISTEN)) {
                     UDPReceiver.this.std.addRealBroadcaster(dev.getName());
-                    graph.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            graph.update(false);
-                        }
-                    });
+                    updateGraphActivity();
 
                 } else if(request.contains(BroadcastService.QUIT)) {
                     UDPReceiver.this.std.rmRealBroadcaster(dev.getName());
-                    graph.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            graph.update(false);
-                        }
-                    });
+                    updateGraphActivity();
                 }
 
             } else
                 Log.e(this.getClass().getName(), "post execute - " + request + " - FAILURE");
+        }
+
+        private void updateGraphActivity(){
+
+            graph.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    graph.update(false);
+                }
+            });
         }
     }
 }
