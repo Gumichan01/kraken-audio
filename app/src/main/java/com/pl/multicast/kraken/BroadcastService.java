@@ -57,7 +57,8 @@ public class BroadcastService implements Runnable {
 
     public synchronized Handler getThreadHandler() {
 
-        return broadcaster.getHandler();
+        return null;
+        //return broadcaster.getHandler();
     }
 
     public void run() {

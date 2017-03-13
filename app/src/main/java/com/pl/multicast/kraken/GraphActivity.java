@@ -167,7 +167,7 @@ public class GraphActivity extends Activity
     // Broadcast the text
     public void broadcastText(View v) {
 
-        EditText edt = (EditText) findViewById(R.id.txtsend);
+        /*EditText edt = (EditText) findViewById(R.id.txtsend);
         String s = edt.getText().toString();
         Log.i(this.getLocalClassName(), "Send the following text: " + s);
         // Send message to the thread responsible of broadcasting the message
@@ -177,7 +177,7 @@ public class GraphActivity extends Activity
         bs.getThreadHandler().sendMessage(m);
         Log.i(this.getLocalClassName(), "Send text END");
 
-        Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, s, Toast.LENGTH_SHORT).show();*/
     }
 
     // Update the list view

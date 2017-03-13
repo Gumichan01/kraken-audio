@@ -1,11 +1,8 @@
 package com.pl.multicast.kraken;
 
 import android.os.AsyncTask;
-import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 
-import com.pl.multicast.kraken.common.KrakenMisc;
 import com.pl.multicast.kraken.datum.DeviceData;
 
 import java.io.IOException;
@@ -14,6 +11,7 @@ import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.Random;
 
 
 /**
@@ -23,16 +21,17 @@ public class UDPSender {
 
     // TODO: 06/02/2017 fix the issue with the handler (minor bug)
 
-    public static final int OBS = 42;
-    private static Handler bshandler;
-    DatagramSocket broadcastsock;
+    //public static final int OBS = 42;
+    //private static Handler bshandler;
+    private byte [] b;
+    private DatagramSocket broadcastsock;
     private BroadcastData std;
 
     public UDPSender(BroadcastData s) {
 
         std = s;
         broadcastsock = null;
-        bshandler = new Handler() {
+        /*bshandler = new Handler() {
 
             public void handleMessage(Message msg) {
 
@@ -52,19 +51,21 @@ public class UDPSender {
                     }
                 }
             }
-        };
+        };*/
 
         try {
             broadcastsock = new DatagramSocket();
         } catch (SocketException e) {
             Log.e(this.getClass().getName(), e.getMessage());
         }
+
+        send();
     }
 
-    public Handler getHandler() {
+    /*public Handler getHandler() {
 
         return bshandler;
-    }
+    }*/
 
     public void close() {
 
@@ -73,18 +74,47 @@ public class UDPSender {
             broadcastsock.close();
     }
 
-    private void sendText(final String text) {
-        new AsyncUDPSenderRoutine().execute(text);
+    void send() {
+
+        b = new byte[2];
+        new Random().nextBytes(b);
+
+        for(int i = 0; i < b.length; i++){
+            Log.i(this.getClass().getName(), "byte value — " + b[i]);
+        }
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                int j = 0;
+
+                while(true){
+
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                        break;
+                    }
+
+                    new AsyncUDPSenderRoutine().execute(new Byte[]{b[j]});
+                    Log.v(this.getClass().getName(), "byte value sent — " + b[j]);
+                    j = 1 - j;
+                }
+            }
+        }).start();
+
     }
 
-    private class AsyncUDPSenderRoutine extends AsyncTask<String, Void, Void> {
+    private class AsyncUDPSenderRoutine extends AsyncTask<Byte, Void, Void> {
 
         public AsyncUDPSenderRoutine() {
             super();
         }
 
         @Override
-        protected Void doInBackground(String... params) {
+        protected Void doInBackground(Byte... params) {
 
             if (params == null || params.length < 1) {
 
@@ -92,16 +122,14 @@ public class UDPSender {
                 return null;
             }
 
-            String text = params[0];
-
             try {
                 DatagramPacket p;
-                byte[] data = text.getBytes();
+                byte [] data = new byte[]{params[0]};
                 ArrayList<DeviceData> listeners = std.getListeners();
 
                 for (DeviceData dev : listeners) {
 
-                    Log.i(this.getClass().getName(), "SEND data to " + dev.getName());
+                    Log.v(this.getClass().getName(), "SEND data — " + data[0] + " — to " + dev.getName());
                     try {
                         p = new DatagramPacket(data, data.length,
                                 new InetSocketAddress(dev.getAddr(), dev.getBroadcastPort()));
