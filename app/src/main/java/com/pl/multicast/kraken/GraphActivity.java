@@ -180,6 +180,16 @@ public class GraphActivity extends Activity
         Toast.makeText(this, s, Toast.LENGTH_SHORT).show();*/
     }
 
+    public void receiveByte(byte b) {
+
+        ListView lstv = (ListView) findViewById(R.id.txtrecv);
+        String text = new Byte(b).toString();
+        ltext.add(text);
+        lstv.setAdapter(new ArrayAdapter<>(getApplicationContext(), R.layout.text_recv, ltext));
+        lstv.setVisibility(View.VISIBLE);
+        Log.i(this.getLocalClassName(), "List updated. Added the following text: " + text);
+    }
+
     // Update the list view
     public void receiveText(String text) {
 

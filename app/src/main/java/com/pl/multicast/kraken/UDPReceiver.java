@@ -70,13 +70,16 @@ public class UDPReceiver {
 
                         try {
                             udpsock.receive(p);
-                            final String rstring = new String(p.getData());
-                            Log.i(this.getClass().getName(), "UDP receiver - " + rstring);
+                            //final String rstring = new String(p.getData());
+                            //Log.i(this.getClass().getName(), "UDP receiver - " + rstring);
+                            final byte b = p.getData()[0];
+                            Log.i(this.getClass().getName(), "UDP receiver - " + b);
 
                             graph.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    graph.receiveText(rstring);
+                                    //graph.receiveText(rstring);
+                                    graph.receiveByte(b);
                                 }
                             });
 
