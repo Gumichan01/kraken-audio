@@ -149,8 +149,8 @@ public class GraphActivity extends Activity
 
     public void onSectionAttached(int number) {
 
+        // TODO: 07/03/2017 Get the view where the item is linked to
         List<DeviceData> ld = std.getSenders();
-
         Log.i(this.getLocalClassName(), "onSectionAttached - " + number);
 
         switch (number) {
@@ -351,8 +351,6 @@ public class GraphActivity extends Activity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        // TODO: 07/03/2017 Get the view where the item is linked to
 
         if (id == R.id.action_listen) {
 
