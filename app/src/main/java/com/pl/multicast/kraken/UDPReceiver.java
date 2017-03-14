@@ -72,8 +72,8 @@ public class UDPReceiver {
                             udpsock.receive(p);
                             //final String rstring = new String(p.getData());
                             //Log.i(this.getClass().getName(), "UDP receiver - " + rstring);
-                            final byte b = p.getData()[0];
-                            Log.i(this.getClass().getName(), "UDP receiver - " + b);
+                            byte [] b = p.getData();
+                            Log.i(this.getClass().getName(), "UDP receiver - " + b.toString());
 
                             graph.runOnUiThread(new Runnable() {
                                 @Override

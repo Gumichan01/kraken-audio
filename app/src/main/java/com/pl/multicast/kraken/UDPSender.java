@@ -130,6 +130,7 @@ public class UDPSender {
                 for (DeviceData dev : listeners) {
 
                     Log.v(this.getClass().getName(), "SEND data — " + data[0] + " — to " + dev.getName());
+                    Log.v(this.getClass().getName(), "SEND data size — " + data.length);
                     try {
                         p = new DatagramPacket(data, data.length,
                                 new InetSocketAddress(dev.getAddr(), dev.getBroadcastPort()));
