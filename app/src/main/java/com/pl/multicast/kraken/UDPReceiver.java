@@ -23,7 +23,7 @@ import java.net.SocketException;
  */
 public class UDPReceiver {
 
-    private static final int DATAPCK_SIZE = 32;
+    private static final int DATAPCK_SIZE = 1;
     private static final int RECV_TIMEOUT = 2000;
 
     private BroadcastData std;
