@@ -72,14 +72,14 @@ public class UDPReceiver {
                             udpsock.receive(p);
                             //final String rstring = new String(p.getData());
                             //Log.i(this.getClass().getName(), "UDP receiver - " + rstring);
-                            byte [] b = p.getData();
+                            final byte [] b = p.getData();
                             Log.i(this.getClass().getName(), "UDP receiver - " + b.toString());
 
                             graph.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     //graph.receiveText(rstring);
-                                    graph.receiveByte(b);
+                                    graph.receiveByte(b[0]);
                                 }
                             });
 
