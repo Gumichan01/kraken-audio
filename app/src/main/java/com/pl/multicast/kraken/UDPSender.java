@@ -24,6 +24,7 @@ public class UDPSender {
     //public static final int OBS = 42;
     //private static Handler bshandler;
     private byte [] b;
+    private int select;
     private DatagramSocket broadcastsock;
     private BroadcastData std;
 
@@ -59,7 +60,13 @@ public class UDPSender {
             Log.e(this.getClass().getName(), e.getMessage());
         }
 
-        send();
+        b = new byte[2];
+        select = 0;
+        new Random().nextBytes(b);
+
+        for(int i = 0; i < b.length; i++){
+            Log.i(this.getClass().getName(), "byte value — " + b[i]);
+        }
     }
 
     /*public Handler getHandler() {
@@ -69,42 +76,15 @@ public class UDPSender {
 
     public void close() {
 
-
         if (broadcastsock != null)
             broadcastsock.close();
     }
 
     void send() {
 
-        b = new byte[2];
-        new Random().nextBytes(b);
-
-        for(int i = 0; i < b.length; i++){
-            Log.i(this.getClass().getName(), "byte value — " + b[i]);
-        }
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-                int j = 0;
-
-                while(true){
-
-                    try {
-                        Thread.sleep(2000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                        break;
-                    }
-
-                    new AsyncUDPSenderRoutine().execute(new Byte[]{b[j]});
-                    Log.v(this.getClass().getName(), "byte value sent — " + b[j]);
-                    j = 1 - j;
-                }
-            }
-        }).start();
-
+        new AsyncUDPSenderRoutine().execute(new Byte[]{b[select]});
+        Log.v(this.getClass().getName(), "byte value sent — " + b[select]);
+        select = 1 - select;
     }
 
     private class AsyncUDPSenderRoutine extends AsyncTask<Byte, Void, Void> {
@@ -129,8 +109,9 @@ public class UDPSender {
 
                 for (DeviceData dev : listeners) {
 
-                    Log.v(this.getClass().getName(), "SEND data — " + data[0] + " — to " + dev.getName());
-                    Log.v(this.getClass().getName(), "SEND data size — " + data.length);
+                    Log.i(this.getClass().getName(), "SEND data — " + data[0] + " — to " + dev.getName() +
+                            " " + dev.getAddr() + ":" + dev.getBroadcastPort());
+                    Log.i(this.getClass().getName(), "SEND data size — " + data.length);
                     try {
                         p = new DatagramPacket(data, data.length,
                                 new InetSocketAddress(dev.getAddr(), dev.getBroadcastPort()));

@@ -61,6 +61,16 @@ public class BroadcastService implements Runnable {
         //return broadcaster.getHandler();
     }
 
+    public void sendData(){
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                broadcaster.send();
+            }
+        });
+    }
+
     public void run() {
 
         // Launch the service server
