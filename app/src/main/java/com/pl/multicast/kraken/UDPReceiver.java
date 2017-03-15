@@ -23,7 +23,7 @@ import java.net.SocketException;
  */
 public class UDPReceiver {
 
-    private static final int DATAPCK_SIZE = 1;
+    private static final int DATAPCK_SIZE = 32;
     private static final int RECV_TIMEOUT = 2000;
 
     private BroadcastData std;
@@ -47,6 +47,18 @@ public class UDPReceiver {
         launched = true;
 
         thread = new Thread(new Runnable() {
+
+            private void printByte(final byte[] bytes){
+
+                graph.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        //graph.receiveText(rstring);
+                        graph.receiveByte(bytes[0]);
+                    }
+                });
+            }
+
             @Override
             public void run() {
                 DatagramSocket udpsock = null;
@@ -70,18 +82,22 @@ public class UDPReceiver {
 
                         try {
                             udpsock.receive(p);
-                            //final String rstring = new String(p.getData());
-                            //Log.i(this.getClass().getName(), "UDP receiver - " + rstring);
-                            final byte [] b = p.getData();
-                            Log.i(this.getClass().getName(), "UDP receiver - " + b.toString());
 
-                            graph.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    //graph.receiveText(rstring);
-                                    graph.receiveByte(b[0]);
-                                }
-                            });
+                            Log.i(this.getClass().getName(), "UDP receiver - (packet) length: " + p.getLength());
+                            byte[] b = p.getData();
+
+                            if (b == null)
+                                Log.i(this.getClass().getName(), "UDP receiver - null bytes");
+                            else {
+
+                                Log.i(this.getClass().getName(), "UDP receiver - bytes length: " + b.length);
+                                Log.i(this.getClass().getName(), "UDP receiver - content");
+                                for (byte by : b)
+                                    Log.i(this.getClass().getName(), "UDP receiver - " + by);
+
+                                Log.i(this.getClass().getName(), "UDP receiver - END content");
+                                printByte(b);
+                            }
 
                         } catch (IOException e) {
                             Log.v(this.getClass().getName(), "UDP receiver - " + e.getMessage());
