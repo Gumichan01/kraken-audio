@@ -184,13 +184,14 @@ public class GraphActivity extends Activity
 
         ListView lstv = (ListView) findViewById(R.id.txtrecv);
         String text = new Byte(b).toString();
+        Log.i(this.getLocalClassName(), "byte received — " + b);
         ltext.add(text);
         lstv.setAdapter(new ArrayAdapter<>(getApplicationContext(), R.layout.text_recv, ltext));
         lstv.setVisibility(View.VISIBLE);
         Log.i(this.getLocalClassName(), "List updated. Added the following text: " + text);
     }
 
-    // Update the list view
+    // Update the list view @deprecated
     public void receiveText(String text) {
 
         ListView lstv = (ListView) findViewById(R.id.txtrecv);
