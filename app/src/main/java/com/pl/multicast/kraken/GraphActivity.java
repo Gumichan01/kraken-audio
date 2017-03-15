@@ -178,6 +178,7 @@ public class GraphActivity extends Activity
         Log.i(this.getLocalClassName(), "Send text END");
 
         Toast.makeText(this, s, Toast.LENGTH_SHORT).show();*/
+        Log.i(this.getLocalClassName(), "send data");
         bs.sendData();
     }
 

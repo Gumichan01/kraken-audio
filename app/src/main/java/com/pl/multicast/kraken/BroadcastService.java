@@ -68,7 +68,7 @@ public class BroadcastService implements Runnable {
             public void run() {
                 broadcaster.send();
             }
-        });
+        }).start();
     }
 
     public void run() {
