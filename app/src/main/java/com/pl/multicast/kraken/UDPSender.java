@@ -22,7 +22,9 @@ public class UDPSender {
     // TODO: 06/02/2017 fix the issue with the handler (minor bug)
 
     //public static final int OBS = 42;
+    private static final int DATAPCK_SIZE = 32;
     //private static Handler bshandler;
+    private int j;
     private byte [] b;
     private int select;
     private DatagramSocket broadcastsock;
@@ -32,6 +34,7 @@ public class UDPSender {
 
         std = s;
         broadcastsock = null;
+        j = 0;
         /*bshandler = new Handler() {
 
             public void handleMessage(Message msg) {
@@ -64,6 +67,14 @@ public class UDPSender {
         select = 0;
         new Random().nextBytes(b);
 
+        /// Block (32 bytes)
+        /*byte [] b2 = new byte[DATAPCK_SIZE];
+        for(int i = 0; i < b2.length; i++)
+        {
+            b2[i] = b[i%2];
+        }*/
+        /// END block
+
         for(int i = 0; i < b.length; i++){
             Log.i(this.getClass().getName(), "byte value — " + b[i]);
         }
@@ -82,19 +93,20 @@ public class UDPSender {
 
     void send() {
 
-        new AsyncUDPSenderRoutine().execute(new Byte[]{b[select]});
-        Log.v(this.getClass().getName(), "byte value sent — " + b[select]);
+        j = 1 - j;
+        String s = Byte.valueOf(b[j]).toString();
+        new AsyncUDPSenderRoutine().execute(s);
+        //new AsyncUDPSenderRoutine().execute(new Byte[]{b[select]});
+        Log.v(this.getClass().getName(), "SEND byte value (string) sent — " + s);
         select = 1 - select;
     }
 
-    private class AsyncUDPSenderRoutine extends AsyncTask<Byte, Void, Void> {
+    private class AsyncUDPSenderRoutine extends AsyncTask<String, Void, Void> {
 
-        public AsyncUDPSenderRoutine() {
-            super();
-        }
+        public AsyncUDPSenderRoutine() { super(); }
 
         @Override
-        protected Void doInBackground(Byte... params) {
+        protected Void doInBackground(String... params) {
 
             if (params == null || params.length < 1) {
 
@@ -104,20 +116,22 @@ public class UDPSender {
 
             try {
                 DatagramPacket p;
-                byte [] data = new byte[]{params[0]};
+                byte [] data = params[0].getBytes();
                 ArrayList<DeviceData> listeners = std.getListeners();
 
                 for (DeviceData dev : listeners) {
 
-                    Log.i(this.getClass().getName(), "SEND data — " + data[0] + " — to " + dev.getName() +
+                    Log.i(this.getClass().getName(), "SEND data — " + params[0] + " — to " + dev.getName() +
                             " " + dev.getAddr() + ":" + dev.getBroadcastPort());
                     Log.i(this.getClass().getName(), "SEND data size — " + data.length);
                     try {
                         p = new DatagramPacket(data, data.length,
                                 new InetSocketAddress(dev.getAddr(), dev.getBroadcastPort()));
 
-                        if (broadcastsock != null)
+                        if (broadcastsock != null){
+                            Log.i(this.getClass().getName(), "SEND — done");
                             broadcastsock.send(p);
+                        }
 
                     } catch (IOException e) {
                         Log.e(this.getClass().getName(), e.getMessage());
