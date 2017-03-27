@@ -67,7 +67,7 @@ public class ClientDevice {
 					stbuild.append(line).append(MessageParser.EOL);
 				}
 
-				System.out.println(stbuild.toString());
+				//System.out.println(stbuild.toString());
 
 			} else {
 				System.err.println("response code: "
@@ -233,7 +233,7 @@ public class ClientDevice {
 	 * @param op One of the following values — MessageParser.CROSS; MessageParser.ARROW
 	 * @param dest The target device
 	 * 
-	 * @return true on success, false ogherwise
+	 * @return true on success, false otherwise
 	 * */
 	public boolean updateGraph(String op, String dest) {
 		
@@ -258,14 +258,19 @@ public class ClientDevice {
 		 ClientDevice c = new ClientDevice("toto", "192.168.48.2", 45621,
 		 2410);
 		 
-		 System.out.println("graph: " + c.updateGraph(MessageParser.CROSS,"gumi@GT-02"));
-		 
-		 /*System.out.println("create group: " + c.createGroup("toto@GT-01"));
+		 System.out.println("create group: " + c.createGroup("toto@GT-01"));
 		 new ClientDevice("lana", "192.168.48.4", 45645, 2410)
 		 .joinGroup("toto@GT-01");
 		 new ClientDevice("titi", "192.168.48.5", 45652, 2410)
 		 .joinGroup("toto@GT-01");
 
+		 System.out.println("graph -> titi: " + c.updateGraph(MessageParser.ARROW,"titi"));
+		 System.out.println("graph -> lana: " + c.updateGraph(MessageParser.ARROW,"lana"));
+		 System.out.println("graph -> lana (again): " + c.updateGraph(MessageParser.ARROW,"lana"));
+		 System.out.println("graph x titi: " + c.updateGraph(MessageParser.CROSS,"titi"));
+		 System.out.println("graph x lana: " + c.updateGraph(MessageParser.CROSS,"lana"));
+		 System.out.println("graph x lana (again): " + c.updateGraph(MessageParser.CROSS,"lana"));
+		 
 		 /*List<GroupData> listgroup = c.groupList();
 
 		 System.out.println("group list");
