@@ -6,6 +6,8 @@ import java.util.regex.Pattern;
 public class MessageParser {
 
 	public static final String EOL = "\r\n";
+	public static final String ARROW = "->";
+	public static final String CROSS = "x";
 
 	// / Client request
 	// Group creation
@@ -18,6 +20,10 @@ public class MessageParser {
 	public static final String CLIENT_JGRP = "JGRP";
 	// Quit group
 	public static final String CLIENT_QGRP = "QGRP";
+	// Graph entry
+	public static final String CLIENT_GRPH = "GRPH";
+	// Get Graph
+	public static final String CLIENT_GGPH = "GGPH";
 
 	// / Server answer
 	// Group creation OK
@@ -32,6 +38,8 @@ public class MessageParser {
 	public static final String SRV_GDAT = "GDAT";
 	// - List of devices- device data
 	public static final String SRV_DDAT = "DDAT";
+	// Graph updated
+	public static final String SRV_GPOK = "GPOK";
 
 	// FAIL means the requested operation failed
 	public static final String SRV_FAIL = "FAIL";
@@ -48,14 +56,17 @@ public class MessageParser {
 	private static final int HEADER_SIZE = 4;
 	private static final String SPACE = "\\s";
 
-	boolean well_parsed;
-	String message;
-	String header;
-	String group_name;
-	String device_name;
-	int devices_number;
-	InetSocketAddress ipaddr;
-	int broadcast_port;
+	private boolean well_parsed;
+	private String message;
+	private String header;
+	private String group_name;
+	private String device_name;
+	private int devices_number;
+	private InetSocketAddress ipaddr;
+	private int broadcast_port;
+	private String gsource;
+	private String op;
+	private String gdest;
 
 	public MessageParser(String s) {
 
@@ -69,6 +80,7 @@ public class MessageParser {
 				|| message.length() < HEADER_SIZE)
 			return;
 
+		System.out.print(message);
 		// Look at the value of the header string
 		header = message.substring(0, HEADER_SIZE);
 
@@ -87,14 +99,18 @@ public class MessageParser {
 
 		else if (header.equals(CLIENT_QGRP))
 			parseQGRP();
+		
+		else if (header.equals(CLIENT_GRPH))
+			parseGRPH();
 
 		// Server message
 		else if (header.equals(SRV_GCOK) || header.equals(SRV_GJOK)
 				|| header.equals(SRV_QACK) || header.equals(SRV_EOTR)
-				|| header.equals(SRV_BADR) || header.equals(SRV_FAIL))
+				|| header.equals(SRV_BADR) || header.equals(SRV_FAIL)
+				|| header.equals(SRV_GPOK)) {
 
 			parseOK();
-
+		}
 		else if (header.equals(SRV_GDAT))
 			parseGDAT();
 		else if (header.equals(SRV_DDAT))
@@ -216,6 +232,24 @@ public class MessageParser {
 		}
 	}
 
+	private void parseGRPH() {
+		
+		int nbwords = 4;
+		Pattern p = Pattern.compile(SPACE);
+		String[] tokens = p.split(message);
+		
+		if (tokens.length != nbwords)
+			well_parsed = false;
+		else {
+		
+			gsource = tokens[1];
+			op = tokens[2];
+			gsource = tokens[3];
+			System.out.println(gsource + " " + op + " " + gdest);
+			well_parsed = true;
+		}
+	}
+	
 	public boolean isWellParsed() {
 
 		return well_parsed;
