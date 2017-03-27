@@ -237,16 +237,14 @@ public class MessageParser {
 		int nbwords = 4;
 		Pattern p = Pattern.compile(SPACE);
 		String[] tokens = p.split(message);
-		
+
 		if (tokens.length != nbwords)
 			well_parsed = false;
 		else {
-		
 			gsource = tokens[1];
 			op = tokens[2];
-			gsource = tokens[3];
-			System.out.println(gsource + " " + op + " " + gdest);
-			well_parsed = true;
+			gdest = tokens[3];
+			well_parsed = (op.equals(ARROW) || op.equals(CROSS));
 		}
 	}
 	

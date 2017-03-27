@@ -237,24 +237,23 @@ public class ClientDevice {
 	 * */
 	public boolean updateGraph(String op, String dest) {
 		
-		if (op == null || dest == null 
-			|| !op.equals(MessageParser.CROSS) || op.equals(MessageParser.ARROW))
+		if (op == null || dest == null)
 			return false;
-		
+
 		StringBuilder st = new StringBuilder("");
 		st.append(MessageParser.CLIENT_GRPH + " " + device_name + " ");
 		st.append(op + " " + dest + MessageParser.EOL);
-		
+
 		String result = connectionToServer(st.toString());
 		MessageParser parser = new MessageParser(result);
 
 		if (parser.isWellParsed())
 			return parser.getHeader().contains(MessageParser.SRV_GPOK);
-		
+
 		return false;
 	}
-	
-	/*public static void main(String[] args) throws MalformedURLException {
+
+	public static void main(String[] args) throws MalformedURLException {
 
 		 ClientDevice c = new ClientDevice("toto", "192.168.48.2", 45621,
 		 2410);
@@ -282,6 +281,6 @@ public class ClientDevice {
 		 for (DeviceData d : listdev) {
 		 System.out.println(d.toString());
 		 }
-		 System.out.println("-----------");
-	}*/
+		 System.out.println("-----------");*/
+	}
 }
