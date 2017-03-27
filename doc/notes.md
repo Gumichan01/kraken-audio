@@ -3,14 +3,14 @@
 
 ## UI ##
 
-- écran creation de nom (DONE)
-- écran creation de groupe (DONE)
+- écran creation de nom
+- écran creation de groupe
 
 > Info complémentaire
 
-* gauche de l'écran - diffuseurs dans le groupe courant (DONE)
-* au millieu - mixage (DONE)
-* droite de l'écran - receveurs (DONE)
+* gauche de l'écran - diffuseurs dans le groupe courant
+* au millieu - mixage
+* droite de l'écran - receveurs
 
 ## Communication ##
 
@@ -34,6 +34,7 @@
 
 
 ### Syntaxe des requetes ###
+
 
  - Syntaxe requêtes du **client**:
 
@@ -70,6 +71,24 @@ Quitter un groupe:
 Fermer la connexion:
 
     EOCO    /// EOCO : End Of COnnexion
+
+
+Signalement de présence:
+
+    IAMH nom_appareil	/// IAMH : I AM Here
+
+Liaison de graphe (pour la création de graphe orienté):
+
+	GRPH nom_appareil_source op nom_appareil_cible		/// GRPH GRaPHe
+	/// op ∈ { '->', 'x' }
+	/// A -> B : A diffuse un flux audio vers B
+	/// A x B : A diffuse pas/plus un flux audio vers B
+
+Obtention d'un graphe:
+
+	GGPH	/// GGPH: Get GraPHe
+
+
 
  - Syntaxe réponse **serveur**.
 
@@ -113,6 +132,26 @@ Quand le téléphone ferme le connexion:
 
     /// Pas d'envoi, le serveur ferme juste le socket
 
+Quand le téléphone signal sa présence (il est toujours là):
+
+	UACK	/// UACK: Update ACKnolegment
+
+Quand le teléphone annonce une diffusion (en gros il diffuse vers un appareil cible)
+
+	GPOk	/// GPOK: GraPhe update OK
+
+Quand le téléphone veut le graphe:
+
+	PATH dev₁ - dev₂ - ... - devₙ	/// PATH: chemin
+	…
+	EOTR	/// EOTR: End Of TRansmission
+
+	/* PATH est une chaine de caractère qui défini le chemin, 
+	 * i.e. les appareils qui, énumérés dans l'ordre, indique que:
+	 *	- dev₁ est la source.
+	 *	- devₙ (n ∈ ℕ*) est l'appareil au bout du chemin.
+	 */
+
 En cas d'echec quelconque:
 
     FAIL
@@ -137,9 +176,18 @@ En cas d'echec quelconque:
 
     Hashtable<String,DeviveData>
 
-- Chaque appareil est définie par :
+ - Chaque appareil est définie par :
     * Son adreese IP
     * Son numéro de port
+
+ - Le graphe est défini comme une HasTable de la manière suivante :
+	
+	
+	Hashtable<String,Gedge>
+
+ - Chaque **Gedge** est défini par :
+	* Son nom
+	* La liste de ses successeurs
 
 ---
 [1]: https://docs.oracle.com/javase/7/docs/api/java/util/Hashtable.html
