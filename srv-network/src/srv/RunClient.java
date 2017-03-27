@@ -56,17 +56,17 @@ public class RunClient implements HttpHandler {
 				if (h != null) {
 
 					// headers (comment)
-					/*Iterator<String> it = h.keySet().iterator();
-
-					while (it.hasNext()) {
-
-						String k = it.next();
-
-						for (String v : h.get(k)) {
-
-							System.out.println(k + ": " + v.toString());
-						}
-					}*/
+					/*
+					 * Iterator<String> it = h.keySet().iterator();
+					 * 
+					 * while (it.hasNext()) {
+					 * 
+					 * String k = it.next();
+					 * 
+					 * for (String v : h.get(k)) {
+					 * 
+					 * System.out.println(k + ": " + v.toString()); } }
+					 */
 
 					// Use the length of the content
 					if (h.containsKey(PROP_CONT)) {
@@ -86,7 +86,8 @@ public class RunClient implements HttpHandler {
 				else {
 					strbuf = new String(buffer).substring(0, read);
 					// remote address (comment)
-					System.out.print(t.getRemoteAddress().toString() + ": " + strbuf);
+					System.out.print(t.getRemoteAddress().toString() + ": "
+							+ strbuf);
 				}
 
 				parser = new MessageParser(strbuf);
@@ -144,7 +145,7 @@ public class RunClient implements HttpHandler {
 			quitGroupResponse();
 		else if (parser.getHeader().equals(MessageParser.CLIENT_GRPH))
 			graphUpdateResponse();
-		
+
 	}
 
 	private void groupCreationResponse() {
@@ -227,9 +228,9 @@ public class RunClient implements HttpHandler {
 
 			boolean b = g.addDevice(parser.getDevice(), d);
 
-			if(b)
+			if (b)
 				srv.graph.addEdge(parser.getDevice());
-			
+
 			response = (b ? MessageParser.SRV_GJOK : MessageParser.SRV_FAIL)
 					+ MessageParser.EOL;
 		}
@@ -252,20 +253,16 @@ public class RunClient implements HttpHandler {
 	}
 
 	private void graphUpdateResponse() {
-		
-		/// TODO update the graph
-		if(parser.getOp().equals(MessageParser.ARROW))
-			srv.graph.link(parser.getSource(), parser.getDest());
 
-		else if(parser.getOp().equals(MessageParser.CROSS))
-			srv.graph.unlink(parser.getSource(), parser.getDest());
+		boolean res = false;
+		if (parser.getOp().equals(MessageParser.ARROW))
+			res = srv.graph.link(parser.getSource(), parser.getDest());
 
-		else {
-			response = MessageParser.SRV_FAIL + MessageParser.EOL;
-			return;
-		}
+		else if (parser.getOp().equals(MessageParser.CROSS))
+			res = srv.graph.unlink(parser.getSource(), parser.getDest());
 
-		response = MessageParser.SRV_GPOK + MessageParser.EOL;
+		response = (res ? MessageParser.SRV_GPOK : MessageParser.SRV_FAIL)
+				+ MessageParser.EOL;
 	}
-	
+
 }
