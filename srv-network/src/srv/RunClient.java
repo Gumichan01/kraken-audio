@@ -38,7 +38,7 @@ public class RunClient implements HttpHandler {
 		response = null;
 		int res = HttpURLConnection.HTTP_OK;
 		String req = t.getRequestMethod();
-		//System.out.println(" - " + req + " - ");
+		System.out.println(" - " + req + " - ");
 
 		if (req.equals(REQ_GET) || req.equals(REQ_POST)) {
 
@@ -55,6 +55,7 @@ public class RunClient implements HttpHandler {
 
 				if (h != null) {
 
+					// headers (comment)
 					/*Iterator<String> it = h.keySet().iterator();
 
 					while (it.hasNext()) {
@@ -84,7 +85,8 @@ public class RunClient implements HttpHandler {
 					strbuf = "";
 				else {
 					strbuf = new String(buffer).substring(0, read);
-					//System.out.print(t.getRemoteAddress().toString() + ": " + strbuf);
+					// remote address (comment)
+					System.out.print(t.getRemoteAddress().toString() + ": " + strbuf);
 				}
 
 				parser = new MessageParser(strbuf);
@@ -140,6 +142,9 @@ public class RunClient implements HttpHandler {
 
 		} else if (parser.getHeader().equals(MessageParser.CLIENT_QGRP))
 			quitGroupResponse();
+		else if (parser.getHeader().equals(MessageParser.CLIENT_GRPH))
+			graphUpdateResponse();
+		
 	}
 
 	private void groupCreationResponse() {
@@ -240,4 +245,11 @@ public class RunClient implements HttpHandler {
 			response = MessageParser.SRV_QACK + MessageParser.EOL;
 		}
 	}
+
+	private void graphUpdateResponse() {
+		
+		/// TODO update the graph
+		response = MessageParser.SRV_GPOK + MessageParser.EOL;
+	}
+	
 }
