@@ -288,4 +288,19 @@ public class MessageParser {
 		return broadcast_port;
 	}
 
+	public String getSource() {
+		
+		return gsource;
+	}
+	
+	public String getOp() {
+		
+		return op;
+	}
+	
+	public String getDest() {
+		
+		return gdest;
+	}
+	
 }
