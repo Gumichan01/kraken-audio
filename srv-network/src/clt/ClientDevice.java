@@ -227,17 +227,47 @@ public class ClientDevice {
 		return devices;
 	}
 
+	/**
+	 * Request for updating the state of the graph on the server side
+	 * 
+	 * @param op One of the following values — MessageParser.CROSS; MessageParser.ARROW
+	 * @param dest The target device
+	 * 
+	 * @return true on success, false ogherwise
+	 * */
+	public boolean updateGraph(String op, String dest) {
+		
+		if (op == null || dest == null 
+			|| !op.equals(MessageParser.CROSS) || op.equals(MessageParser.ARROW))
+			return false;
+		
+		StringBuilder st = new StringBuilder("");
+		st.append(MessageParser.CLIENT_GRPH + " " + device_name + " ");
+		st.append(op + " " + dest + MessageParser.EOL);
+		
+		String result = connectionToServer(st.toString());
+		MessageParser parser = new MessageParser(result);
+
+		if (parser.isWellParsed())
+			return parser.getHeader().contains(MessageParser.SRV_GPOK);
+		
+		return false;
+	}
+	
 	/*public static void main(String[] args) throws MalformedURLException {
 
 		 ClientDevice c = new ClientDevice("toto", "192.168.48.2", 45621,
 		 2410);
-		 System.out.println("create group: " + c.createGroup("toto@GT-01"));
+		 
+		 System.out.println("graph: " + c.updateGraph(MessageParser.CROSS,"gumi@GT-02"));
+		 
+		 /*System.out.println("create group: " + c.createGroup("toto@GT-01"));
 		 new ClientDevice("lana", "192.168.48.4", 45645, 2410)
 		 .joinGroup("toto@GT-01");
 		 new ClientDevice("titi", "192.168.48.5", 45652, 2410)
 		 .joinGroup("toto@GT-01");
 
-		 List<GroupData> listgroup = c.groupList();
+		 /*List<GroupData> listgroup = c.groupList();
 
 		 System.out.println("group list");
 		 System.out.println("----------");
