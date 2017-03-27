@@ -67,7 +67,7 @@ public class ClientDevice {
 					stbuild.append(line).append(MessageParser.EOL);
 				}
 
-				//System.out.println(stbuild.toString());
+				// System.out.println(stbuild.toString());
 
 			} else {
 				System.err.println("response code: "
@@ -230,13 +230,16 @@ public class ClientDevice {
 	/**
 	 * Request for updating the state of the graph on the server side
 	 * 
-	 * @param op One of the following values — MessageParser.CROSS; MessageParser.ARROW
-	 * @param dest The target device
+	 * @param op
+	 *            One of the following values — MessageParser.CROSS;
+	 *            MessageParser.ARROW
+	 * @param dest
+	 *            The target device
 	 * 
 	 * @return true on success, false otherwise
 	 * */
 	public boolean updateGraph(String op, String dest) {
-		
+
 		if (op == null || dest == null)
 			return false;
 
@@ -253,7 +256,7 @@ public class ClientDevice {
 		return false;
 	}
 
-	public static void main(String[] args) throws MalformedURLException {
+	/*public static void main(String[] args) throws MalformedURLException {
 
 		 ClientDevice c = new ClientDevice("toto", "192.168.48.2", 45621,
 		 2410);
@@ -286,6 +289,7 @@ public class ClientDevice {
 		 for (DeviceData d : listdev) {
 		 System.out.println(d.toString());
 		 }
-		 System.out.println("-----------");*/
-	}
+		 System.out.println("-----------");
+	}*/
+	
 }

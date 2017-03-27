@@ -1,5 +1,6 @@
 package srv;
 
+import graph.Graph;
 
 import java.net.InetSocketAddress;
 import java.util.Hashtable;
@@ -10,13 +11,16 @@ import com.sun.net.httpserver.HttpServer;
 public class DirectoryServer {
 
 	// private static final int BUFFER_SIZE = 1024;
-	private static final int SERVER_PORT = 80;
+	private static final int SERVER_PORT = 8000;
 
 	private HttpServer server;
 	private Hashtable<String, GroupInfo> groups;
+	// Graph is visible from any class in the package
+	Graph graph;
 
 	public DirectoryServer() throws Exception {
 		groups = new Hashtable<String, GroupInfo>();
+		graph = new Graph();
 
 		server = HttpServer.create(new InetSocketAddress(SERVER_PORT), 0);
 		server.createContext("/", new RunClient(this));

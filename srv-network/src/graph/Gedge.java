@@ -6,13 +6,13 @@ public class Gedge {
 
 	private String name;
 	private ArrayList<Gedge> succ;
-	
-	public Gedge(String s){
-		
+
+	public Gedge(String s) {
+
 		name = s;
 		succ = new ArrayList<>();
 	}
-	
+
 	public boolean addSucc(Gedge g) {
 
 		return g != null && (!succ.contains(g)) && succ.add(g);
@@ -22,11 +22,10 @@ public class Gedge {
 
 		return g != null && (succ.contains(g)) && succ.remove(g);
 	}
-	
 
 	@Override
-	public boolean equals(Object o){
-		
+	public boolean equals(Object o) {
+
 		Gedge g = (Gedge) o;
 		return name.equals(g.name);
 	}

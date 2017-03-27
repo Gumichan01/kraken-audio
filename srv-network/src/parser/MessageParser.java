@@ -99,7 +99,7 @@ public class MessageParser {
 
 		else if (header.equals(CLIENT_QGRP))
 			parseQGRP();
-		
+
 		else if (header.equals(CLIENT_GRPH))
 			parseGRPH();
 
@@ -110,8 +110,7 @@ public class MessageParser {
 				|| header.equals(SRV_GPOK)) {
 
 			parseOK();
-		}
-		else if (header.equals(SRV_GDAT))
+		} else if (header.equals(SRV_GDAT))
 			parseGDAT();
 		else if (header.equals(SRV_DDAT))
 			parseDDAT();
@@ -233,7 +232,7 @@ public class MessageParser {
 	}
 
 	private void parseGRPH() {
-		
+
 		int nbwords = 4;
 		Pattern p = Pattern.compile(SPACE);
 		String[] tokens = p.split(message);
@@ -247,7 +246,7 @@ public class MessageParser {
 			well_parsed = (op.equals(ARROW) || op.equals(CROSS));
 		}
 	}
-	
+
 	public boolean isWellParsed() {
 
 		return well_parsed;
@@ -289,18 +288,18 @@ public class MessageParser {
 	}
 
 	public String getSource() {
-		
+
 		return gsource;
 	}
-	
+
 	public String getOp() {
-		
+
 		return op;
 	}
-	
+
 	public String getDest() {
-		
+
 		return gdest;
 	}
-	
+
 }
