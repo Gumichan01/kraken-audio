@@ -36,91 +36,100 @@ public class RunClient implements HttpHandler {
 			return;
 
 		response = null;
-		int res = HttpURLConnection.HTTP_OK;
 		String req = t.getRequestMethod();
 		System.out.println(" - " + req + " - ");
 
-		if (req.equals(REQ_GET) || req.equals(REQ_POST)) {
+		if (req.equals(REQ_GET))
+			handleGet(t);
 
-			int read;
-			int toread = BUFSIZE;
-			String strbuf = null;
-			BufferedReader r = null;
-			char[] buffer = new char[BUFSIZE];
-			r = new BufferedReader(new InputStreamReader(t.getRequestBody()));
+		else if (req.equals(REQ_POST))
+			handlePost(t);
 
+		else {
 			try {
-				// get the headers
-				Headers h = t.getRequestHeaders();
-
-				if (h != null) {
-
-					// headers (comment)
-					/*
-					 * Iterator<String> it = h.keySet().iterator();
-					 * 
-					 * while (it.hasNext()) {
-					 * 
-					 * String k = it.next();
-					 * 
-					 * for (String v : h.get(k)) {
-					 * 
-					 * System.out.println(k + ": " + v.toString()); } }
-					 */
-
-					// Use the length of the content
-					if (h.containsKey(PROP_CONT)) {
-
-						try {
-							toread = Integer.parseInt(h.get(PROP_CONT).get(0));
-						} catch (NumberFormatException ne) {
-							ne.printStackTrace();
-						}
-					}
-				}
-
-				read = r.read(buffer, 0, toread);
-
-				if (read == -1)
-					strbuf = "";
-				else {
-					strbuf = new String(buffer).substring(0, read);
-					// remote address (comment)
-					System.out.print(t.getRemoteAddress().toString() + ": "
-							+ strbuf);
-				}
-
-				parser = new MessageParser(strbuf);
-
-				if (parser.isWellParsed())
-					respond();
-				else
-					response = MessageParser.SRV_BADR + MessageParser.EOL;
-
-				t.sendResponseHeaders(res, response.length());
-
-				if (res == HttpURLConnection.HTTP_OK) {
-
-					OutputStream os = t.getResponseBody();
-					os.write(response.getBytes());
-					os.flush();
-					os.close();
-				}
-
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-		} else {
-			res = HttpURLConnection.HTTP_NOT_IMPLEMENTED;
-			try {
-				t.sendResponseHeaders(res, 0);
+				t.sendResponseHeaders(HttpURLConnection.HTTP_NOT_IMPLEMENTED, 0);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
 
 		t.close();
+	}
+
+	private void handleGet(HttpExchange t) {
+
+		try {
+
+			response = "hello";
+			t.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length());
+			OutputStream os = t.getResponseBody();
+			os.write(response.getBytes());
+			os.flush();
+			os.close();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void handlePost(HttpExchange t) {
+
+		int read;
+		int toread = BUFSIZE;
+		String strbuf = null;
+		BufferedReader r = null;
+		char[] buffer = new char[BUFSIZE];
+		int res = HttpURLConnection.HTTP_OK;
+
+		r = new BufferedReader(new InputStreamReader(t.getRequestBody()));
+
+		try {
+			// get the headers
+			Headers h = t.getRequestHeaders();
+
+			if (h != null) {
+				// Use the length of the content
+				if (h.containsKey(PROP_CONT)) {
+
+					try {
+						toread = Integer.parseInt(h.get(PROP_CONT).get(0));
+					} catch (NumberFormatException ne) {
+						ne.printStackTrace();
+					}
+				}
+			}
+
+			read = r.read(buffer, 0, toread);
+
+			if (read == -1)
+				strbuf = "";
+			else {
+				strbuf = new String(buffer).substring(0, read);
+				// remote address (comment)
+				System.out.print(t.getRemoteAddress().toString() + ": "
+						+ strbuf);
+			}
+
+			parser = new MessageParser(strbuf);
+
+			if (parser.isWellParsed())
+				respond();
+			else
+				response = MessageParser.SRV_BADR + MessageParser.EOL;
+
+			t.sendResponseHeaders(res, response.length());
+
+			if (res == HttpURLConnection.HTTP_OK) {
+
+				OutputStream os = t.getResponseBody();
+				os.write(response.getBytes());
+				os.flush();
+				os.close();
+			}
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void respond() {
