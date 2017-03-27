@@ -162,6 +162,7 @@ public class RunClient implements HttpHandler {
 				new DeviceData(parser.getDevice(), parser.getIPaddr(), parser
 						.getPort(), parser.getBroadcastPort()))) {
 
+			srv.graph.addEdge(parser.getDevice());
 			response = MessageParser.SRV_GCOK + MessageParser.EOL;
 
 		} else {
@@ -226,6 +227,9 @@ public class RunClient implements HttpHandler {
 
 			boolean b = g.addDevice(parser.getDevice(), d);
 
+			if(b)
+				srv.graph.addEdge(parser.getDevice());
+			
 			response = (b ? MessageParser.SRV_GJOK : MessageParser.SRV_FAIL)
 					+ MessageParser.EOL;
 		}
@@ -242,6 +246,7 @@ public class RunClient implements HttpHandler {
 			if (g.nbDevices() == 0)
 				srv.destroyGroup(g.getName());
 
+			srv.graph.rmEdge(parser.getDevice());
 			response = MessageParser.SRV_QACK + MessageParser.EOL;
 		}
 	}
@@ -249,6 +254,17 @@ public class RunClient implements HttpHandler {
 	private void graphUpdateResponse() {
 		
 		/// TODO update the graph
+		if(parser.getOp().equals(MessageParser.ARROW))
+			srv.graph.link(parser.getSource(), parser.getDest());
+
+		else if(parser.getOp().equals(MessageParser.CROSS))
+			srv.graph.unlink(parser.getSource(), parser.getDest());
+
+		else {
+			response = MessageParser.SRV_FAIL + MessageParser.EOL;
+			return;
+		}
+
 		response = MessageParser.SRV_GPOK + MessageParser.EOL;
 	}
 	

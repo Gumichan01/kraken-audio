@@ -16,6 +16,7 @@ public class Graph {
 		
 		try {
 
+			System.out.println("graph addition: " + name);
 			graph.put(name, new Gedge(name));
 			return true;
 
@@ -32,6 +33,7 @@ public class Graph {
 
 			if (graph.containsKey(name)) {
 
+				System.out.println("graph remove: " + name);
 				graph.remove(name);
 				return true;
 			}
@@ -50,7 +52,7 @@ public class Graph {
 		if(src == null || dest == null)
 			return false;
 		
-		System.out.println("graph: " + src + " | " + dest);
+		System.out.println("graph link: " + src + " | " + dest);
 		
 		Gedge gsrc = graph.get(src);
 		Gedge gdest = graph.get(dest);
@@ -66,7 +68,7 @@ public class Graph {
 		if(src == null || dest == null)
 			return false;
 		
-		System.out.println("graph: " + src + " | " + dest);
+		System.out.println("graph unlink: " + src + " | " + dest);
 		
 		Gedge gsrc = graph.get(src);
 		Gedge gdest = graph.get(dest);
