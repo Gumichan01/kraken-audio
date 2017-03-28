@@ -1,6 +1,7 @@
 package parser;
 
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 public class MessageParser {
@@ -69,6 +70,7 @@ public class MessageParser {
 	private String gsource;
 	private String op;
 	private String gdest;
+	private ArrayList<String> path;
 
 	public MessageParser(String s) {
 
@@ -118,7 +120,8 @@ public class MessageParser {
 			parseGDAT();
 		else if (header.equals(SRV_DDAT))
 			parseDDAT();
-		//else if (header.equals(SRV_PATH));
+		else if (header.equals(SRV_PATH))
+			parsePATH();
 		else
 			well_parsed = false;
 	}
@@ -257,6 +260,23 @@ public class MessageParser {
 		well_parsed = true;
 	}
 
+	private void parsePATH() {
+		
+		int nbwords_min = 2;
+		Pattern p = Pattern.compile(SPACE);
+		String[] tokens = p.split(message);
+
+		if (tokens.length < nbwords_min)
+			well_parsed = false;
+		else {
+			
+			path = new ArrayList<>();
+			for(int i = 1; i< tokens.length; i++) path.add(tokens[i]);
+			well_parsed = true;
+		}
+		
+	}
+	
 	public boolean isWellParsed() {
 
 		return well_parsed;
@@ -312,4 +332,9 @@ public class MessageParser {
 		return gdest;
 	}
 
+	public ArrayList<String> getPath() {
+		
+		return path;
+	}
+	
 }
