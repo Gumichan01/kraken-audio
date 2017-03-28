@@ -256,40 +256,77 @@ public class ClientDevice {
 		return false;
 	}
 
-	/*public static void main(String[] args) throws MalformedURLException {
+	public List<ArrayList<String>> getGraph() {
 
-		 ClientDevice c = new ClientDevice("toto", "192.168.48.2", 45621,
-		 2410);
-		 
-		 System.out.println("create group: " + c.createGroup("toto@GT-01"));
-		 new ClientDevice("lana", "192.168.48.4", 45645, 2410)
-		 .joinGroup("toto@GT-01");
-		 new ClientDevice("titi", "192.168.48.5", 45652, 2410)
-		 .joinGroup("toto@GT-01");
+		List<ArrayList<String>> gdevices = new ArrayList<>();
+		StringBuilder st = new StringBuilder("");
 
-		 System.out.println("graph -> titi: " + c.updateGraph(MessageParser.ARROW,"titi"));
-		 System.out.println("graph -> lana: " + c.updateGraph(MessageParser.ARROW,"lana"));
-		 System.out.println("graph -> lana (again): " + c.updateGraph(MessageParser.ARROW,"lana"));
-		 System.out.println("graph x titi: " + c.updateGraph(MessageParser.CROSS,"titi"));
-		 System.out.println("graph x lana: " + c.updateGraph(MessageParser.CROSS,"lana"));
-		 System.out.println("graph x lana (again): " + c.updateGraph(MessageParser.CROSS,"lana"));
-		 
-		 /*List<GroupData> listgroup = c.groupList();
+		st.append(MessageParser.CLIENT_GGPH + " ");
+		st.append(device_name + MessageParser.EOL);
 
-		 System.out.println("group list");
-		 System.out.println("----------");
-		 for (GroupData g : listgroup) {
-		 System.out.println(g.toString());
-		 }
-		 System.out.println("-----------");
-		 List<DeviceData> listdev = c.deviceList("toto@GT-01");
+		String result = connectionToServer(st.toString());
+		Pattern p = Pattern.compile(MessageParser.EOL);
+		String[] tokens = p.split(result);
 
-		 System.out.println("device list");
-		 System.out.println("-----------");
-		 for (DeviceData d : listdev) {
-		 System.out.println(d.toString());
-		 }
-		 System.out.println("-----------");
-	}*/
-	
+		if (tokens == null)
+			return null;
+
+		for (String s : tokens) {
+
+			MessageParser parser = new MessageParser(s);
+
+			if (parser.isWellParsed()) {
+
+				if (parser.getHeader().contains(MessageParser.SRV_PATH))
+					gdevices.add(parser.getPath());
+				else if (parser.getHeader().contains(MessageParser.SRV_EOTR))
+					break;
+				else
+					return null;
+			}
+
+		}
+
+		return gdevices;
+	}
+
+	public static void main(String[] args) throws MalformedURLException {
+
+		ClientDevice c = new ClientDevice("toto", "192.168.48.2", 45621, 2410);
+
+		System.out.println("create group: " + c.createGroup("toto@GT-01"));
+		new ClientDevice("lana", "192.168.48.4", 45645, 2410).joinGroup("toto@GT-01");
+		new ClientDevice("titi", "192.168.48.5", 45652, 2410).joinGroup("toto@GT-01");
+
+		System.out.println("graph -> titi: " + c.updateGraph(MessageParser.ARROW, "titi"));
+		System.out.println("graph -> lana: " + c.updateGraph(MessageParser.ARROW, "lana"));
+		System.out.println("graph -> lana (again): " + c.updateGraph(MessageParser.ARROW, "lana"));
+		System.out.println("graph x titi: " + c.updateGraph(MessageParser.CROSS, "titi"));
+		System.out.println("graph x lana: " + c.updateGraph(MessageParser.CROSS, "lana"));
+		System.out.println("graph x lana (again): " + c.updateGraph(MessageParser.CROSS, "lana"));
+
+		List<ArrayList<String>> lstring = c.getGraph();
+		System.out.println("----------");
+		for (ArrayList<String> a : lstring)
+			System.out.println(a.toString());
+		System.out.println("----------");
+
+		/*List<GroupData> listgroup = c.groupList();
+
+		System.out.println("group list");
+		System.out.println("----------");
+		for (GroupData g : listgroup) {
+			System.out.println(g.toString());
+		}
+		System.out.println("-----------");
+		List<DeviceData> listdev = c.deviceList("toto@GT-01");
+
+		System.out.println("device list");
+		System.out.println("-----------");
+		for (DeviceData d : listdev) {
+			System.out.println(d.toString());
+		}
+		System.out.println("-----------");*/
+	}
+
 }
