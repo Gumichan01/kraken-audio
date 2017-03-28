@@ -2,8 +2,10 @@ package graph;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Set;
 
 public class Graph {
 
@@ -93,9 +95,31 @@ public class Graph {
 		ArrayList<String> stack = new ArrayList<>();
 		stack.add(gstr);
 
-		List<String> l = Arrays.asList(gdev.recPath(stack));
-		ArrayList<String> paths = new ArrayList<>(l);
-		System.out.println(paths.toString());
+		List<String> lsucc = Arrays.asList(gdev.recPath(stack, null));
+		//List<String> lpred = new ArrayList<>();
+		//Set<String> ss = graph.keySet();
+
+		// Clear the stack
+		//stack.clear();
+
+		/*for (String s : ss) {
+
+			if (!s.equals(gstr)) {
+
+				System.out.println("----------------");
+				System.out.println("graph pred loop: " + s);
+				stack.add(s);
+				lpred.addAll(Arrays.asList(graph.get(s).recPath(stack, s)));
+				stack.clear();
+			}
+		}*/
+
+		System.out.println("graph succ: " + lsucc.toString());
+		System.out.println("----------------");
+		// System.out.println("graph pred: " + lpred.toString());
+
+		ArrayList<String> paths = new ArrayList<>(lsucc);
+		System.out.println("graph final: " + paths.toString());
 		return paths;
 	}
 

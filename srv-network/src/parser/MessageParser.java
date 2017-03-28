@@ -84,7 +84,7 @@ public class MessageParser {
 				|| message.length() < HEADER_SIZE)
 			return;
 
-		System.out.print(message);
+		//System.out.print(message);
 		// Look at the value of the header string
 		header = message.substring(0, HEADER_SIZE);
 

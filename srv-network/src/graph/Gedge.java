@@ -30,11 +30,12 @@ public class Gedge {
 		return name.equals(g.name);
 	}
 
-	String[] recPath(ArrayList<String> stack) {
+	String[] recPath(ArrayList<String> stack, String dstop) {
 
 		System.out.println("rec: " + name + " | " + succ.toString());
 		System.out.println("rec stack: " + stack.toString());
-		if (succ.isEmpty()) {
+		
+		if (succ.isEmpty() || (dstop != null && name.equals(dstop)) ) {
 
 			System.out.println("fix point: " + name);
 			return new String[] { name };
@@ -54,7 +55,7 @@ public class Gedge {
 
 					// Add the current dev in the stack
 					stack.add(gdev.name);
-					String[] sarray = gdev.recPath(stack);
+					String[] sarray = gdev.recPath(stack, dstop);
 					// Remove the last dev in the stack (current)
 					stack.remove(stack.size() - 1);
 
