@@ -40,7 +40,9 @@ public class MessageParser {
 	public static final String SRV_DDAT = "DDAT";
 	// Graph updated
 	public static final String SRV_GPOK = "GPOK";
-
+	// Path of the oriented graph
+	public static final String SRV_PATH = "PATH";
+	
 	// FAIL means the requested operation failed
 	public static final String SRV_FAIL = "FAIL";
 	/*
@@ -102,6 +104,8 @@ public class MessageParser {
 
 		else if (header.equals(CLIENT_GRPH))
 			parseGRPH();
+		else if (header.equals(CLIENT_GGPH))
+			parseGGPH();
 
 		// Server message
 		else if (header.equals(SRV_GCOK) || header.equals(SRV_GJOK)
@@ -114,6 +118,7 @@ public class MessageParser {
 			parseGDAT();
 		else if (header.equals(SRV_DDAT))
 			parseDDAT();
+		//else if (header.equals(SRV_PATH));
 		else
 			well_parsed = false;
 	}
@@ -245,6 +250,11 @@ public class MessageParser {
 			gdest = tokens[3];
 			well_parsed = (op.equals(ARROW) || op.equals(CROSS));
 		}
+	}
+	
+	private void parseGGPH() {
+		
+		well_parsed = true;
 	}
 
 	public boolean isWellParsed() {
