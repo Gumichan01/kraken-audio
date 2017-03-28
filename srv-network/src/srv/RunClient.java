@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Iterator;
 
 import com.sun.net.httpserver.Headers;
@@ -155,6 +156,8 @@ public class RunClient implements HttpHandler {
 			quitGroupResponse();
 		else if (parser.getHeader().equals(MessageParser.CLIENT_GRPH))
 			graphUpdateResponse();
+		else if (parser.getHeader().equals(MessageParser.CLIENT_GGPH))
+			getGraphResponse();
 
 	}
 
@@ -173,7 +176,7 @@ public class RunClient implements HttpHandler {
 				new DeviceData(parser.getDevice(), parser.getIPaddr(), parser
 						.getPort(), parser.getBroadcastPort()))) {
 
-			srv.graph.addEdge(parser.getDevice());
+			srv.graph.addEdge(parser.getDevice()); // / new edge
 			response = MessageParser.SRV_GCOK + MessageParser.EOL;
 
 		} else {
@@ -239,7 +242,7 @@ public class RunClient implements HttpHandler {
 			boolean b = g.addDevice(parser.getDevice(), d);
 
 			if (b)
-				srv.graph.addEdge(parser.getDevice());
+				srv.graph.addEdge(parser.getDevice()); // / new edge
 
 			response = (b ? MessageParser.SRV_GJOK : MessageParser.SRV_FAIL)
 					+ MessageParser.EOL;
@@ -257,7 +260,7 @@ public class RunClient implements HttpHandler {
 			if (g.nbDevices() == 0)
 				srv.destroyGroup(g.getName());
 
-			srv.graph.rmEdge(parser.getDevice());
+			srv.graph.rmEdge(parser.getDevice()); // / remove edge
 			response = MessageParser.SRV_QACK + MessageParser.EOL;
 		}
 	}
@@ -275,4 +278,27 @@ public class RunClient implements HttpHandler {
 				+ MessageParser.EOL;
 	}
 
+	private void getGraphResponse() {
+
+		// ArrayList<String> paths = srv.graph.getPaths("");
+		ArrayList<String> paths = new ArrayList<>();
+		StringBuilder sb = new StringBuilder("");
+
+		paths.add("toto titi tutu");
+		paths.add("toto lana miku");
+
+		if (paths == null)
+			response = MessageParser.SRV_FAIL + MessageParser.EOL;
+		else {
+
+			for (String s : paths) {
+				sb.append(MessageParser.SRV_PATH).append(" ");
+				sb.append(s).append(MessageParser.EOL);
+			}
+
+			sb.append(MessageParser.SRV_EOTR).append(MessageParser.EOL);
+			response = sb.toString();
+		}
+
+	}
 }
