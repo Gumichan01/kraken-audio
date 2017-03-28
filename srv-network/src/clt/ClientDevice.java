@@ -295,21 +295,30 @@ public class ClientDevice {
 		ClientDevice c = new ClientDevice("toto", "192.168.48.2", 45621, 2410);
 
 		System.out.println("create group: " + c.createGroup("toto@GT-01"));
-		new ClientDevice("lana", "192.168.48.4", 45645, 2410).joinGroup("toto@GT-01");
-		new ClientDevice("titi", "192.168.48.5", 45652, 2410).joinGroup("toto@GT-01");
+		ClientDevice l = new ClientDevice("lana", "192.168.48.4", 45645, 2410);
+		l.joinGroup("toto@GT-01");
+		ClientDevice t = new ClientDevice("titi", "192.168.48.5", 45652, 2410);
+		t.joinGroup("toto@GT-01");
+		new ClientDevice("miku", "192.168.48.5", 45652, 2410).joinGroup("toto@GT-01");
+		new ClientDevice("luka", "192.168.48.5", 45652, 2410).joinGroup("toto@GT-01");
 
 		System.out.println("graph -> titi: " + c.updateGraph(MessageParser.ARROW, "titi"));
 		System.out.println("graph -> lana: " + c.updateGraph(MessageParser.ARROW, "lana"));
+		System.out.println("graph -> miku: " + l.updateGraph(MessageParser.ARROW, "miku"));
+		System.out.println("graph -> luka: " + t.updateGraph(MessageParser.ARROW, "luka"));
+		//System.out.println("graph -> toto (warn loop): " + l.updateGraph(MessageParser.ARROW, "toto"));
 		System.out.println("graph -> lana (again): " + c.updateGraph(MessageParser.ARROW, "lana"));
-		System.out.println("graph x titi: " + c.updateGraph(MessageParser.CROSS, "titi"));
-		System.out.println("graph x lana: " + c.updateGraph(MessageParser.CROSS, "lana"));
-		System.out.println("graph x lana (again): " + c.updateGraph(MessageParser.CROSS, "lana"));
 
 		List<ArrayList<String>> lstring = c.getGraph();
 		System.out.println("----------");
 		for (ArrayList<String> a : lstring)
 			System.out.println(a.toString());
 		System.out.println("----------");
+
+		System.out.println("graph x titi: " + c.updateGraph(MessageParser.CROSS, "titi"));
+		System.out.println("graph x titi: " + l.updateGraph(MessageParser.CROSS, "miku"));
+		System.out.println("graph x lana: " + c.updateGraph(MessageParser.CROSS, "lana"));
+		System.out.println("graph x lana (again): " + c.updateGraph(MessageParser.CROSS, "lana"));
 
 		/*List<GroupData> listgroup = c.groupList();
 
