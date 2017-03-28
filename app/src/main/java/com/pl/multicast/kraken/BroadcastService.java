@@ -61,7 +61,7 @@ public class BroadcastService implements Runnable {
         //return broadcaster.getHandler();
     }
 
-    public void sendData(){
+    public void sendData() {
 
         new Thread(new Runnable() {
             @Override
@@ -243,11 +243,33 @@ public class BroadcastService implements Runnable {
         if (ss.length != LISTEN_NBTOK)
             return BADR_RES;
         else {
-            if (rstring.contains(LISTEN))
-                return (registerListener(ss[1]) ? ACK_RES : FAIL_RES);
-            else if (rstring.contains(STOP))
-                return (unregisterListener(ss[1]) ? ACK_RES : FAIL_RES);
-            else if (rstring.contains(UPDATE))
+            if (rstring.contains(LISTEN)) {
+                boolean b = registerListener(ss[1]);
+                if (b) {
+
+                    Hackojo h = new Hackojo(gactivity.getDevData(), gactivity.getGroupName());
+                    h.setDestForGraph(ss[1]);
+                    h.execute(Hackojo.GRAPH_LINK_OP);
+                    return ACK_RES;
+
+                } else
+                    return FAIL_RES;
+
+            } else if (rstring.contains(STOP)) {
+
+                boolean b = unregisterListener(ss[1]);
+
+                if (b) {
+
+                    Hackojo h = new Hackojo(gactivity.getDevData(), gactivity.getGroupName());
+                    h.setDestForGraph(ss[1]);
+                    h.execute(Hackojo.GRAPH_UNLINK_OP);
+                    return ACK_RES;
+
+                } else
+                    return FAIL_RES;
+
+            } else if (rstring.contains(UPDATE))
                 newDevice(ss[1]);
             else if (rstring.contains(QUIT))
                 rmDevice(ss[1]);

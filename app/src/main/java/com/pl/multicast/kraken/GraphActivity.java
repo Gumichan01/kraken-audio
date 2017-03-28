@@ -444,6 +444,17 @@ public class GraphActivity extends Activity
         }
     }
 
+
+    public DeviceData getDevData() {
+
+        return d;
+    }
+
+    public String getGroupName() {
+
+        return gname;
+    }
+
     /**
      * AsyncGraphTask is a specialized Hackojo class (asynchronous task in the graph activity)
      */

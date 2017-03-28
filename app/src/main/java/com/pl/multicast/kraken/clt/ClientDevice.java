@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 public class ClientDevice {
 
     // Server information
-    private static final String HTTP_HOST = "http://localhost:8000";
+    private static final String HTTP_HOST = "http://192.168.43.114:8000";
     //private static final String HTTP_HOST = "http://luxon.hackojo.org";
     private static final String HTTP_METHOD = "POST";
     private static final String HTTP_METADATA = "Content-Length";

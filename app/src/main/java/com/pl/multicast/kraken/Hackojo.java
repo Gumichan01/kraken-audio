@@ -7,6 +7,7 @@ import android.util.Log;
 import com.pl.multicast.kraken.clt.ClientDevice;
 import com.pl.multicast.kraken.datum.DeviceData;
 import com.pl.multicast.kraken.datum.GroupData;
+import com.pl.multicast.kraken.parser.MessageParser;
 
 import java.net.MalformedURLException;
 import java.util.List;
@@ -23,11 +24,15 @@ public class Hackojo extends AsyncTask<Integer, Integer, Boolean> {
     public static final int JOIN_GROUP_OP = 2;
     public static final int QUIT_GROUP_OP = 3;
     public static final int CREATE_GROUP_OP = 4;
+    public static final int GRAPH_LINK_OP = 5;
+    public static final int GRAPH_UNLINK_OP = 6;
+    public static final int GRAPH_GET_OP = 7;
     int op;
     private String gname;
     private List<GroupData> gdata;
     private List<DeviceData> ddata;
     private ClientDevice cd;
+    private String dest;
 
     public Hackojo(DeviceData ddata, String gn) {
 
@@ -48,6 +53,14 @@ public class Hackojo extends AsyncTask<Integer, Integer, Boolean> {
     public synchronized List<DeviceData> getDevices() {
 
         return ddata;
+    }
+
+    public synchronized void setDestForGraph(String d) {
+
+        if(d == null)
+            Log.i(getClass().getName(),"setDestForGraph — null");
+        else
+            dest = d;
     }
 
     @Override
@@ -94,6 +107,27 @@ public class Hackojo extends AsyncTask<Integer, Integer, Boolean> {
                 } else
                     status = true;
                 break;
+
+            case GRAPH_LINK_OP:
+                // set a new link
+                if(!cd.updateGraph(MessageParser.ARROW, dest)) {
+                    Log.e(this.getClass().getName(), "Cannot link with " + dest);
+                    status = false;
+                }
+                else
+                    status = true;
+                break;
+
+            case GRAPH_UNLINK_OP:
+                // set a new link
+                if(!cd.updateGraph(MessageParser.CROSS, dest)) {
+                    Log.e(this.getClass().getName(), "Cannot unlink with " + dest);
+                    status = false;
+                }
+                else
+                    status = true;
+                break;
+
 
             default:
                 Log.e(this.getClass().getName(), "Invalid operation identifier");
