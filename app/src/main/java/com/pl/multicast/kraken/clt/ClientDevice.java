@@ -1,7 +1,5 @@
 package com.pl.multicast.kraken.clt;
 
-import android.util.Log;
-
 import com.pl.multicast.kraken.datum.DeviceData;
 import com.pl.multicast.kraken.datum.GroupData;
 import com.pl.multicast.kraken.parser.MessageParser;
@@ -18,14 +16,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-
 public class ClientDevice {
 
     // Server information
-    private static final String HTTP_HOST = "http://luxon.hackojo.org";
+    private static final String HTTP_HOST = "http://localhost:8000";
+    //private static final String HTTP_HOST = "http://luxon.hackojo.org";
     private static final String HTTP_METHOD = "POST";
     private static final String HTTP_METADATA = "Content-Length";
     private static final int HTTP_TIMEOUT = 16000;
+
 
     private URL url;
     private BufferedReader reader;
@@ -49,37 +48,34 @@ public class ClientDevice {
         StringBuilder stbuild = null;
 
         try {
-            Log.i(this.getClass().getName(), msg);
-
             connection = (HttpURLConnection) url.openConnection();
+
             connection.setRequestMethod(HTTP_METHOD);
             connection.setDoOutput(true);
             connection.setRequestProperty(HTTP_METADATA, "" + msg.length());
-
             OutputStream os = connection.getOutputStream();
             os.write(msg.getBytes());
-
             connection.setReadTimeout(HTTP_TIMEOUT);
             connection.connect();
 
             if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
 
-                Log.i(this.getClass().getName(), "valid request\n");
+                System.out.println("valid request\n");
 
                 reader = new BufferedReader(new InputStreamReader(
                         connection.getInputStream()));
 
-                String line;
+                String line = null;
                 stbuild = new StringBuilder("");
 
                 while ((line = reader.readLine()) != null) {
                     stbuild.append(line).append(MessageParser.EOL);
                 }
 
-                Log.i(this.getClass().getName(), stbuild.toString());
+                // System.out.println(stbuild.toString());
 
             } else {
-                Log.e(this.getClass().getName(), "response code: "
+                System.err.println("response code: "
                         + connection.getResponseCode());
             }
 
@@ -89,9 +85,9 @@ public class ClientDevice {
 
             if (connection != null)
                 connection.disconnect();
-        }
 
-        return stbuild == null ? null : stbuild.toString();
+            return stbuild == null ? null : stbuild.toString();
+        }
     }
 
     public boolean createGroup(String gname) {
@@ -234,5 +230,65 @@ public class ClientDevice {
         }
 
         return devices;
+    }
+
+    /**
+     * Request for updating the state of the graph on the server side
+     *
+     * @param op   One of the following values � MessageParser.CROSS;
+     *             MessageParser.ARROW
+     * @param dest The target device
+     * @return true on success, false otherwise
+     */
+    public boolean updateGraph(String op, String dest) {
+
+        if (op == null || dest == null)
+            return false;
+
+        StringBuilder st = new StringBuilder("");
+        st.append(MessageParser.CLIENT_GRPH + " " + device_name + " ");
+        st.append(op + " " + dest + MessageParser.EOL);
+
+        String result = connectionToServer(st.toString());
+        MessageParser parser = new MessageParser(result);
+
+        if (parser.isWellParsed())
+            return parser.getHeader().contains(MessageParser.SRV_GPOK);
+
+        return false;
+    }
+
+    public List<ArrayList<String>> getGraph() {
+
+        List<ArrayList<String>> gdevices = new ArrayList<>();
+        StringBuilder st = new StringBuilder("");
+
+        st.append(MessageParser.CLIENT_GGPH + " ");
+        st.append(device_name + MessageParser.EOL);
+
+        String result = connectionToServer(st.toString());
+        Pattern p = Pattern.compile(MessageParser.EOL);
+        String[] tokens = p.split(result);
+
+        if (tokens == null)
+            return null;
+
+        for (String s : tokens) {
+
+            MessageParser parser = new MessageParser(s);
+
+            if (parser.isWellParsed()) {
+
+                if (parser.getHeader().contains(MessageParser.SRV_PATH))
+                    gdevices.add(parser.getPath());
+                else if (parser.getHeader().contains(MessageParser.SRV_EOTR))
+                    break;
+                else
+                    return null;
+            }
+
+        }
+
+        return gdevices;
     }
 }
