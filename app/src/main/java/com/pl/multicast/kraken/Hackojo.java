@@ -10,6 +10,7 @@ import com.pl.multicast.kraken.datum.GroupData;
 import com.pl.multicast.kraken.parser.MessageParser;
 
 import java.net.MalformedURLException;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -128,6 +129,20 @@ public class Hackojo extends AsyncTask<Integer, Integer, Boolean> {
                     status = true;
                 break;
 
+            case GRAPH_GET_OP:
+                // set a new link
+                List<ArrayList<String> > paths = cd.getGraph();
+                if(paths == null) {
+                    Log.e(this.getClass().getName(), "Cannot get the graph " + dest);
+                    status = false;
+                }
+                else {
+                    for(ArrayList<String> ar: paths)
+                        Log.i(this.getClass().getName(), ar.toString());
+
+                    status = true;
+                }
+                break;
 
             default:
                 Log.e(this.getClass().getName(), "Invalid operation identifier");

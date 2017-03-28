@@ -395,6 +395,11 @@ public class GraphActivity extends Activity
                 Toast.makeText(getApplicationContext(), "You cannot stop yourself, (o_O) idiot!",
                         Toast.LENGTH_LONG).show();
             return true;
+
+        } else if (id == R.id.action_graph) {
+
+            AsyncGraphTask async = new AsyncGraphTask(d,gname);
+            async.execute(Hackojo.GRAPH_GET_OP);
         }
 
         return super.onOptionsItemSelected(item);

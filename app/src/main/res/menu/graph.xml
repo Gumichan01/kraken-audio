@@ -5,4 +5,7 @@
         android:orderInCategory="100" android:showAsAction="ifRoom" />
     <item android:id="@+id/action_stop" android:title="@string/action_stop"
         android:orderInCategory="100" android:showAsAction="ifRoom" />
+    <item android:id="@+id/action_graph" android:title="@string/action_graph"
+        android:orderInCategory="100" android:showAsAction="ifRoom" />
+
 </menu>
