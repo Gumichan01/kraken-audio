@@ -257,6 +257,17 @@ public class MessageParser {
 	
 	private void parseGGPH() {
 		
+		int nbwords = 2;
+		Pattern p = Pattern.compile(SPACE);
+		String[] tokens = p.split(message);
+
+		if (tokens.length != nbwords)
+			well_parsed = false;
+		else {
+			device_name = tokens[1];
+			well_parsed = true;
+		}
+		
 		well_parsed = true;
 	}
 
