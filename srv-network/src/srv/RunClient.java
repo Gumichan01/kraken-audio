@@ -280,12 +280,8 @@ public class RunClient implements HttpHandler {
 
 	private void getGraphResponse() {
 
-		// ArrayList<String> paths = srv.graph.getPaths("");
-		ArrayList<String> paths = new ArrayList<>();
+		ArrayList<String> paths = srv.graph.getPaths(parser.getDevice());
 		StringBuilder sb = new StringBuilder("");
-
-		paths.add("toto titi tutu");
-		paths.add("toto lana miku");
 
 		if (paths == null)
 			response = MessageParser.SRV_FAIL + MessageParser.EOL;
