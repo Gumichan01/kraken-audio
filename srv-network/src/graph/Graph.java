@@ -3,6 +3,7 @@ package graph;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Hashtable;
+import java.util.List;
 
 public class Graph {
 
@@ -88,8 +89,13 @@ public class Graph {
 		if (gdev == null)
 			return null;
 
-		ArrayList<String> paths = new ArrayList<>(Arrays.asList(gdev.recPath()));
-		System.out.print(paths.toString());
+		// Stack that contains the edges already checked
+		ArrayList<String> stack = new ArrayList<>();
+		stack.add(gstr);
+
+		List<String> l = Arrays.asList(gdev.recPath(stack));
+		ArrayList<String> paths = new ArrayList<>(l);
+		System.out.println(paths.toString());
 		return paths;
 	}
 

@@ -30,29 +30,43 @@ public class Gedge {
 		return name.equals(g.name);
 	}
 
-	String[] recPath() {
+	String[] recPath(ArrayList<String> stack) {
 
-		// System.out.println("rec: " + name + " | " + succ.toString());
-		if (succ.isEmpty())
+		System.out.println("rec: " + name + " | " + succ.toString());
+		System.out.println("rec stack: " + stack.toString());
+		if (succ.isEmpty()) {
+
+			System.out.println("fix point: " + name);
 			return new String[] { name };
 
-		else {
+		} else {
 
 			ArrayList<String> lstring = new ArrayList<>();
 
 			for (Gedge gdev : succ) {
 
 				StringBuilder sb = new StringBuilder(name);
-				String[] sarray = gdev.recPath();
 
-				if (sarray == null)
-					continue;
+				if (stack.contains(gdev.name)) {
+					// Loop
+					System.out.println("loop detected on " + gdev.name);
+				} else {
 
-				for (String s : sarray)
-					sb.append(" ").append(s);
+					// Add the current dev in the stack
+					stack.add(gdev.name);
+					String[] sarray = gdev.recPath(stack);
+					// Remove the last dev in the stack (current)
+					stack.remove(stack.size() - 1);
 
-				// System.out.println("rec loop: " + sb.toString());
-				lstring.add(sb.toString());
+					if (sarray == null)
+						continue;
+
+					for (String s : sarray)
+						sb.append(" ").append(s);
+
+					System.out.println("rec loop: " + sb.toString());
+					lstring.add(sb.toString());
+				}
 			}
 
 			String[] rpath = new String[lstring.size()];
