@@ -29,4 +29,40 @@ public class Gedge {
 		Gedge g = (Gedge) o;
 		return name.equals(g.name);
 	}
+
+	String[] recPath() {
+
+		// System.out.println("rec: " + name + " | " + succ.toString());
+		if (succ.isEmpty())
+			return new String[] { name };
+
+		else {
+
+			ArrayList<String> lstring = new ArrayList<>();
+
+			for (Gedge gdev : succ) {
+
+				StringBuilder sb = new StringBuilder(name);
+				String[] sarray = gdev.recPath();
+
+				if (sarray == null)
+					continue;
+
+				for (String s : sarray)
+					sb.append(" ").append(s);
+
+				// System.out.println("rec loop: " + sb.toString());
+				lstring.add(sb.toString());
+			}
+
+			String[] rpath = new String[lstring.size()];
+			return lstring.toArray(rpath);
+		}
+	}
+
+	@Override
+	public String toString() {
+
+		return "- " + name + " -";
+	}
 }

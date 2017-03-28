@@ -1,5 +1,7 @@
 package graph;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Hashtable;
 
 public class Graph {
@@ -76,6 +78,19 @@ public class Graph {
 			return false;
 
 		return gsrc.removeSucc(gdest);
+	}
+
+	public ArrayList<String> getPaths(String gstr) {
+
+		Gedge gdev = graph.get(gstr);
+		System.out.println("graph paths: " + gstr);
+
+		if (gdev == null)
+			return null;
+
+		ArrayList<String> paths = new ArrayList<>(Arrays.asList(gdev.recPath()));
+		System.out.print(paths.toString());
+		return paths;
 	}
 
 }
