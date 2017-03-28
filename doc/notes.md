@@ -142,7 +142,7 @@ Quand le teléphone annonce une diffusion (en gros il diffuse vers un appareil c
 
 Quand le téléphone veut le graphe:
 
-	PATH dev₁ - dev₂ - ... - devₙ	/// PATH: chemin
+	PATH dev₁ dev₂ ... devₙ		/// PATH: chemin
 	…
 	EOTR	/// EOTR: End Of TRansmission
 
