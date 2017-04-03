@@ -112,12 +112,14 @@ public class MessageParser {
 			parseGRPH();
 		else if (header.equals(CLIENT_GGPH))
 			parseGGPH();
+		else if (header.equals(CLIENT_IAMH))
+			parseIAMH();
 
 		// Server message
 		else if (header.equals(SRV_GCOK) || header.equals(SRV_GJOK)
 				|| header.equals(SRV_QACK) || header.equals(SRV_EOTR)
 				|| header.equals(SRV_BADR) || header.equals(SRV_FAIL)
-				|| header.equals(SRV_GPOK)) {
+				|| header.equals(SRV_GPOK) || header.equals(SRV_UACK)) {
 
 			parseOK();
 		} else if (header.equals(SRV_GDAT))
@@ -289,7 +291,21 @@ public class MessageParser {
 			for(int i = 1; i< tokens.length; i++) path.add(tokens[i]);
 			well_parsed = true;
 		}
-		
+	}
+	
+	private void parseIAMH() {
+
+		int nbwords_min = 2;
+		Pattern p = Pattern.compile(SPACE);
+		String[] tokens = p.split(message);
+
+		if (tokens.length < nbwords_min)
+			well_parsed = false;
+		else {
+			
+			device_name = tokens[1];
+			well_parsed = true;
+		}
 	}
 	
 	public boolean isWellParsed() {
