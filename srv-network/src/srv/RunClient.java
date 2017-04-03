@@ -12,11 +12,13 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
 import datum.DeviceData;
+import datum.GroupData;
 import parser.MessageParser;
 import sun.net.www.protocol.http.HttpURLConnection;
 
 public class RunClient implements HttpHandler {
 
+	private static final long DELAY_ALIVE = 16000;
 	private static final int BUFSIZE = 1024;
 	private static final String REQ_GET = "GET";
 	private static final String REQ_POST = "POST";
@@ -301,7 +303,34 @@ public class RunClient implements HttpHandler {
 
 	private void updateDeviceResponse() {
 
-		// / TODO update the state of the device
-		response = MessageParser.SRV_UACK + MessageParser.EOL;
+		boolean updated = false;
+		String sdev = parser.getDevice();
+		Iterator<String> it = srv.getIterator();
+
+		while (it.hasNext() && !updated) {
+
+			GroupInfo gd = srv.getGroup(it.next());
+			if (gd == null)
+				continue;
+
+			DeviceData dev = gd.getDevice(sdev);
+			if (dev == null)
+				continue;
+
+			long dtime = System.currentTimeMillis() - dev.getTimeStamp();
+			System.out.println("diff time: " + dtime);
+
+			if (dtime > DELAY_ALIVE)
+				break;
+			else {
+				updated = true;
+				dev.updateTimeStamp();
+			}
+		}
+
+		if (updated)
+			response = MessageParser.SRV_UACK + MessageParser.EOL;
+		else
+			response = MessageParser.SRV_FAIL + MessageParser.EOL;
 	}
 }
