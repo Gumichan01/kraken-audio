@@ -25,6 +25,8 @@ public class MessageParser {
 	public static final String CLIENT_GRPH = "GRPH";
 	// Get Graph
 	public static final String CLIENT_GGPH = "GGPH";
+	// I am here
+	public static final String CLIENT_IAMH = "IAMH";
 
 	// / Server answer
 	// Group creation OK
@@ -43,6 +45,8 @@ public class MessageParser {
 	public static final String SRV_GPOK = "GPOK";
 	// Path of the oriented graph
 	public static final String SRV_PATH = "PATH";
+	// Update acknowlegdment
+	public static final String SRV_UACK = "UACK";
 	
 	// FAIL means the requested operation failed
 	public static final String SRV_FAIL = "FAIL";
