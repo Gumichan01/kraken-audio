@@ -158,7 +158,8 @@ public class RunClient implements HttpHandler {
 			graphUpdateResponse();
 		else if (parser.getHeader().equals(MessageParser.CLIENT_GGPH))
 			getGraphResponse();
-
+		else if (parser.getHeader().equals(MessageParser.CLIENT_IAMH))
+			updateDeviceResponse();
 	}
 
 	private void groupCreationResponse() {
@@ -296,5 +297,11 @@ public class RunClient implements HttpHandler {
 			response = sb.toString();
 		}
 
+	}
+
+	private void updateDeviceResponse() {
+
+		// / TODO update the state of the device
+		response = MessageParser.SRV_UACK + MessageParser.EOL;
 	}
 }
