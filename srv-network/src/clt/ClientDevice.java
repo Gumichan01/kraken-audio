@@ -290,6 +290,22 @@ public class ClientDevice {
 		return gdevices;
 	}
 
+	public boolean iamHere() {
+
+		StringBuilder st = new StringBuilder("");
+
+		st.append(MessageParser.CLIENT_IAMH + " ");
+		st.append(device_name + " " + MessageParser.EOL);
+
+		String result = connectionToServer(st.toString());
+		MessageParser parser = new MessageParser(result);
+
+		if (parser.isWellParsed())
+			return parser.getHeader().contains(MessageParser.SRV_UACK);
+
+		return false;
+	}
+
 	/*public static void main(String[] args) throws MalformedURLException {
 
 		ClientDevice c = new ClientDevice("toto", "192.168.48.2", 45621, 2410);
@@ -299,15 +315,23 @@ public class ClientDevice {
 		l.joinGroup("toto@GT-01");
 		ClientDevice t = new ClientDevice("titi", "192.168.48.5", 45652, 2410);
 		t.joinGroup("toto@GT-01");
-		new ClientDevice("miku", "192.168.48.5", 45652, 2410).joinGroup("toto@GT-01");
-		new ClientDevice("luka", "192.168.48.5", 45652, 2410).joinGroup("toto@GT-01");
+		new ClientDevice("miku", "192.168.48.5", 45652, 2410)
+				.joinGroup("toto@GT-01");
+		new ClientDevice("luka", "192.168.48.5", 45652, 2410)
+				.joinGroup("toto@GT-01");
 
-		System.out.println("graph -> titi: " + c.updateGraph(MessageParser.ARROW, "titi"));
-		System.out.println("graph -> lana: " + c.updateGraph(MessageParser.ARROW, "lana"));
-		System.out.println("graph -> miku: " + l.updateGraph(MessageParser.ARROW, "miku"));
-		System.out.println("graph -> luka: " + t.updateGraph(MessageParser.ARROW, "luka"));
-		//System.out.println("graph -> toto (warn loop): " + l.updateGraph(MessageParser.ARROW, "toto"));
-		System.out.println("graph -> lana (again): " + c.updateGraph(MessageParser.ARROW, "lana"));
+		System.out.println("graph -> titi: "
+				+ c.updateGraph(MessageParser.ARROW, "titi"));
+		System.out.println("graph -> lana: "
+				+ c.updateGraph(MessageParser.ARROW, "lana"));
+		System.out.println("graph -> miku: "
+				+ l.updateGraph(MessageParser.ARROW, "miku"));
+		System.out.println("graph -> luka: "
+				+ t.updateGraph(MessageParser.ARROW, "luka"));
+		// System.out.println("graph -> toto (warn loop): " +
+		// l.updateGraph(MessageParser.ARROW, "toto"));
+		System.out.println("graph -> lana (again): "
+				+ c.updateGraph(MessageParser.ARROW, "lana"));
 
 		List<ArrayList<String>> lstring = c.getGraph();
 		System.out.println("----------");
@@ -315,10 +339,16 @@ public class ClientDevice {
 			System.out.println(a.toString());
 		System.out.println("----------");
 
-		System.out.println("graph x titi: " + c.updateGraph(MessageParser.CROSS, "titi"));
-		System.out.println("graph x titi: " + l.updateGraph(MessageParser.CROSS, "miku"));
-		System.out.println("graph x lana: " + c.updateGraph(MessageParser.CROSS, "lana"));
-		System.out.println("graph x lana (again): " + c.updateGraph(MessageParser.CROSS, "lana"));
+		System.out.println("graph x titi: "
+				+ c.updateGraph(MessageParser.CROSS, "titi"));
+		System.out.println("graph x titi: "
+				+ l.updateGraph(MessageParser.CROSS, "miku"));
+		System.out.println("graph x lana: "
+				+ c.updateGraph(MessageParser.CROSS, "lana"));
+		System.out.println("graph x lana (again): "
+				+ c.updateGraph(MessageParser.CROSS, "lana"));
+
+		System.out.println("I am here: " + c.iamHere());
 
 		/*List<GroupData> listgroup = c.groupList();
 
@@ -335,7 +365,7 @@ public class ClientDevice {
 		for (DeviceData d : listdev) {
 			System.out.println(d.toString());
 		}
-		System.out.println("-----------");
+		System.out.println("-----------");*
 	}*/
 
 }
