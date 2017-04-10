@@ -25,7 +25,7 @@ public class UDPSender {
     private static final int DATAPCK_SIZE = 32;
     //private static Handler bshandler;
     private int j;
-    private byte [] b;
+    private byte[] b;
     private int select;
     private DatagramSocket broadcastsock;
     private BroadcastData std;
@@ -75,7 +75,7 @@ public class UDPSender {
         }*/
         /// END block
 
-        for(int i = 0; i < b.length; i++){
+        for (int i = 0; i < b.length; i++) {
             Log.i(this.getClass().getName(), "byte value — " + b[i]);
         }
     }
@@ -94,19 +94,39 @@ public class UDPSender {
     void send() {
 
         j = 1 - j;
-        String s = Byte.valueOf(b[j]).toString();
-        new AsyncUDPSenderRoutine().execute(s);
-        //new AsyncUDPSenderRoutine().execute(new Byte[]{b[select]});
-        Log.v(this.getClass().getName(), "SEND byte value (string) sent — " + s);
+        new AsyncUDPSenderRoutine().execute(toObjects(b));
+        Log.v(this.getClass().getName(), "SEND byte array");
         select = 1 - select;
     }
 
-    private class AsyncUDPSenderRoutine extends AsyncTask<String, Void, Void> {
+    // byte[] to Byte[]
+    private Byte[] toObjects(byte[] bytesPrim) {
+        Byte[] bytes = new Byte[bytesPrim.length];
 
-        public AsyncUDPSenderRoutine() { super(); }
+        int i = 0;
+        for (byte b : bytesPrim) bytes[i++] = b; // Autoboxing
+
+        return bytes;
+    }
+
+    private class AsyncUDPSenderRoutine extends AsyncTask<Byte[], Void, Void> {
+
+        public AsyncUDPSenderRoutine() {
+            super();
+        }
+
+        private byte[] toPrimitives(Byte[] oBytes) {
+            byte[] bytes = new byte[oBytes.length];
+
+            for (int i = 0; i < oBytes.length; i++) {
+                bytes[i] = oBytes[i];
+            }
+
+            return bytes;
+        }
 
         @Override
-        protected Void doInBackground(String... params) {
+        protected Void doInBackground(Byte[]... params) {
 
             if (params == null || params.length < 1) {
 
@@ -116,9 +136,9 @@ public class UDPSender {
 
             try {
                 DatagramPacket p;
-                byte [] data = params[0].getBytes();
+                Byte[] bdata = params[0];
+                byte[] data = toPrimitives(bdata);
                 ArrayList<DeviceData> listeners = std.getListeners();
-
                 for (DeviceData dev : listeners) {
 
                     Log.i(this.getClass().getName(), "SEND data — " + params[0] + " — to " + dev.getName() +
@@ -128,7 +148,7 @@ public class UDPSender {
                         p = new DatagramPacket(data, data.length,
                                 new InetSocketAddress(dev.getAddr(), dev.getBroadcastPort()));
 
-                        if (broadcastsock != null){
+                        if (broadcastsock != null) {
                             Log.i(this.getClass().getName(), "SEND — done");
                             broadcastsock.send(p);
                         }
