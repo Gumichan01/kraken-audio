@@ -63,27 +63,14 @@ public class UDPSender {
             Log.e(this.getClass().getName(), e.getMessage());
         }
 
-        b = new byte[2];
+        b = new byte[32];
         select = 0;
         new Random().nextBytes(b);
-
-        /// Block (32 bytes)
-        /*byte [] b2 = new byte[DATAPCK_SIZE];
-        for(int i = 0; i < b2.length; i++)
-        {
-            b2[i] = b[i%2];
-        }*/
-        /// END block
 
         for (int i = 0; i < b.length; i++) {
             Log.i(this.getClass().getName(), "byte value — " + b[i]);
         }
     }
-
-    /*public Handler getHandler() {
-
-        return bshandler;
-    }*/
 
     public void close() {
 
@@ -93,10 +80,8 @@ public class UDPSender {
 
     void send() {
 
-        j = 1 - j;
         new AsyncUDPSenderRoutine().execute(toObjects(b));
         Log.v(this.getClass().getName(), "SEND byte array");
-        select = 1 - select;
     }
 
     // byte[] to Byte[]
