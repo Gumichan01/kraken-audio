@@ -356,7 +356,7 @@ public class GraphActivity extends Activity
 
 
     /**
-     * Option Items — Specify what will happen when the user selects a button ("Listen" or "Stop")
+     * Option Items — Specify what will happen when the user selects a button ("Listen" or "Stop" or "Path²")
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

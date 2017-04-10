@@ -41,8 +41,9 @@ public class BroadcastService implements Runnable {
     private static final String SPACE = " ";
 
     private static final int LISTEN_NBTOK = 2;
-    private static final int SRV_DELAY = 2000;
+    private static final int SRV_DELAY = 8000;
 
+    private DeviceData d;
     private GraphActivity gactivity;
     private BroadcastData bdata;
     private UDPSender broadcaster;
@@ -51,6 +52,7 @@ public class BroadcastService implements Runnable {
     public BroadcastService(GraphActivity g, BroadcastData dd) {
         super();
         gactivity = g;
+        d = g.getDevData();
         bdata = dd;
         broadcaster = new UDPSender(dd);
     }
@@ -101,7 +103,10 @@ public class BroadcastService implements Runnable {
                 }
 
                 if (sock == null)
+                {
+                    new Hackojo(d,"").execute(Hackojo.IAM_HERE_OP);
                     continue;
+                }
 
                 Log.i(this.getClass().getName(), "Service - Connection from @" + sock.getInetAddress().getHostAddress() + ":" + sock.getPort());
                 PrintWriter w = new PrintWriter(new OutputStreamWriter(sock.getOutputStream()));

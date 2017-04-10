@@ -28,6 +28,8 @@ public class Hackojo extends AsyncTask<Integer, Integer, Boolean> {
     public static final int GRAPH_LINK_OP = 5;
     public static final int GRAPH_UNLINK_OP = 6;
     public static final int GRAPH_GET_OP = 7;
+    public static final int IAM_HERE_OP = 8;
+
     int op;
     private String gname;
     private List<GroupData> gdata;
@@ -142,6 +144,12 @@ public class Hackojo extends AsyncTask<Integer, Integer, Boolean> {
 
                     status = true;
                 }
+                break;
+
+            case IAM_HERE_OP:
+                // set a new link
+                status = cd.iamHere();
+                Log.v(this.getClass().getName(), "I am here: " + status);
                 break;
 
             default:
