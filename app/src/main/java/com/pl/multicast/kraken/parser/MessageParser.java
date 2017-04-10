@@ -25,6 +25,8 @@ public class MessageParser {
 	public static final String CLIENT_GRPH = "GRPH";
 	// Get Graph
 	public static final String CLIENT_GGPH = "GGPH";
+	// I am here
+	public static final String CLIENT_IAMH = "IAMH";
 
 	// / Server answer
 	// Group creation OK
@@ -43,6 +45,8 @@ public class MessageParser {
 	public static final String SRV_GPOK = "GPOK";
 	// Path of the oriented graph
 	public static final String SRV_PATH = "PATH";
+	// Update acknowlegdment
+	public static final String SRV_UACK = "UACK";
 	
 	// FAIL means the requested operation failed
 	public static final String SRV_FAIL = "FAIL";
@@ -108,12 +112,14 @@ public class MessageParser {
 			parseGRPH();
 		else if (header.equals(CLIENT_GGPH))
 			parseGGPH();
+		else if (header.equals(CLIENT_IAMH))
+			parseIAMH();
 
 		// Server message
 		else if (header.equals(SRV_GCOK) || header.equals(SRV_GJOK)
 				|| header.equals(SRV_QACK) || header.equals(SRV_EOTR)
 				|| header.equals(SRV_BADR) || header.equals(SRV_FAIL)
-				|| header.equals(SRV_GPOK)) {
+				|| header.equals(SRV_GPOK) || header.equals(SRV_UACK)) {
 
 			parseOK();
 		} else if (header.equals(SRV_GDAT))
@@ -285,7 +291,21 @@ public class MessageParser {
 			for(int i = 1; i< tokens.length; i++) path.add(tokens[i]);
 			well_parsed = true;
 		}
-		
+	}
+	
+	private void parseIAMH() {
+
+		int nbwords_min = 2;
+		Pattern p = Pattern.compile(SPACE);
+		String[] tokens = p.split(message);
+
+		if (tokens.length < nbwords_min)
+			well_parsed = false;
+		else {
+			
+			device_name = tokens[1];
+			well_parsed = true;
+		}
 	}
 	
 	public boolean isWellParsed() {

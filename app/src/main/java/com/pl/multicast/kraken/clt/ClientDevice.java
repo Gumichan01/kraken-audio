@@ -1,9 +1,5 @@
 package com.pl.multicast.kraken.clt;
 
-import com.pl.multicast.kraken.datum.DeviceData;
-import com.pl.multicast.kraken.datum.GroupData;
-import com.pl.multicast.kraken.parser.MessageParser;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -16,279 +12,363 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import com.pl.multicast.kraken.parser.MessageParser;
+import com.pl.multicast.kraken.datum.DeviceData;
+import com.pl.multicast.kraken.datum.GroupData;
+
 public class ClientDevice {
 
-    // Server information
-    private static final String HTTP_HOST = "http://192.168.43.114:8000";
-    //private static final String HTTP_HOST = "http://luxon.hackojo.org";
+	// Server information
+	//private static final String SVHOST = "http://luxon.hackojo.org";
+	private static final String SVHOST = "http://192.168.43.114:8000";
     private static final String HTTP_METHOD = "POST";
     private static final String HTTP_METADATA = "Content-Length";
-    private static final int HTTP_TIMEOUT = 16000;
 
+	private URL url;
+	private BufferedReader reader;
+	private String device_name;
+	private InetSocketAddress ipaddr;
+	private int bport;
 
-    private URL url;
-    private BufferedReader reader;
-    private String device_name;
-    private InetSocketAddress ipaddr;
-    private int bport;
+	public ClientDevice(String name, String addr, int port, int bport)
+			throws MalformedURLException {
 
-    public ClientDevice(String name, String addr, int port, int bport)
-            throws MalformedURLException {
+		url = new URL(SVHOST);
+		this.device_name = name;
+		this.ipaddr = new InetSocketAddress(addr, port);
+		this.bport = bport;
+	}
 
-        url = new URL(HTTP_HOST);
-        this.device_name = name;
-        this.ipaddr = new InetSocketAddress(addr, port);
-        this.bport = bport;
-    }
+	@SuppressWarnings("finally")
+	private String connectionToServer(String msg) {
 
-    @SuppressWarnings("finally")
-    private String connectionToServer(String msg) {
+		HttpURLConnection connection = null;
+		StringBuilder stbuild = null;
 
-        HttpURLConnection connection = null;
-        StringBuilder stbuild = null;
+		try {
+			connection = (HttpURLConnection) url.openConnection();
 
-        try {
-            connection = (HttpURLConnection) url.openConnection();
+			connection.setRequestMethod(HTTP_METHOD);
+			connection.setDoOutput(true);
+			connection.setRequestProperty(HTTP_METADATA, "" + msg.length());
+			OutputStream os = connection.getOutputStream();
+			os.write(msg.getBytes());
+			connection.setReadTimeout(8000);
+			connection.connect();
 
-            connection.setRequestMethod(HTTP_METHOD);
-            connection.setDoOutput(true);
-            connection.setRequestProperty(HTTP_METADATA, "" + msg.length());
-            OutputStream os = connection.getOutputStream();
-            os.write(msg.getBytes());
-            connection.setReadTimeout(HTTP_TIMEOUT);
-            connection.connect();
+			if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
 
-            if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+				System.out.println("valid request\n");
 
-                System.out.println("valid request\n");
+				reader = new BufferedReader(new InputStreamReader(
+						connection.getInputStream()));
 
-                reader = new BufferedReader(new InputStreamReader(
-                        connection.getInputStream()));
+				String line = null;
+				stbuild = new StringBuilder("");
 
-                String line = null;
-                stbuild = new StringBuilder("");
+				while ((line = reader.readLine()) != null) {
+					stbuild.append(line).append(MessageParser.EOL);
+				}
 
-                while ((line = reader.readLine()) != null) {
-                    stbuild.append(line).append(MessageParser.EOL);
-                }
+				// System.out.println(stbuild.toString());
 
-                // System.out.println(stbuild.toString());
+			} else {
+				System.err.println("response code: "
+						+ connection.getResponseCode());
+			}
 
-            } else {
-                System.err.println("response code: "
-                        + connection.getResponseCode());
-            }
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
+			if (connection != null)
+				connection.disconnect();
 
-            if (connection != null)
-                connection.disconnect();
+			return stbuild == null ? null : stbuild.toString();
+		}
+	}
 
-            return stbuild == null ? null : stbuild.toString();
-        }
-    }
+	public boolean createGroup(String gname) {
 
-    public boolean createGroup(String gname) {
+		if (gname == null)
+			return false;
 
-        if (gname == null)
-            return false;
+		StringBuilder st = new StringBuilder("");
 
-        StringBuilder st = new StringBuilder("");
+		st.append(MessageParser.CLIENT_CGRP + " ");
+		st.append(gname + " " + device_name + " ");
+		st.append(ipaddr.getAddress().getHostAddress() + " ");
+		st.append(ipaddr.getPort() + " ");
+		st.append(bport + MessageParser.EOL);
 
-        st.append(MessageParser.CLIENT_CGRP + " ");
-        st.append(gname + " " + device_name + " ");
-        st.append(ipaddr.getAddress().getHostAddress() + " ");
-        st.append(ipaddr.getPort() + " ");
-        st.append(bport + MessageParser.EOL);
+		String result = connectionToServer(st.toString());
+		MessageParser parser = new MessageParser(result);
 
-        String result = connectionToServer(st.toString());
-        MessageParser parser = new MessageParser(result);
+		if (parser.isWellParsed())
+			return parser.getHeader().contains(MessageParser.SRV_GCOK);
 
-        if (parser.isWellParsed())
-            return parser.getHeader().contains(MessageParser.SRV_GCOK);
+		return false;
+	}
 
-        return false;
-    }
+	public boolean joinGroup(String gname) {
 
-    public boolean joinGroup(String gname) {
+		if (gname == null)
+			return false;
 
-        if (gname == null)
-            return false;
+		StringBuilder st = new StringBuilder("");
 
-        StringBuilder st = new StringBuilder("");
+		st.append(MessageParser.CLIENT_JGRP + " ");
+		st.append(gname + " " + device_name + " ");
+		st.append(ipaddr.getAddress().getHostAddress() + " ");
+		st.append(ipaddr.getPort() + " ");
+		st.append(bport + MessageParser.EOL);
 
-        st.append(MessageParser.CLIENT_JGRP + " ");
-        st.append(gname + " " + device_name + " ");
-        st.append(ipaddr.getAddress().getHostAddress() + " ");
-        st.append(ipaddr.getPort() + " ");
-        st.append(bport + MessageParser.EOL);
+		String result = connectionToServer(st.toString());
+		MessageParser parser = new MessageParser(result);
 
-        String result = connectionToServer(st.toString());
-        MessageParser parser = new MessageParser(result);
+		if (parser.isWellParsed())
+			return parser.getHeader().contains(MessageParser.SRV_GJOK);
 
-        if (parser.isWellParsed())
-            return parser.getHeader().contains(MessageParser.SRV_GJOK);
+		return false;
+	}
 
-        return false;
-    }
+	public boolean quitGroup(String gname) {
 
-    public boolean quitGroup(String gname) {
+		if (gname == null)
+			return false;
 
-        if (gname == null)
-            return false;
+		StringBuilder st = new StringBuilder("");
 
-        StringBuilder st = new StringBuilder("");
+		st.append(MessageParser.CLIENT_QGRP + " ");
+		st.append(gname + " " + device_name + MessageParser.EOL);
 
-        st.append(MessageParser.CLIENT_QGRP + " ");
-        st.append(gname + " " + device_name + MessageParser.EOL);
+		String result = connectionToServer(st.toString());
+		MessageParser parser = new MessageParser(result);
 
-        String result = connectionToServer(st.toString());
-        MessageParser parser = new MessageParser(result);
+		if (parser.isWellParsed())
+			return parser.getHeader().contains(MessageParser.SRV_QACK);
 
-        if (parser.isWellParsed())
-            return parser.getHeader().contains(MessageParser.SRV_QACK);
+		return false;
+	}
 
-        return false;
-    }
+	public List<GroupData> groupList() {
 
-    public List<GroupData> groupList() {
+		StringBuilder st = new StringBuilder("");
+		List<GroupData> group = new ArrayList<>();
 
-        StringBuilder st = new StringBuilder("");
-        List<GroupData> group = new ArrayList<>();
+		st.append(MessageParser.CLIENT_GRPL);
+		st.append(MessageParser.EOL);
 
-        st.append(MessageParser.CLIENT_GRPL);
-        st.append(MessageParser.EOL);
+		String result = connectionToServer(st.toString());
+		Pattern p = Pattern.compile(MessageParser.EOL);
+		String[] tokens = p.split(result);
 
-        String result = connectionToServer(st.toString());
-        Pattern p = Pattern.compile(MessageParser.EOL);
-        String[] tokens = p.split(result);
+		if (tokens == null)
+			return null;
 
-        if (tokens == null)
-            return null;
+		for (String s : tokens) {
 
-        for (String s : tokens) {
+			MessageParser parser = new MessageParser(s);
 
-            MessageParser parser = new MessageParser(s);
+			if (parser.isWellParsed()) {
 
-            if (parser.isWellParsed()) {
+				if (parser.getHeader().contains(MessageParser.SRV_GDAT)) {
 
-                if (parser.getHeader().contains(MessageParser.SRV_GDAT)) {
+					group.add(new GroupData(parser.getGroup(), parser
+							.getNumberOfDevices()));
 
-                    group.add(new GroupData(parser.getGroup(), parser
-                            .getNumberOfDevices()));
+				} else if (parser.getHeader().contains(MessageParser.SRV_EOTR))
+					break;
+				else
+					return null;
+			}
 
-                } else if (parser.getHeader().contains(MessageParser.SRV_EOTR))
-                    break;
-                else
-                    return null;
-            }
+		}
 
-        }
+		return group;
+	}
 
-        return group;
-    }
+	public List<DeviceData> deviceList(String gname) {
 
-    public List<DeviceData> deviceList(String gname) {
+		if (gname == null)
+			return null;
 
-        if (gname == null)
-            return null;
+		StringBuilder st = new StringBuilder("");
+		List<DeviceData> devices = new ArrayList<>();
 
-        StringBuilder st = new StringBuilder("");
-        List<DeviceData> devices = new ArrayList<>();
+		st.append(MessageParser.CLIENT_DEVL + " ");
+		st.append(gname + " ");
+		st.append(MessageParser.EOL);
 
-        st.append(MessageParser.CLIENT_DEVL + " ");
-        st.append(gname + " ");
-        st.append(MessageParser.EOL);
+		String result = connectionToServer(st.toString());
+		Pattern p = Pattern.compile(MessageParser.EOL);
+		String[] tokens = p.split(result);
 
-        String result = connectionToServer(st.toString());
-        Pattern p = Pattern.compile(MessageParser.EOL);
-        String[] tokens = p.split(result);
+		if (tokens == null)
+			return null;
 
-        if (tokens == null)
-            return null;
+		for (String s : tokens) {
 
-        for (String s : tokens) {
+			MessageParser parser = new MessageParser(s);
 
-            MessageParser parser = new MessageParser(s);
+			if (parser.isWellParsed()) {
 
-            if (parser.isWellParsed()) {
+				if (parser.getHeader().contains(MessageParser.SRV_DDAT)) {
 
-                if (parser.getHeader().contains(MessageParser.SRV_DDAT)) {
+					devices.add(new DeviceData(parser.getDevice(), parser
+							.getIPaddr(), parser.getPort(), parser
+							.getBroadcastPort()));
 
-                    devices.add(new DeviceData(parser.getDevice(), parser
-                            .getIPaddr(), parser.getPort(), parser
-                            .getBroadcastPort()));
+				} else if (parser.getHeader().contains(MessageParser.SRV_EOTR))
+					break;
+				else
+					return null;
+			}
 
-                } else if (parser.getHeader().contains(MessageParser.SRV_EOTR))
-                    break;
-                else
-                    return null;
-            }
+		}
 
-        }
+		return devices;
+	}
 
-        return devices;
-    }
+	/**
+	 * Request for updating the state of the graph on the server side
+	 * 
+	 * @param op
+	 *            One of the following values � MessageParser.CROSS;
+	 *            MessageParser.ARROW
+	 * @param dest
+	 *            The target device
+	 * 
+	 * @return true on success, false otherwise
+	 * */
+	public boolean updateGraph(String op, String dest) {
 
-    /**
-     * Request for updating the state of the graph on the server side
-     *
-     * @param op   One of the following values � MessageParser.CROSS;
-     *             MessageParser.ARROW
-     * @param dest The target device
-     * @return true on success, false otherwise
-     */
-    public boolean updateGraph(String op, String dest) {
+		if (op == null || dest == null)
+			return false;
 
-        if (op == null || dest == null)
-            return false;
+		StringBuilder st = new StringBuilder("");
+		st.append(MessageParser.CLIENT_GRPH + " " + device_name + " ");
+		st.append(op + " " + dest + MessageParser.EOL);
 
-        StringBuilder st = new StringBuilder("");
-        st.append(MessageParser.CLIENT_GRPH + " " + device_name + " ");
-        st.append(op + " " + dest + MessageParser.EOL);
+		String result = connectionToServer(st.toString());
+		MessageParser parser = new MessageParser(result);
 
-        String result = connectionToServer(st.toString());
-        MessageParser parser = new MessageParser(result);
+		if (parser.isWellParsed())
+			return parser.getHeader().contains(MessageParser.SRV_GPOK);
 
-        if (parser.isWellParsed())
-            return parser.getHeader().contains(MessageParser.SRV_GPOK);
+		return false;
+	}
 
-        return false;
-    }
+	public List<ArrayList<String>> getGraph() {
 
-    public List<ArrayList<String>> getGraph() {
+		List<ArrayList<String>> gdevices = new ArrayList<>();
+		StringBuilder st = new StringBuilder("");
 
-        List<ArrayList<String>> gdevices = new ArrayList<>();
-        StringBuilder st = new StringBuilder("");
+		st.append(MessageParser.CLIENT_GGPH + " ");
+		st.append(device_name + MessageParser.EOL);
 
-        st.append(MessageParser.CLIENT_GGPH + " ");
-        st.append(device_name + MessageParser.EOL);
+		String result = connectionToServer(st.toString());
+		Pattern p = Pattern.compile(MessageParser.EOL);
+		String[] tokens = p.split(result);
 
-        String result = connectionToServer(st.toString());
-        Pattern p = Pattern.compile(MessageParser.EOL);
-        String[] tokens = p.split(result);
+		if (tokens == null)
+			return null;
 
-        if (tokens == null)
-            return null;
+		for (String s : tokens) {
 
-        for (String s : tokens) {
+			MessageParser parser = new MessageParser(s);
 
-            MessageParser parser = new MessageParser(s);
+			if (parser.isWellParsed()) {
 
-            if (parser.isWellParsed()) {
+				if (parser.getHeader().contains(MessageParser.SRV_PATH))
+					gdevices.add(parser.getPath());
+				else if (parser.getHeader().contains(MessageParser.SRV_EOTR))
+					break;
+				else
+					return null;
+			}
 
-                if (parser.getHeader().contains(MessageParser.SRV_PATH))
-                    gdevices.add(parser.getPath());
-                else if (parser.getHeader().contains(MessageParser.SRV_EOTR))
-                    break;
-                else
-                    return null;
-            }
+		}
 
-        }
+		return gdevices;
+	}
 
-        return gdevices;
-    }
+	public boolean iamHere() {
+
+		StringBuilder st = new StringBuilder("");
+
+		st.append(MessageParser.CLIENT_IAMH + " ");
+		st.append(device_name + " " + MessageParser.EOL);
+
+		String result = connectionToServer(st.toString());
+		MessageParser parser = new MessageParser(result);
+
+		if (parser.isWellParsed())
+			return parser.getHeader().contains(MessageParser.SRV_UACK);
+
+		return false;
+	}
+
+	public static void main(String[] args) throws MalformedURLException {
+
+		ClientDevice c = new ClientDevice("toto", "192.168.48.2", 45621, 2410);
+
+		System.out.println("create group: " + c.createGroup("toto@GT-01"));
+		ClientDevice l = new ClientDevice("lana", "192.168.48.4", 45645, 2410);
+		l.joinGroup("toto@GT-01");
+		ClientDevice t = new ClientDevice("titi", "192.168.48.5", 45652, 2410);
+		t.joinGroup("toto@GT-01");
+		new ClientDevice("miku", "192.168.48.5", 45652, 2410)
+				.joinGroup("toto@GT-01");
+		new ClientDevice("luka", "192.168.48.5", 45652, 2410)
+				.joinGroup("toto@GT-01");
+
+		System.out.println("graph -> titi: "
+				+ c.updateGraph(MessageParser.ARROW, "titi"));
+		System.out.println("graph -> lana: "
+				+ c.updateGraph(MessageParser.ARROW, "lana"));
+		System.out.println("graph -> miku: "
+				+ l.updateGraph(MessageParser.ARROW, "miku"));
+		System.out.println("graph -> luka: "
+				+ t.updateGraph(MessageParser.ARROW, "luka"));
+		// System.out.println("graph -> toto (warn loop): " +
+		// l.updateGraph(MessageParser.ARROW, "toto"));
+		System.out.println("graph -> lana (again): "
+				+ c.updateGraph(MessageParser.ARROW, "lana"));
+
+		List<ArrayList<String>> lstring = c.getGraph();
+		System.out.println("----------");
+		for (ArrayList<String> a : lstring)
+			System.out.println(a.toString());
+		System.out.println("----------");
+
+		System.out.println("graph x titi: "
+				+ c.updateGraph(MessageParser.CROSS, "titi"));
+		System.out.println("graph x titi: "
+				+ l.updateGraph(MessageParser.CROSS, "miku"));
+		System.out.println("graph x lana: "
+				+ c.updateGraph(MessageParser.CROSS, "lana"));
+		System.out.println("graph x lana (again): "
+				+ c.updateGraph(MessageParser.CROSS, "lana"));
+
+		System.out.println("I am here: " + c.iamHere());
+
+		/*List<GroupData> listgroup = c.groupList();
+
+		System.out.println("group list");
+		System.out.println("----------");
+		for (GroupData g : listgroup) {
+			System.out.println(g.toString());
+		}
+		System.out.println("-----------");
+		List<DeviceData> listdev = c.deviceList("toto@GT-01");
+
+		System.out.println("device list");
+		System.out.println("-----------");
+		for (DeviceData d : listdev) {
+			System.out.println(d.toString());
+		}
+		System.out.println("-----------");*/
+	}
+
 }

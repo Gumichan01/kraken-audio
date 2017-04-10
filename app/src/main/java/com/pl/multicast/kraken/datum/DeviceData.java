@@ -18,10 +18,12 @@ public class DeviceData implements Parcelable {
             return new DeviceData[size];
         }
     };
+
     private static int SZ = 2;
     private String dname;
     private InetSocketAddress ipaddr;
     private int bport;
+    private long timestamp;
 
     public DeviceData() {
         this("", "", 0, 0);
@@ -32,6 +34,8 @@ public class DeviceData implements Parcelable {
         ipaddr = new InetSocketAddress(ipaddress, port);
         this.bport = bport;
         dname = name;
+        // Current time
+        timestamp = System.currentTimeMillis();
     }
 
     protected DeviceData(Parcel in) {
@@ -46,6 +50,7 @@ public class DeviceData implements Parcelable {
         ipaddr = new InetSocketAddress(strings[1], ints[0]);
         bport = ints[1];
     }
+
 
     public String getName() {
 
@@ -62,11 +67,21 @@ public class DeviceData implements Parcelable {
         return ipaddr.getPort();
     }
 
-    // Parcelable implementation
-
     public int getBroadcastPort() {
 
         return bport;
+    }
+
+    public long getTimeStamp() {
+
+        return timestamp;
+    }
+
+    public void updateTimeStamp() {
+
+        System.out.println("timestamp before update: " + timestamp);
+        timestamp = System.currentTimeMillis();
+        System.out.println("timestamp after update: " + timestamp);
     }
 
     public String toString() {
@@ -81,8 +96,8 @@ public class DeviceData implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-
         dest.writeStringArray(new String[]{dname, getAddr()});
         dest.writeIntArray(new int[]{getPort(), bport});
+
     }
 }
