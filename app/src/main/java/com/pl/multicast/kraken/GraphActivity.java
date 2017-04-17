@@ -203,6 +203,7 @@ public class GraphActivity extends Activity
         Log.i(this.getLocalClassName(), "List updated. Added the following text: " + text);
     }
 
+    // Notify devices - a new device joined the group
     public void notifyDevices() {
 
         List<DeviceData> l = new ArrayList<>();
@@ -238,6 +239,7 @@ public class GraphActivity extends Activity
             AsyncGraphTask async = new AsyncGraphTask(d, gname);
             async.setFirstUpdate(first);
             async.execute(Hackojo.DEVICE_OP);
+            Log.i(this.getLocalClassName(), "update devl");
         } else {
             Log.e(this.getLocalClassName(), "Cannot update the group content - network unavailable");
             Toast.makeText(getApplicationContext(), R.string.gunetwork, Toast.LENGTH_LONG).show();
@@ -491,6 +493,7 @@ public class GraphActivity extends Activity
 
                 if (op == DEVICE_OP) {
                     std.clearBroadcasters();
+                    Log.i(this.getClass().getName(), "post execute -  devl update");
                     updateGroupContent(this, first_update);
 
                     if (first_update)

@@ -19,8 +19,6 @@ import java.util.Random;
  */
 public class UDPSender {
 
-    // TODO: 06/02/2017 fix the issue with the handler (minor bug)
-
     //public static final int OBS = 42;
     private static final int DATAPCK_SIZE = 32;
     //private static Handler bshandler;
@@ -29,12 +27,16 @@ public class UDPSender {
     private int select;
     private DatagramSocket broadcastsock;
     private BroadcastData std;
+    private AsyncUDPSenderRoutine routine;
+    private boolean stop;
 
     public UDPSender(BroadcastData s) {
 
-        std = s;
-        broadcastsock = null;
         j = 0;
+        std = s;
+        stop = true;
+        broadcastsock = null;
+        routine = new AsyncUDPSenderRoutine();
         /*bshandler = new Handler() {
 
             public void handleMessage(Message msg) {
@@ -70,6 +72,8 @@ public class UDPSender {
         for (int i = 0; i < b.length; i++) {
             Log.i(this.getClass().getName(), "byte value — " + b[i]);
         }
+
+        //routine.execute(toObjects(b));
     }
 
     public void close() {
@@ -80,8 +84,20 @@ public class UDPSender {
 
     void send() {
 
-        new AsyncUDPSenderRoutine().execute(toObjects(b));
+        stop = !stop;
+        //routine.execute(toObjects(b));
         Log.v(this.getClass().getName(), "SEND byte array");
+        while(!stop) {
+
+            try {
+                Thread.sleep(25);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            Log.i(this.getClass().getName(),"sender - loop");
+            new AsyncUDPSenderRoutine().execute(toObjects(b));
+        }
     }
 
     // byte[] to Byte[]
@@ -119,40 +135,39 @@ public class UDPSender {
                 return null;
             }
 
-            try {
-                DatagramPacket p;
-                Byte[] bdata = params[0];
-                byte[] data = toPrimitives(bdata);
-                ArrayList<DeviceData> listeners = std.getListeners();
-                for (DeviceData dev : listeners) {
+                try {
+                    DatagramPacket p;
+                    Byte[] bdata = params[0];
+                    byte[] data = toPrimitives(bdata);
+                    ArrayList<DeviceData> listeners = std.getListeners();
+                    for (DeviceData dev : listeners) {
 
-                    Log.i(this.getClass().getName(), "SEND data — " + params[0] + " — to " + dev.getName() +
-                            " " + dev.getAddr() + ":" + dev.getBroadcastPort());
-                    Log.i(this.getClass().getName(), "SEND data size — " + data.length);
-                    try {
-                        p = new DatagramPacket(data, data.length,
-                                new InetSocketAddress(dev.getAddr(), dev.getBroadcastPort()));
+                        Log.i(this.getClass().getName(), "SEND data — " + params[0] + " — to " + dev.getName() +
+                                " " + dev.getAddr() + ":" + dev.getBroadcastPort());
+                        Log.i(this.getClass().getName(), "SEND data size — " + data.length);
+                        try {
+                            p = new DatagramPacket(data, data.length,
+                                    new InetSocketAddress(dev.getAddr(), dev.getBroadcastPort()));
 
-                        if (broadcastsock != null) {
-                            Log.i(this.getClass().getName(), "SEND — done");
-                            broadcastsock.send(p);
+                            if (broadcastsock != null && !broadcastsock.isClosed()) {
+                                Log.i(this.getClass().getName(), "SEND — done");
+                                broadcastsock.send(p);
+                            }
+
+                        } catch (IOException e) {
+                            Log.e(this.getClass().getName(), e.getMessage());
                         }
-
-                    } catch (IOException e) {
-                        Log.e(this.getClass().getName(), e.getMessage());
                     }
+                    Log.v(this.getClass().getName(), "DONE");
+
+                } catch (SecurityException | NullPointerException se) {
+
+                    se.printStackTrace();
+
+                } catch (Exception u) {
+
+                    u.printStackTrace();
                 }
-                Log.i(this.getClass().getName(), "DONE");
-
-            } catch (SecurityException | NullPointerException se) {
-
-                se.printStackTrace();
-
-            } catch (Exception u) {
-
-                u.printStackTrace();
-            }
-
             return null;
         }
     }

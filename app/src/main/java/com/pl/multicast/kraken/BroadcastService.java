@@ -179,6 +179,7 @@ public class BroadcastService implements Runnable {
         gactivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                Log.i(this.getClass().getName(), "Service - update");
                 gactivity.update(false);
             }
         });
