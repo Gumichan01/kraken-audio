@@ -19,7 +19,10 @@ import datum.GroupData;
 public class ClientDevice {
 
 	// Server information
+	//private static final String SVHOST = "http://luxon.hackojo.org";
 	private static final String SVHOST = "http://localhost:8000";
+    private static final String HTTP_METHOD = "POST";
+    private static final String HTTP_METADATA = "Content-Length";
 
 	private URL url;
 	private BufferedReader reader;
@@ -45,9 +48,9 @@ public class ClientDevice {
 		try {
 			connection = (HttpURLConnection) url.openConnection();
 
-			connection.setRequestMethod("POST");
+			connection.setRequestMethod(HTTP_METHOD);
 			connection.setDoOutput(true);
-			connection.setRequestProperty("Content-Length", "" + msg.length());
+			connection.setRequestProperty(HTTP_METADATA, "" + msg.length());
 			OutputStream os = connection.getOutputStream();
 			os.write(msg.getBytes());
 			connection.setReadTimeout(8000);
@@ -365,7 +368,7 @@ public class ClientDevice {
 		for (DeviceData d : listdev) {
 			System.out.println(d.toString());
 		}
-		System.out.println("-----------");*
+		System.out.println("-----------");
 	}*/
 
 }
