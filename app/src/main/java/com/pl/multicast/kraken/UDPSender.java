@@ -19,15 +19,12 @@ import java.util.Random;
  */
 public class UDPSender {
 
-    //public static final int OBS = 42;
     private static final int DATAPCK_SIZE = 32;
-    //private static Handler bshandler;
     private int j;
     private byte[] b;
     private int select;
     private DatagramSocket broadcastsock;
     private BroadcastData std;
-    private AsyncUDPSenderRoutine routine;
     private boolean stop;
 
     public UDPSender(BroadcastData s) {
@@ -36,28 +33,6 @@ public class UDPSender {
         std = s;
         stop = true;
         broadcastsock = null;
-        routine = new AsyncUDPSenderRoutine();
-        /*bshandler = new Handler() {
-
-            public void handleMessage(Message msg) {
-
-                Log.i(this.getClass().getName(), "msg - what: " + msg.what);
-                Log.i(this.getClass().getName(), "msg - obj: " + (msg.obj != null ? msg.obj.getClass().getName() : "NULL"));
-
-                if (msg.what == KrakenMisc.TXT_ID && msg.obj != null) {
-
-                    Log.i(this.getClass().getName(), "msg - OK");
-
-                    try {
-                        final String text = (String) msg.obj;
-                        Log.i(this.getClass().getName(), "broadcast");
-                        sendText(text);
-                    } catch (ClassCastException ce) {
-                        Log.e(this.getClass().getName(), "msg - cannot get the text: " + ce.getMessage());
-                    }
-                }
-            }
-        };*/
 
         try {
             broadcastsock = new DatagramSocket();
@@ -72,8 +47,6 @@ public class UDPSender {
         for (int i = 0; i < b.length; i++) {
             Log.i(this.getClass().getName(), "byte value — " + b[i]);
         }
-
-        //routine.execute(toObjects(b));
     }
 
     public void close() {
@@ -85,8 +58,8 @@ public class UDPSender {
     void send() {
 
         stop = !stop;
-        //routine.execute(toObjects(b));
         Log.v(this.getClass().getName(), "SEND byte array");
+
         while(!stop) {
 
             try {
