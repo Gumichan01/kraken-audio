@@ -12,7 +12,6 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
 import datum.DeviceData;
-import datum.GroupData;
 import parser.MessageParser;
 import sun.net.www.protocol.http.HttpURLConnection;
 

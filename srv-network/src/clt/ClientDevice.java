@@ -234,7 +234,7 @@ public class ClientDevice {
 	 * Request for updating the state of the graph on the server side
 	 * 
 	 * @param op
-	 *            One of the following values — MessageParser.CROSS;
+	 *            One of the following values ï¿½ MessageParser.CROSS;
 	 *            MessageParser.ARROW
 	 * @param dest
 	 *            The target device
@@ -309,7 +309,7 @@ public class ClientDevice {
 		return false;
 	}
 
-	public static void main(String[] args) throws MalformedURLException {
+	/*public static void main(String[] args) throws MalformedURLException {
 
 		ClientDevice c = new ClientDevice("toto", "192.168.48.2", 45621, 2410);
 
@@ -353,7 +353,7 @@ public class ClientDevice {
 
 		System.out.println("I am here: " + c.iamHere());
 
-		/*List<GroupData> listgroup = c.groupList();
+		List<GroupData> listgroup = c.groupList();
 
 		System.out.println("group list");
 		System.out.println("----------");
@@ -368,7 +368,7 @@ public class ClientDevice {
 		for (DeviceData d : listdev) {
 			System.out.println(d.toString());
 		}
-		System.out.println("-----------");*/
-	}
+		System.out.println("-----------");
+	}*/
 
 }
