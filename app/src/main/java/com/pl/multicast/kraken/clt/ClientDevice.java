@@ -309,7 +309,7 @@ public class ClientDevice {
 		return false;
 	}
 
-	public static void main(String[] args) throws MalformedURLException {
+	/*public static void main(String[] args) throws MalformedURLException {
 
 		ClientDevice c = new ClientDevice("toto", "192.168.48.2", 45621, 2410);
 
@@ -368,7 +368,7 @@ public class ClientDevice {
 		for (DeviceData d : listdev) {
 			System.out.println(d.toString());
 		}
-		System.out.println("-----------");*/
-	}
+		System.out.println("-----------");
+	}*/
 
 }
