@@ -104,6 +104,7 @@ public class BroadcastService implements Runnable {
 
                 if (sock == null)
                 {
+                    // Notitifier IAMH in a separate thread
                     new Hackojo(d,"").execute(Hackojo.IAM_HERE_OP);
                     continue;
                 }
