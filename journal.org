@@ -1,3 +1,19 @@
+* <2017-04-19>
+** Fait:
+   - Centraliser le graphe sur le serveur
+   - Faire que chaque client dise régulièrement au serveur qu'il est bien
+     là et quels sont ses voisins dans le graphe.
+   - Début d'implémentation pour la transmission d'un flot de bytes
+
+** A faire:
+   - Sérialiser le graphe intelligemment
+   - https://developer.android.com/reference/android/media/AudioTrack.html
+   - Corriger la couche de communication
+   - Faire une démo avec un envoi "continu" d'octets avec une mesure
+     du nombre d'octets envoyés par seconde.
+   - Faire une demo ou on produit un son "simple" et on le joue de
+     l'autre côté.
+
 * <2017-03-23>
 ** Fait:
    - Mise à jour de l'interface graphique
