@@ -18,7 +18,7 @@ import sun.net.www.protocol.http.HttpURLConnection;
 
 public class RunClient implements HttpHandler {
 
-	private static final long DELAY_ALIVE = 16000;
+	private static final long DELAY_ALIVE = 30000;
 	private static final int BUFSIZE = 1024;
 	private static final String REQ_GET = "GET";
 	private static final String REQ_POST = "POST";
