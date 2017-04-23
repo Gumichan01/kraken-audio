@@ -4,11 +4,16 @@ import java.util.ArrayList;
 
 public class Gedge {
 
+	public static final String SEP = ",";
+	private static int idc = 0;
+
+	private int id;
 	private String name;
 	private ArrayList<Gedge> succ;
 
 	public Gedge(String s) {
 
+		id = ++idc;
 		name = s;
 		succ = new ArrayList<>();
 	}
@@ -27,15 +32,15 @@ public class Gedge {
 	public boolean equals(Object o) {
 
 		Gedge g = (Gedge) o;
-		return name.equals(g.name);
+		return id == g.id && name.equals(g.name);
 	}
 
-	String[] recPath(ArrayList<String> stack, String dstop) {
+	public String[] recPath(ArrayList<String> stack, String dstop) {
 
 		System.out.println("rec: " + name + " | " + succ.toString());
 		System.out.println("rec stack: " + stack.toString());
-		
-		if (succ.isEmpty() || (dstop != null && name.equals(dstop)) ) {
+
+		if (succ.isEmpty() || (dstop != null && name.equals(dstop))) {
 
 			System.out.println("fix point: " + name);
 			return new String[] { name };
@@ -75,9 +80,22 @@ public class Gedge {
 		}
 	}
 
+	public String getEdges() {
+
+		StringBuilder st = new StringBuilder(id + " ");
+
+		for (int i = 0; i < succ.size(); i++) {
+
+			st.append(succ.get(i) + (i == succ.size() -1 ? "": SEP));
+		}
+
+		System.out.println(st.toString());
+		return st.toString();
+	}
+
 	@Override
 	public String toString() {
 
-		return "- " + name + " -";
+		return id + " " + name;
 	}
 }

@@ -83,6 +83,32 @@ public class Graph {
 		return gsrc.removeSucc(gdest);
 	}
 
+	public ArrayList<String> getVertices() {
+		
+		ArrayList<String> vlist = new ArrayList<>();
+		Set<String> ss = graph.keySet();
+		
+		for(String s: ss) {
+		
+			vlist.add(graph.get(s).toString());
+		}
+		
+		return vlist;
+	}
+	
+	public ArrayList<String> getEdges(String gstr) {
+		
+		ArrayList<String> elist = new ArrayList<>();
+		Set<String> ss = graph.keySet();
+
+		for(String s: ss) {
+			
+			elist.add(graph.get(s).toString());
+		}
+
+		return elist;
+	}
+	
 	public ArrayList<String> getPaths(String gstr) {
 
 		Gedge gdev = graph.get(gstr);
