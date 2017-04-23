@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class GVertex {
 
-	public static final String SEP = ",";
+	public static final String SEP = "|";
 	private static int idc = 0;
 
 	private int id;
@@ -87,13 +87,14 @@ public class GVertex {
 
 		for (int i = 0; i < succ.size(); i++) {
 
-			st.append(succ.get(i) + (i == succ.size() - 1 ? "" : SEP));
+			st.append(succ.get(i).id + (i == succ.size() - 1 ? "" : SEP));
 		}
 
-		System.out.println(st.toString());
+		System.out.println("lines →" + st.toString());
 		return st.toString();
 	}
 
+	
 	@Override
 	public String toString() {
 
