@@ -10,3 +10,4 @@ depot.iml
 .idea/*
 srv-network/bin/
 srv-network/server.jar
+*.settings
