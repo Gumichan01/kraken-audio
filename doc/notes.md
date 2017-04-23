@@ -189,5 +189,10 @@ En cas d'echec quelconque:
 	* Son nom
 	* La liste de ses successeurs
 
+	
+### TODO ###
+
+Kenny : afficher le graphe dans un Toast (il faut lui expliquer comment j'ai représenter le graphe)
+
 ---
 [1]: https://docs.oracle.com/javase/7/docs/api/java/util/Hashtable.html
