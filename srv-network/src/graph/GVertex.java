@@ -2,28 +2,28 @@ package graph;
 
 import java.util.ArrayList;
 
-public class Gedge {
+public class GVertex {
 
 	public static final String SEP = ",";
 	private static int idc = 0;
 
 	private int id;
 	private String name;
-	private ArrayList<Gedge> succ;
+	private ArrayList<GVertex> succ;
 
-	public Gedge(String s) {
+	public GVertex(String s) {
 
 		id = ++idc;
 		name = s;
 		succ = new ArrayList<>();
 	}
 
-	public boolean addSucc(Gedge g) {
+	public boolean addSucc(GVertex g) {
 
 		return g != null && (!succ.contains(g)) && succ.add(g);
 	}
 
-	public boolean removeSucc(Gedge g) {
+	public boolean removeSucc(GVertex g) {
 
 		return g != null && (succ.contains(g)) && succ.remove(g);
 	}
@@ -31,7 +31,7 @@ public class Gedge {
 	@Override
 	public boolean equals(Object o) {
 
-		Gedge g = (Gedge) o;
+		GVertex g = (GVertex) o;
 		return id == g.id && name.equals(g.name);
 	}
 
@@ -49,7 +49,7 @@ public class Gedge {
 
 			ArrayList<String> lstring = new ArrayList<>();
 
-			for (Gedge gdev : succ) {
+			for (GVertex gdev : succ) {
 
 				StringBuilder sb = new StringBuilder(name);
 
@@ -86,7 +86,7 @@ public class Gedge {
 
 		for (int i = 0; i < succ.size(); i++) {
 
-			st.append(succ.get(i) + (i == succ.size() -1 ? "": SEP));
+			st.append(succ.get(i) + (i == succ.size() - 1 ? "" : SEP));
 		}
 
 		System.out.println(st.toString());

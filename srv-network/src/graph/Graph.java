@@ -9,7 +9,7 @@ import java.util.Set;
 
 public class Graph {
 
-	private Hashtable<String, Gedge> graph;
+	private Hashtable<String, GVertex> graph;
 
 	public Graph() {
 
@@ -21,7 +21,7 @@ public class Graph {
 		try {
 
 			System.out.println("graph addition: " + name);
-			graph.put(name, new Gedge(name));
+			graph.put(name, new GVertex(name));
 			return true;
 
 		} catch (NullPointerException ne) {
@@ -58,8 +58,8 @@ public class Graph {
 
 		System.out.println("graph link: " + src + " | " + dest);
 
-		Gedge gsrc = graph.get(src);
-		Gedge gdest = graph.get(dest);
+		GVertex gsrc = graph.get(src);
+		GVertex gdest = graph.get(dest);
 
 		if (gsrc == null || gdest == null)
 			return false;
@@ -74,8 +74,8 @@ public class Graph {
 
 		System.out.println("graph unlink: " + src + " | " + dest);
 
-		Gedge gsrc = graph.get(src);
-		Gedge gdest = graph.get(dest);
+		GVertex gsrc = graph.get(src);
+		GVertex gdest = graph.get(dest);
 
 		if (gsrc == null || gdest == null)
 			return false;
@@ -111,7 +111,7 @@ public class Graph {
 	
 	public ArrayList<String> getPaths(String gstr) {
 
-		Gedge gdev = graph.get(gstr);
+		GVertex gdev = graph.get(gstr);
 		System.out.println("graph paths: " + gstr);
 
 		if (gdev == null)
