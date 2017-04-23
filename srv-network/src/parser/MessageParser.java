@@ -1,7 +1,6 @@
 package parser;
 
 import java.net.InetSocketAddress;
-import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 public class MessageParser {
@@ -43,11 +42,13 @@ public class MessageParser {
 	public static final String SRV_DDAT = "DDAT";
 	// Graph updated
 	public static final String SRV_GPOK = "GPOK";
+	// Vertices
+	public static final String SRV_VRTX = "VRTX";
 	// Path of the oriented graph
-	public static final String SRV_PATH = "PATH";
+	public static final String SRV_LINE = "LINE";
 	// Update acknowlegdment
 	public static final String SRV_UACK = "UACK";
-	
+
 	// FAIL means the requested operation failed
 	public static final String SRV_FAIL = "FAIL";
 	/*
@@ -74,7 +75,7 @@ public class MessageParser {
 	private String gsource;
 	private String op;
 	private String gdest;
-	private ArrayList<String> path;
+	private String line_content;
 
 	public MessageParser(String s) {
 
@@ -88,7 +89,7 @@ public class MessageParser {
 				|| message.length() < HEADER_SIZE)
 			return;
 
-		//System.out.print(message);
+		// System.out.print(message);
 		// Look at the value of the header string
 		header = message.substring(0, HEADER_SIZE);
 
@@ -126,8 +127,10 @@ public class MessageParser {
 			parseGDAT();
 		else if (header.equals(SRV_DDAT))
 			parseDDAT();
-		else if (header.equals(SRV_PATH))
-			parsePATH();
+		else if (header.equals(SRV_LINE))
+			parseLINE();
+		else if (header.equals(SRV_VRTX))
+			parseVRTX();
 		else
 			well_parsed = false;
 	}
@@ -260,9 +263,9 @@ public class MessageParser {
 			well_parsed = (op.equals(ARROW) || op.equals(CROSS));
 		}
 	}
-	
+
 	private void parseGGPH() {
-		
+
 		int nbwords = 2;
 		Pattern p = Pattern.compile(SPACE);
 		String[] tokens = p.split(message);
@@ -273,26 +276,30 @@ public class MessageParser {
 			device_name = tokens[1];
 			well_parsed = true;
 		}
-		
+
 		well_parsed = true;
 	}
 
-	private void parsePATH() {
-		
-		int nbwords_min = 2;
+	private void parseLINE() {
+
+		int nbwords_min = 3;
 		Pattern p = Pattern.compile(SPACE);
 		String[] tokens = p.split(message);
 
 		if (tokens.length < nbwords_min)
 			well_parsed = false;
 		else {
-			
-			path = new ArrayList<>();
-			for(int i = 1; i< tokens.length; i++) path.add(tokens[i]);
+
+			line_content = tokens[1] + " " + tokens[2];
 			well_parsed = true;
 		}
 	}
-	
+
+	private void parseVRTX() {
+
+		parseLINE(); // The syntax is identical
+	}
+
 	private void parseIAMH() {
 
 		int nbwords_min = 2;
@@ -302,12 +309,12 @@ public class MessageParser {
 		if (tokens.length < nbwords_min)
 			well_parsed = false;
 		else {
-			
+
 			device_name = tokens[1];
 			well_parsed = true;
 		}
 	}
-	
+
 	public boolean isWellParsed() {
 
 		return well_parsed;
@@ -363,9 +370,9 @@ public class MessageParser {
 		return gdest;
 	}
 
-	public ArrayList<String> getPath() {
-		
-		return path;
+	public String getLineContent() {
+
+		return line_content;
 	}
-	
+
 }
