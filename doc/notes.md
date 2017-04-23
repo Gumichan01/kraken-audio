@@ -142,14 +142,21 @@ Quand le teléphone annonce une diffusion (en gros il diffuse vers un appareil c
 
 Quand le téléphone veut le graphe:
 
-	PATH dev₁ dev₂ ... devₙ		/// PATH: chemin
+	VRTX id₁ nom₁
+	VRTX id₂ nom₂
+	...
+	LINE id₁ idr₁|...|idrₙ		/// LINE: chemin
 	…
 	EOTR	/// EOTR: End Of TRansmission
 
-	/* PATH est une chaine de caractère qui défini le chemin, 
-	 * i.e. les appareils qui, énumérés dans l'ordre, indique que:
-	 *	- dev₁ est la source.
-	 *	- devₙ (n ∈ ℕ*) est l'appareil au bout du chemin.
+	/*
+	 *	VRTX donne le sommet d'un graphe.
+	 *	Ce sommet est défini par le couple (id, nom).
+	 *
+	 *	LINE est une chaine de caractère qui défini les adjacences, 
+	 *	i.e. les appareils qui, énumérés dans l'ordre, indique que:
+	 *		- idₙ est la source qui diffuse le message (n ∈ ℕ*).
+	 *		- idrₙ (n ∈ ℕ*) est l'appareil au bout du chemin.
 	 */
 
 En cas d'echec quelconque:
