@@ -96,14 +96,14 @@ public class Graph {
 		return vlist;
 	}
 	
-	public ArrayList<String> getEdges(String gstr) {
+	public ArrayList<String> getLines() {
 		
 		ArrayList<String> elist = new ArrayList<>();
 		Set<String> ss = graph.keySet();
 
 		for(String s: ss) {
 			
-			elist.add(graph.get(s).toString());
+			elist.add(graph.get(s).getLines());
 		}
 
 		return elist;

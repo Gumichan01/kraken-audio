@@ -282,22 +282,32 @@ public class RunClient implements HttpHandler {
 
 	private void getGraphResponse() {
 
-		ArrayList<String> paths = srv.graph.getPaths(parser.getDevice());
+		ArrayList<String> vertices = srv.graph.getVertices();
+		ArrayList<String> lines = srv.graph.getLines();
 		StringBuilder sb = new StringBuilder("");
 
-		if (paths == null)
+		// Vertices
+		if (vertices == null)
 			response = MessageParser.SRV_FAIL + MessageParser.EOL;
 		else {
 
-			for (String s : paths) {
-				sb.append(MessageParser.SRV_PATH).append(" ");
+			for (String s : vertices) {
+				sb.append(MessageParser.SRV_VRTX).append(" ");
 				sb.append(s).append(MessageParser.EOL);
 			}
-
-			sb.append(MessageParser.SRV_EOTR).append(MessageParser.EOL);
-			response = sb.toString();
 		}
 
+		// Lines
+		if (lines != null) {
+
+			for (String s : lines) {
+				sb.append(MessageParser.SRV_LINE).append(" ");
+				sb.append(s).append(MessageParser.EOL);
+			}
+		}
+
+		sb.append(MessageParser.SRV_EOTR).append(MessageParser.EOL);
+		response = sb.toString();
 	}
 
 	private void updateDeviceResponse() {

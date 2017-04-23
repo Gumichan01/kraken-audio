@@ -10,8 +10,8 @@ import com.sun.net.httpserver.HttpServer;
 
 public class DirectoryServer {
 
-	private static final int SERVER_PORT = 80;
-	//private static final int SERVER_PORT = 8000;
+	//private static final int SERVER_PORT = 80;
+	private static final int SERVER_PORT = 8000;
 
 	private HttpServer server;
 	private Hashtable<String, GroupInfo> groups;

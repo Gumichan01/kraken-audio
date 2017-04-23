@@ -80,7 +80,8 @@ public class GVertex {
 		}
 	}
 
-	public String getEdges() {
+	// Get lines that connect the current vertex to the others
+	public String getLines() {
 
 		StringBuilder st = new StringBuilder(id + " ");
 
