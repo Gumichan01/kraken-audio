@@ -19,10 +19,10 @@ import datum.GroupData;
 public class ClientDevice {
 
 	// Server information
-	//private static final String SVHOST = "http://luxon.hackojo.org";
+	// private static final String SVHOST = "http://luxon.hackojo.org";
 	private static final String SVHOST = "http://localhost:8000";
-    private static final String HTTP_METHOD = "POST";
-    private static final String HTTP_METADATA = "Content-Length";
+	private static final String HTTP_METHOD = "POST";
+	private static final String HTTP_METADATA = "Content-Length";
 
 	private URL url;
 	private BufferedReader reader;
@@ -234,7 +234,7 @@ public class ClientDevice {
 	 * Request for updating the state of the graph on the server side
 	 * 
 	 * @param op
-	 *            One of the following values � MessageParser.CROSS;
+	 *            One of the following values: - MessageParser.CROSS; -
 	 *            MessageParser.ARROW
 	 * @param dest
 	 *            The target device
@@ -261,7 +261,9 @@ public class ClientDevice {
 
 	public List<ArrayList<String>> getGraph() {
 
-		List<ArrayList<String>> gdevices = new ArrayList<>();
+		List<ArrayList<String>> graph = new ArrayList<ArrayList<String>>(2);
+		graph.add(new ArrayList<String>());
+		graph.add(new ArrayList<String>());
 		StringBuilder st = new StringBuilder("");
 
 		st.append(MessageParser.CLIENT_GGPH + " ");
@@ -280,8 +282,12 @@ public class ClientDevice {
 
 			if (parser.isWellParsed()) {
 
-				if (parser.getHeader().contains(MessageParser.SRV_PATH))
-					gdevices.add(parser.getPath());
+				if (parser.getHeader().contains(MessageParser.SRV_VRTX))
+					graph.get(0).add(parser.getLineContent());
+
+				else if (parser.getHeader().contains(MessageParser.SRV_LINE))
+					graph.get(1).add(parser.getLineContent());
+
 				else if (parser.getHeader().contains(MessageParser.SRV_EOTR))
 					break;
 				else
@@ -290,7 +296,7 @@ public class ClientDevice {
 
 		}
 
-		return gdevices;
+		return graph;
 	}
 
 	public boolean iamHere() {
@@ -339,7 +345,7 @@ public class ClientDevice {
 		List<ArrayList<String>> lstring = c.getGraph();
 		System.out.println("----------");
 		for (ArrayList<String> a : lstring)
-			System.out.println(a.toString());
+			System.out.println("--- " + a.toString());
 		System.out.println("----------");
 
 		System.out.println("graph x titi: "
@@ -353,7 +359,7 @@ public class ClientDevice {
 
 		System.out.println("I am here: " + c.iamHere());
 
-		List<GroupData> listgroup = c.groupList();
+		/*List<GroupData> listgroup = c.groupList();
 
 		System.out.println("group list");
 		System.out.println("----------");
