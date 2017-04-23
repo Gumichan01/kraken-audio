@@ -37,21 +37,22 @@ public class DeviceData {
 
 		return bport;
 	}
-	
+
 	public long getTimeStamp() {
-		
+
 		return timestamp;
 	}
-	
+
 	public void updateTimeStamp() {
-		
+
 		System.out.println("timestamp before update: " + timestamp);
 		timestamp = System.currentTimeMillis();
 		System.out.println("timestamp after update: " + timestamp);
 	}
-	
+
 	public String toString() {
 
-		return dname + " " + getAddr() + " " + getPort() + " " + getBroadcastPort();
+		return dname + " " + getAddr() + " " + getPort() + " "
+				+ getBroadcastPort();
 	}
 }
