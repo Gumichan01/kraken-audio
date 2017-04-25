@@ -48,7 +48,7 @@ public class UDPReceiver {
 
         thread = new Thread(new Runnable() {
 
-            private void printByte(final byte[] bytes){
+            private void printByte(final byte[] bytes) {
 
                 graph.runOnUiThread(new Runnable() {
                     @Override
@@ -96,6 +96,9 @@ public class UDPReceiver {
 
                                 Log.i(this.getClass().getName(), "UDP receiver - END content");
                                 //printByte(b);
+                                Log.i(this.getClass().getName(), "—");
+                                for (byte o : b) Log.i(this.getClass().getName(), " " + o);
+                                Log.i(this.getClass().getName(), "—");
                                 final String rstring = new String(b);
 
                                 graph.runOnUiThread(new Runnable() {
@@ -156,6 +159,7 @@ public class UDPReceiver {
     }
 
 
+    // Thread that sends requests for receiving messages
     private class ASyncUDPReceiveRequest extends AsyncTask<Void, Void, Boolean> {
 
         private DeviceData dev;
