@@ -63,7 +63,7 @@ public class RunClient implements HttpHandler {
 		try {
 
 			response = "<html><title>It works</title>"
-					+ "<body><h1>It works</h1>This server works!</body></html>";
+					+ "<body><h1>It works</h1>This server works! 2017-04-26</body></html>";
 			t.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length());
 			OutputStream os = t.getResponseBody();
 			os.write(response.getBytes());
