@@ -10,8 +10,8 @@ import com.sun.net.httpserver.HttpServer;
 
 public class DirectoryServer {
 
-	// private static final int SERVER_PORT = 80;
-	private static final int SERVER_PORT = 8000;
+	private static final int SERVER_PORT = 80;
+	// private static final int SERVER_PORT = 8000;
 
 	private HttpServer server;
 	private Hashtable<String, GroupInfo> groups;
@@ -22,10 +22,11 @@ public class DirectoryServer {
 		groups = new Hashtable<String, GroupInfo>();
 		graph = new Graph();
 
+		System.out.println("port: " + SERVER_PORT);
 		server = HttpServer.create(new InetSocketAddress(SERVER_PORT), 0);
 		server.createContext("/", new RunClient(this));
 		server.setExecutor(null); // creates a default executor
-		System.out.println("The server is running");
+		System.out.println("The server is running - port: " + SERVER_PORT);
 	}
 
 	public void launch() throws Exception {
