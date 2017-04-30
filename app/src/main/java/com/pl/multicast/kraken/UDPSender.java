@@ -26,11 +26,14 @@ public class UDPSender {
     private DatagramSocket broadcastsock;
     private BroadcastData std;
     private boolean stop;
+    private volatile long nbytes;
+    private long t;
 
     public UDPSender(BroadcastData s) {
 
         j = 0;
         std = s;
+        nbytes = 0;
         stop = true;
         broadcastsock = null;
 
@@ -58,6 +61,7 @@ public class UDPSender {
     void send() {
 
         stop = !stop;
+        t = System.currentTimeMillis();
         Log.v(this.getClass().getName(), "SEND byte array");
 
         while(!stop) {
@@ -68,8 +72,21 @@ public class UDPSender {
                 e.printStackTrace();
             }
 
-            Log.i(this.getClass().getName(),"sender - loop");
+            Log.i(this.getClass().getName(), "sender - loop");
             new AsyncUDPSenderRoutine().execute(toObjects(b));
+
+            if((System.currentTimeMillis() - t) > 1000) {
+
+                long n;
+
+                ///synchronized (this) {
+
+                    n = nbytes;
+                    nbytes = 0;
+                //}
+                Log.i(getClass().getName(), "send — " + n + " bytes/s");
+                t = System.currentTimeMillis();
+            }
         }
     }
 
@@ -125,6 +142,10 @@ public class UDPSender {
                             if (broadcastsock != null && !broadcastsock.isClosed()) {
                                 Log.i(this.getClass().getName(), "SEND — done");
                                 broadcastsock.send(p);
+
+                                //synchronized (UDPSender.this){
+                                    nbytes += data.length;
+                                //}
                             }
 
                         } catch (IOException e) {
