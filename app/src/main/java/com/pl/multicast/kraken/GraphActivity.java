@@ -510,7 +510,7 @@ public class GraphActivity extends Activity
 
                     String s = "";
                     for(ArrayList<String> ar: paths)
-                        s += ar.toString();
+                        s += ar.toString() + "\n";
 
                     Toast.makeText(GraphActivity.this, s, Toast.LENGTH_LONG).show();
                 }
