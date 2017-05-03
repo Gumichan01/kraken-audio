@@ -1,3 +1,17 @@
+* <2017-05-03>
+** Fait:
+   - Flot continue d'octets
+** A faire:
+   - S'assurer de la reconnection automatique quand le téléphone
+     se met en veille
+   - Sérialiser le graphe intelligemment
+   - https://developer.android.com/reference/android/media/AudioTrack.html
+   - Corriger la couche de communication
+   - Faire une démo avec un envoi "continu" d'octets avec une mesure
+     du nombre d'octets envoyés par seconde.
+   - Faire une demo ou on produit un son "simple" et on le joue de
+     l'autre côté.
+
 * <2017-04-19>
 ** Fait:
    - Centraliser le graphe sur le serveur
