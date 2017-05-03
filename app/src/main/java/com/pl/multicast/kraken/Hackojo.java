@@ -36,6 +36,7 @@ public class Hackojo extends AsyncTask<Integer, Integer, Boolean> {
     private List<DeviceData> ddata;
     private ClientDevice cd;
     private String dest;
+    protected List<ArrayList<String> > paths;
 
     public Hackojo(DeviceData ddata, String gn) {
 
@@ -133,7 +134,7 @@ public class Hackojo extends AsyncTask<Integer, Integer, Boolean> {
 
             case GRAPH_GET_OP:
                 // set a new link
-                List<ArrayList<String> > paths = cd.getGraph();
+                paths = cd.getGraph();
                 if(paths == null) {
                     Log.e(this.getClass().getName(), "Cannot get the graph " + dest);
                     status = false;

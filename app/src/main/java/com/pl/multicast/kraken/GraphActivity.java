@@ -22,6 +22,7 @@ import com.pl.multicast.kraken.common.KrakenMisc;
 import com.pl.multicast.kraken.common.NotifyTask;
 import com.pl.multicast.kraken.datum.DeviceData;
 
+import java.lang.reflect.GenericArrayType;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -505,6 +506,13 @@ public class GraphActivity extends Activity
                     Log.i(this.getClass().getName(), "post execute - notify the devices (quit)");
                     notifyQuitDevices(username, std.getSenders().iterator());
                     notifyQuitDevices(username, std.getListeners().iterator());
+                } else if(op == GRAPH_GET_OP) {
+
+                    String s = "";
+                    for(ArrayList<String> ar: paths)
+                        s += ar.toString();
+
+                    Toast.makeText(GraphActivity.this, s, Toast.LENGTH_LONG).show();
                 }
 
             } else
