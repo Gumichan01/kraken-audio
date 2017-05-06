@@ -19,13 +19,13 @@ import java.util.Random;
  */
 public class UDPSender {
 
-    private static final int DATAPCK_SIZE = 32;
+    private static final int DATAPCK_SIZE = 1024;
     private int j;
     private byte[] b;
     private int select;
     private DatagramSocket broadcastsock;
     private BroadcastData std;
-    private boolean stop;
+    private volatile boolean stop;
 
     public UDPSender(BroadcastData s) {
 
@@ -51,6 +51,7 @@ public class UDPSender {
 
     public void close() {
 
+        stop = true;
         if (broadcastsock != null)
             broadcastsock.close();
     }
@@ -62,11 +63,11 @@ public class UDPSender {
 
         while(!stop) {
 
-            /*try {
+            try {
                 Thread.sleep(16);
             } catch (InterruptedException e) {
                 e.printStackTrace();
-            }*/
+            }
 
             Log.i(this.getClass().getName(), "sender - loop");
             new AsyncUDPSenderRoutine().execute(toObjects(b));
