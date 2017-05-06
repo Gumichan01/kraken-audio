@@ -26,14 +26,11 @@ public class UDPSender {
     private DatagramSocket broadcastsock;
     private BroadcastData std;
     private boolean stop;
-    private volatile long nbytes;
-    private long t;
 
     public UDPSender(BroadcastData s) {
 
         j = 0;
         std = s;
-        nbytes = 0;
         stop = true;
         broadcastsock = null;
 
@@ -43,7 +40,7 @@ public class UDPSender {
             Log.e(this.getClass().getName(), e.getMessage());
         }
 
-        b = new byte[32];
+        b = new byte[DATAPCK_SIZE];
         select = 0;
         new Random().nextBytes(b);
 
@@ -61,32 +58,18 @@ public class UDPSender {
     void send() {
 
         stop = !stop;
-        t = System.currentTimeMillis();
         Log.v(this.getClass().getName(), "SEND byte array");
 
         while(!stop) {
 
-            try {
-                Thread.sleep(25);
+            /*try {
+                Thread.sleep(16);
             } catch (InterruptedException e) {
                 e.printStackTrace();
-            }
+            }*/
 
             Log.i(this.getClass().getName(), "sender - loop");
             new AsyncUDPSenderRoutine().execute(toObjects(b));
-
-            if((System.currentTimeMillis() - t) > 1000) {
-
-                long n;
-
-                ///synchronized (this) {
-
-                    n = nbytes;
-                    nbytes = 0;
-                //}
-                Log.i(getClass().getName(), "send — " + n + " bytes/s");
-                t = System.currentTimeMillis();
-            }
         }
     }
 
@@ -140,12 +123,9 @@ public class UDPSender {
                                     new InetSocketAddress(dev.getAddr(), dev.getBroadcastPort()));
 
                             if (broadcastsock != null && !broadcastsock.isClosed()) {
+
                                 Log.i(this.getClass().getName(), "SEND — done");
                                 broadcastsock.send(p);
-
-                                //synchronized (UDPSender.this){
-                                    nbytes += data.length;
-                                //}
                             }
 
                         } catch (IOException e) {

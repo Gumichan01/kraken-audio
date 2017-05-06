@@ -24,7 +24,7 @@ import java.net.SocketException;
 public class UDPReceiver {
 
     private static final int DATAPCK_SIZE = 32;
-    private static final int RECV_TIMEOUT = 8000;
+    private static final int RECV_TIMEOUT = 1000;
 
     private BroadcastData std;
     private GraphActivity graph;
@@ -48,16 +48,8 @@ public class UDPReceiver {
 
         thread = new Thread(new Runnable() {
 
-            private void printByte(final byte[] bytes) {
-
-                graph.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        //graph.receiveText(rstring);
-                        graph.receiveByte(bytes[0]);
-                    }
-                });
-            }
+            private volatile long nbytes;
+            private long t;
 
             @Override
             public void run() {
@@ -90,23 +82,23 @@ public class UDPReceiver {
                                 Log.i(this.getClass().getName(), "UDP receiver - null bytes");
                             else {
 
-                                Log.i(this.getClass().getName(), "UDP receiver - bytes length: " + b.length);
-                                Log.i(this.getClass().getName(), "UDP receiver - content");
-                                Log.i(this.getClass().getName(), "UDP receiver - " + new String(b));
+                                nbytes += b.length;
 
-                                Log.i(this.getClass().getName(), "UDP receiver - END content");
-                                //printByte(b);
-                                Log.i(this.getClass().getName(), "—");
-                                for (byte o : b) Log.i(this.getClass().getName(), " " + o);
-                                Log.i(this.getClass().getName(), "—");
-                                final String rstring = new String(b);
+                                /// DEBUG display
+                                /*final String rstring = new String(b);
 
                                 graph.runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
                                         graph.receiveText(rstring);
                                     }
-                                });
+                                });*/
+                            }
+
+                            if((System.currentTimeMillis() - t) > 1000) {
+                                Log.i(getClass().getName(), "recv — " + nbytes + " bytes/s");
+                                t = System.currentTimeMillis();
+                                nbytes = 0;
                             }
 
                         } catch (IOException e) {
