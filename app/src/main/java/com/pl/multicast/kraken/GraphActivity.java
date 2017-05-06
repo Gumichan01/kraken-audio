@@ -112,22 +112,39 @@ public class GraphActivity extends Activity
     }
 
     @Override
+    public void onRestart() {
+
+        super.onStop();
+        Log.i(this.getLocalClassName(), "Restart the activity");
+    }
+
+    @Override
     public void onResume() {
 
         super.onResume();
+        Log.i(this.getLocalClassName(), "Resume the activity");
     }
 
     @Override
     public void onPause() {
 
         super.onPause();
+        Log.i(this.getLocalClassName(), "Pause the activity");
     }
+
 
     @Override
     public void onStop() {
 
         super.onStop();
         Log.i(this.getLocalClassName(), "Stop the activity");
+    }
+
+    @Override
+    public void onDestroy() {
+
+        super.onDestroy();
+        Log.i(this.getLocalClassName(), "Destroy the activity");
         bserviceth.interrupt();
 
         if (recv != null)
