@@ -11,6 +11,7 @@ import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 
 /**
@@ -18,9 +19,10 @@ import java.util.ArrayList;
  */
 public class UDPSender {
 
-    private static final int DATAPCK_SIZE = 1024;
+    private static final int CACHE_SZ = 1024;
     private byte[] b;
     private DatagramSocket broadcastsock;
+    private KrakenCache kbuffer;
     private BroadcastData std;
     private volatile boolean stop;
 
@@ -29,6 +31,7 @@ public class UDPSender {
         std = s;
         stop = true;
         broadcastsock = null;
+        kbuffer = new KrakenCache(CACHE_SZ);
 
         try {
             broadcastsock = new DatagramSocket();
@@ -40,6 +43,7 @@ public class UDPSender {
     public void close() {
 
         stop = true;
+        kbuffer.clear();
         if (broadcastsock != null)
             broadcastsock.close();
     }
@@ -67,11 +71,19 @@ public class UDPSender {
 
     /**
      * Put a block of bytes into the waiting list in attempt to send data via the background task
-     * */
-    void putData(byte [] data) {
+     */
+    void putData(byte[] data) {
 
         Log.v(this.getClass().getName(), "sender — put block of data, length: " + data.length);
-        new AsyncUDPSenderRoutine().execute(toObjects(data));
+        kbuffer.write(data, data.length);
+
+        if (kbuffer.isFull()) {
+            Log.v(this.getClass().getName(), "sender — cache");
+            byte[] bytes = kbuffer.readAll();
+            new AsyncUDPSenderRoutine().execute(toObjects(bytes));
+        }
+
+
     }
 
     // byte[] to Byte[]
@@ -88,6 +100,30 @@ public class UDPSender {
 
         public AsyncUDPSenderRoutine() {
             super();
+        }
+
+        // Send packet to a specific device per block of 1024 bytes
+        private void sendPacket(DeviceData dev, byte[] bytes) throws IOException {
+
+            int i = 0;
+            while (i < bytes.length) {
+
+                try {
+                    Thread.sleep(6);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                int len = (bytes.length - i) > CACHE_SZ ? CACHE_SZ : bytes.length - i;
+                Log.v(this.getClass().getName(), "SEND data size — " + len);
+
+                byte[] data = Arrays.copyOfRange(bytes, i, i + len);
+                DatagramPacket p = new DatagramPacket(data, data.length,
+                        new InetSocketAddress(dev.getAddr(), dev.getBroadcastPort()));
+
+                broadcastsock.send(p);
+                i += len;
+            }
         }
 
         private byte[] toPrimitives(Byte[] oBytes) {
@@ -110,24 +146,15 @@ public class UDPSender {
             }
 
             try {
-                DatagramPacket p;
+                //DatagramPacket p;
                 Byte[] bdata = params[0];
-                byte[] data = toPrimitives(bdata);
                 ArrayList<DeviceData> listeners = std.getListeners();
                 for (DeviceData dev : listeners) {
 
                     Log.v(this.getClass().getName(), "SEND data — " + params[0] + " — to " + dev.getName() +
                             " " + dev.getAddr() + ":" + dev.getBroadcastPort());
-                    Log.v(this.getClass().getName(), "SEND data size — " + data.length);
                     try {
-                        p = new DatagramPacket(data, data.length,
-                                new InetSocketAddress(dev.getAddr(), dev.getBroadcastPort()));
-
-                        if (broadcastsock != null && !broadcastsock.isClosed()) {
-
-                            Log.v(this.getClass().getName(), "SEND — done");
-                            broadcastsock.send(p);
-                        }
+                        sendPacket(dev, toPrimitives(bdata));
 
                     } catch (IOException e) {
                         Log.e(this.getClass().getName(), e.getMessage());
