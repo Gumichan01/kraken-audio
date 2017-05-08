@@ -57,8 +57,8 @@ public class GraphActivity extends Activity
     // Thread
     private Thread bserviceth;      // broadcast service thread
     private BroadcastService bs;
-    // Receiver
-    private UDPReceiver recv;
+    // Broadcast
+    KrakenBroadcast kbroadcast;
     // Data
     private BroadcastData std;      // Data broadcasting information
 
@@ -84,9 +84,9 @@ public class GraphActivity extends Activity
         bserviceth = new Thread(bs);
         bserviceth.start();
 
-        /** Receiver */
-        recv = new UDPReceiver(this, std);
-        recv.launch();
+        /** Broadcast */
+        kbroadcast = new KrakenBroadcast(this, std);
+        kbroadcast.launch();
 
         /** Fragment creation */
         navigationSenders = (NavDrawer)
@@ -114,7 +114,7 @@ public class GraphActivity extends Activity
     @Override
     public void onRestart() {
 
-        super.onStop();
+        super.onRestart();
         Log.i(this.getLocalClassName(), "Restart the activity");
     }
 
@@ -132,7 +132,6 @@ public class GraphActivity extends Activity
         Log.i(this.getLocalClassName(), "Pause the activity");
     }
 
-
     @Override
     public void onStop() {
 
@@ -146,9 +145,7 @@ public class GraphActivity extends Activity
         super.onDestroy();
         Log.i(this.getLocalClassName(), "Destroy the activity");
         bserviceth.interrupt();
-
-        if (recv != null)
-            recv.stop();
+        kbroadcast.stop();
 
         if (KrakenMisc.isNetworkAvailable(getApplicationContext()))
             new AsyncGraphTask(d, gname).execute(Hackojo.QUIT_GROUP_OP);
@@ -185,19 +182,8 @@ public class GraphActivity extends Activity
     // Broadcast the text
     public void broadcastText(View v) {
 
-        /*EditText edt = (EditText) findViewById(R.id.txtsend);
-        String s = edt.getText().toString();
-        Log.i(this.getLocalClassName(), "Send the following text: " + s);
-        // Send message to the thread responsible of broadcasting the message
-        Message m = new Message();
-        m.what = KrakenMisc.TXT_ID;
-        m.obj = s;
-        bs.getThreadHandler().sendMessage(m);
-        Log.i(this.getLocalClassName(), "Send text END");
-
-        Toast.makeText(this, s, Toast.LENGTH_SHORT).show();*/
         Log.i(this.getLocalClassName(), "send data");
-        bs.sendData();
+        //bs.sendData();
     }
 
     public void receiveByte(byte b) {
@@ -384,6 +370,7 @@ public class GraphActivity extends Activity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+        UDPReceiver recv = kbroadcast.getReceiver();
 
         if (id == R.id.action_listen) {
 
