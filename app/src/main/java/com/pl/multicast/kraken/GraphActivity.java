@@ -29,8 +29,6 @@ public class GraphActivity extends Activity
         implements NavDrawer.NavigationDrawerCallbacks {
 
     private static ArrayList<String> ltext = new ArrayList<>();
-    // Communication point
-    //private AsyncGraphTask hack;
     // Broadcast
     KrakenBroadcast kbroadcast;
     /**
@@ -42,7 +40,7 @@ public class GraphActivity extends Activity
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private String mTitle;
-    private String username;
+    public static String username;
     private String gname;
     private DeviceData d;
     /**
