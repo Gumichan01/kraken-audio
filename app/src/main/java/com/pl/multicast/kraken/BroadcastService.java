@@ -46,7 +46,6 @@ public class BroadcastService implements Runnable {
     private DeviceData d;
     private GraphActivity gactivity;
     private BroadcastData bdata;
-    private UDPSender broadcaster;
 
 
     public BroadcastService(GraphActivity g, BroadcastData dd) {
@@ -54,24 +53,8 @@ public class BroadcastService implements Runnable {
         gactivity = g;
         d = g.getDevData();
         bdata = dd;
-        broadcaster = new UDPSender(dd);
     }
 
-    public synchronized Handler getThreadHandler() {
-
-        return null;
-        //return broadcaster.getHandler();
-    }
-
-    public void sendData() {
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                broadcaster.send();
-            }
-        }).start();
-    }
 
     public void run() {
 
@@ -98,7 +81,6 @@ public class BroadcastService implements Runnable {
                         sock.close();
 
                     s.close();
-                    broadcaster.close();
                     break;
                 }
 
