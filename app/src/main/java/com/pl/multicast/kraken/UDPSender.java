@@ -70,7 +70,7 @@ public class UDPSender {
      * */
     void putData(byte [] data) {
 
-        Log.i(this.getClass().getName(), "sender — put block of data, length: " + data.length);
+        Log.v(this.getClass().getName(), "sender — put block of data, length: " + data.length);
         new AsyncUDPSenderRoutine().execute(toObjects(data));
     }
 

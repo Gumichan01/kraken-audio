@@ -60,6 +60,7 @@ public class KrakenBroadcast {
             Log.i(getClass().getName(), "kraken broadcast  — cache");
             audio.streamData(by);
             /// TODO forward to UDPSender
+            sender.putData(by);
         }
     }
 
