@@ -12,10 +12,16 @@ public class KrakenCache {
 
     private static final int CACHE_SIZE = 8000;
     private List<Byte> buffer; // Cache memory
+    private int mcsize;   // maximum cache size
 
     public KrakenCache() {
+        this(CACHE_SIZE);
+    }
+
+    public KrakenCache(int size) {
 
         buffer = Collections.synchronizedList(new LinkedList<Byte>());
+        mcsize = size;
     }
 
     /**
