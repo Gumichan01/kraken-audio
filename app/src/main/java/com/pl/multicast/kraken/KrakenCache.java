@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class KrakenCache {
 
-    private static final int CACHE_SIZE = 65536;
+    private static final int CACHE_SIZE = 8000;
     private List<Byte> buffer; // Cache memory
 
     public KrakenCache() {
@@ -23,7 +23,6 @@ public class KrakenCache {
      *
      * @param array bloc to write
      * @param len   size of the bloc
-     * @note Is len necessary ?
      */
     public void write(byte[] array, int len) {
 
@@ -49,6 +48,11 @@ public class KrakenCache {
         }
 
         return bytes;
+    }
+
+
+    public byte [] readAll() {
+        return read(buffer.size());
     }
 
     public boolean isEmpty() {
