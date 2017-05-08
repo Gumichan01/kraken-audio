@@ -44,9 +44,9 @@ public class UDPSender {
         select = 0;
         new Random().nextBytes(b);
 
-        for (int i = 0; i < b.length; i++) {
+        /*for (int i = 0; i < b.length; i++) {
             Log.i(this.getClass().getName(), "byte value — " + b[i]);
-        }
+        }*/
     }
 
     public void close() {
@@ -56,6 +56,9 @@ public class UDPSender {
             broadcastsock.close();
     }
 
+    /**
+     * @deprecated
+     * */
     void send() {
 
         stop = !stop;
@@ -64,15 +67,16 @@ public class UDPSender {
         while(!stop) {
 
             try {
-                Thread.sleep(16);
+                Thread.sleep(6);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
 
-            Log.i(this.getClass().getName(), "sender - loop");
+            Log.v(this.getClass().getName(), "sender - loop");
             new AsyncUDPSenderRoutine().execute(toObjects(b));
         }
     }
+    
 
     // byte[] to Byte[]
     private Byte[] toObjects(byte[] bytesPrim) {
@@ -116,16 +120,16 @@ public class UDPSender {
                     ArrayList<DeviceData> listeners = std.getListeners();
                     for (DeviceData dev : listeners) {
 
-                        Log.i(this.getClass().getName(), "SEND data — " + params[0] + " — to " + dev.getName() +
+                        Log.v(this.getClass().getName(), "SEND data — " + params[0] + " — to " + dev.getName() +
                                 " " + dev.getAddr() + ":" + dev.getBroadcastPort());
-                        Log.i(this.getClass().getName(), "SEND data size — " + data.length);
+                        Log.v(this.getClass().getName(), "SEND data size — " + data.length);
                         try {
                             p = new DatagramPacket(data, data.length,
                                     new InetSocketAddress(dev.getAddr(), dev.getBroadcastPort()));
 
                             if (broadcastsock != null && !broadcastsock.isClosed()) {
 
-                                Log.i(this.getClass().getName(), "SEND — done");
+                                Log.v(this.getClass().getName(), "SEND — done");
                                 broadcastsock.send(p);
                             }
 
