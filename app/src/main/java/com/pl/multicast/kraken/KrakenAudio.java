@@ -5,15 +5,13 @@ import android.media.AudioManager;
 import android.media.AudioTrack;
 import android.util.Log;
 
-import java.util.Arrays;
-
 /**
  * Created by Luxon on 08/05/2017.
  */
 public class KrakenAudio {
 
-    private KrakenCache kbuffer;
     private static AudioTrack audiotrack;
+    private KrakenCache kbuffer;
     private boolean isplaying;
 
     public KrakenAudio() {
@@ -22,19 +20,22 @@ public class KrakenAudio {
         kbuffer = new KrakenCache();
     }
 
-    public void putInCacheMemory(byte [] arr, int len) {
+    /**
+     * @depracated
+     */
+    public void putInCacheMemory(byte[] arr, int len) {
 
         // write into the cache memory
-        kbuffer.write(arr,len);
+        kbuffer.write(arr, len);
 
-        if(kbuffer.isFull()) {
+        if (kbuffer.isFull()) {
 
-            byte [] by = kbuffer.readAll();
+            byte[] by = kbuffer.readAll();
             Log.i(getClass().getName(), "recv  — cache");
             // blocking write
-            if(audiotrack != null) {
+            if (audiotrack != null) {
 
-                if(!isplaying) {
+                if (!isplaying) {
                     Log.i(getClass().getName(), "audio  — play");
                     audiotrack.play();
                     isplaying = true;
@@ -45,13 +46,34 @@ public class KrakenAudio {
         }
     }
 
-    public void play(int samplerate, boolean stereo, int duration){
+    public void configure(int samplerate, boolean stereo, int duration) {
 
         Log.i(getClass().getName(), "audio  — create");
+
+        if (audiotrack != null) {
+            stop();
+            clearAudio();
+        }
+
         audiotrack = new AudioTrack(AudioManager.STREAM_MUSIC,
                 samplerate, (stereo ? AudioFormat.CHANNEL_OUT_STEREO : AudioFormat.CHANNEL_OUT_MONO),
                 AudioFormat.ENCODING_PCM_16BIT, (duration * samplerate),
                 AudioTrack.MODE_STREAM);
+    }
+
+    public void streamData(byte[] data) {
+
+        Log.i(getClass().getName(), "audio  — stream");
+        if (audiotrack != null) {
+
+            if (!isplaying) {
+                Log.i(getClass().getName(), "audio  — play");
+                audiotrack.play();
+                isplaying = true;
+            }
+            Log.i(getClass().getName(), "audio  — write");
+            audiotrack.write(data, 0, data.length);
+        }
     }
 
     public void stop() {
