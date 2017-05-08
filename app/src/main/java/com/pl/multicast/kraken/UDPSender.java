@@ -11,7 +11,6 @@ import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
 import java.util.ArrayList;
-import java.util.Random;
 
 
 /**
@@ -20,16 +19,13 @@ import java.util.Random;
 public class UDPSender {
 
     private static final int DATAPCK_SIZE = 1024;
-    private int j;
     private byte[] b;
-    private int select;
     private DatagramSocket broadcastsock;
     private BroadcastData std;
     private volatile boolean stop;
 
     public UDPSender(BroadcastData s) {
 
-        j = 0;
         std = s;
         stop = true;
         broadcastsock = null;
@@ -39,14 +35,6 @@ public class UDPSender {
         } catch (SocketException e) {
             Log.e(this.getClass().getName(), e.getMessage());
         }
-
-        b = new byte[DATAPCK_SIZE];
-        select = 0;
-        new Random().nextBytes(b);
-
-        /*for (int i = 0; i < b.length; i++) {
-            Log.i(this.getClass().getName(), "byte value — " + b[i]);
-        }*/
     }
 
     public void close() {
@@ -58,13 +46,13 @@ public class UDPSender {
 
     /**
      * @deprecated
-     * */
+     */
     void send() {
 
         stop = !stop;
         Log.v(this.getClass().getName(), "SEND byte array");
 
-        while(!stop) {
+        while (!stop) {
 
             try {
                 Thread.sleep(6);
@@ -76,7 +64,15 @@ public class UDPSender {
             new AsyncUDPSenderRoutine().execute(toObjects(b));
         }
     }
-    
+
+    /**
+     * Put a block of bytes into the waiting list in attempt to send data via the background task
+     * */
+    void putData(byte [] data) {
+
+        Log.i(this.getClass().getName(), "sender — put block of data, length: " + data.length);
+        new AsyncUDPSenderRoutine().execute(toObjects(data));
+    }
 
     // byte[] to Byte[]
     private Byte[] toObjects(byte[] bytesPrim) {
@@ -113,40 +109,40 @@ public class UDPSender {
                 return null;
             }
 
-                try {
-                    DatagramPacket p;
-                    Byte[] bdata = params[0];
-                    byte[] data = toPrimitives(bdata);
-                    ArrayList<DeviceData> listeners = std.getListeners();
-                    for (DeviceData dev : listeners) {
+            try {
+                DatagramPacket p;
+                Byte[] bdata = params[0];
+                byte[] data = toPrimitives(bdata);
+                ArrayList<DeviceData> listeners = std.getListeners();
+                for (DeviceData dev : listeners) {
 
-                        Log.v(this.getClass().getName(), "SEND data — " + params[0] + " — to " + dev.getName() +
-                                " " + dev.getAddr() + ":" + dev.getBroadcastPort());
-                        Log.v(this.getClass().getName(), "SEND data size — " + data.length);
-                        try {
-                            p = new DatagramPacket(data, data.length,
-                                    new InetSocketAddress(dev.getAddr(), dev.getBroadcastPort()));
+                    Log.v(this.getClass().getName(), "SEND data — " + params[0] + " — to " + dev.getName() +
+                            " " + dev.getAddr() + ":" + dev.getBroadcastPort());
+                    Log.v(this.getClass().getName(), "SEND data size — " + data.length);
+                    try {
+                        p = new DatagramPacket(data, data.length,
+                                new InetSocketAddress(dev.getAddr(), dev.getBroadcastPort()));
 
-                            if (broadcastsock != null && !broadcastsock.isClosed()) {
+                        if (broadcastsock != null && !broadcastsock.isClosed()) {
 
-                                Log.v(this.getClass().getName(), "SEND — done");
-                                broadcastsock.send(p);
-                            }
-
-                        } catch (IOException e) {
-                            Log.e(this.getClass().getName(), e.getMessage());
+                            Log.v(this.getClass().getName(), "SEND — done");
+                            broadcastsock.send(p);
                         }
+
+                    } catch (IOException e) {
+                        Log.e(this.getClass().getName(), e.getMessage());
                     }
-                    Log.v(this.getClass().getName(), "DONE");
-
-                } catch (SecurityException | NullPointerException se) {
-
-                    se.printStackTrace();
-
-                } catch (Exception u) {
-
-                    u.printStackTrace();
                 }
+                Log.v(this.getClass().getName(), "DONE");
+
+            } catch (SecurityException | NullPointerException se) {
+
+                se.printStackTrace();
+
+            } catch (Exception u) {
+
+                u.printStackTrace();
+            }
             return null;
         }
     }
