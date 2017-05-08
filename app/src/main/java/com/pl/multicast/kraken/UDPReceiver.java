@@ -53,8 +53,7 @@ public class UDPReceiver {
             private volatile long nbytes;
             private long t;
 
-            private void rate()
-            {
+            private void rate() {
                 if ((System.currentTimeMillis() - t) > 1000) {
                     Log.i(getClass().getName(), "recv — " + nbytes + " bytes/s");
                     t = System.currentTimeMillis();
