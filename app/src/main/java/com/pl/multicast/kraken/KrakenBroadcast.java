@@ -52,11 +52,11 @@ public class KrakenBroadcast {
         audio.configure(samplerate, stereo, duration);
     }
 
-    public void setForward(boolean forward1) {
+    public void setForwardOption(boolean forward1) {
         forward = forward1;
     }
 
-    public void setListen(boolean listen1) {
+    public void setListenOption(boolean listen1) {
         listen = listen1;
     }
 
@@ -77,6 +77,14 @@ public class KrakenBroadcast {
         }
     }
 
+
+    public boolean getForwardOption() {
+        return forward;
+    }
+
+    public boolean getListenOption() {
+        return listen;
+    }
 
     public UDPReceiver getReceiver() {
         return receiver;
