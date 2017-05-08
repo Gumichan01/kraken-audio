@@ -20,32 +20,6 @@ public class KrakenAudio {
         kbuffer = new KrakenCache();
     }
 
-    /**
-     * @depracated
-     */
-    public void putInCacheMemory(byte[] arr, int len) {
-
-        // write into the cache memory
-        kbuffer.write(arr, len);
-
-        if (kbuffer.isFull()) {
-
-            byte[] by = kbuffer.readAll();
-            Log.i(getClass().getName(), "recv  — cache");
-            // blocking write
-            if (audiotrack != null) {
-
-                if (!isplaying) {
-                    Log.i(getClass().getName(), "audio  — play");
-                    audiotrack.play();
-                    isplaying = true;
-                }
-                Log.i(getClass().getName(), "audio  — write");
-                audiotrack.write(by, 0, by.length);
-            }
-        }
-    }
-
     public void configure(int samplerate, boolean stereo, int duration) {
 
         Log.i(getClass().getName(), "audio  — create");
@@ -63,15 +37,15 @@ public class KrakenAudio {
 
     public void streamData(byte[] data) {
 
-        Log.i(getClass().getName(), "audio  — stream");
+        Log.v(getClass().getName(), "audio  — stream");
         if (audiotrack != null) {
 
             if (!isplaying) {
-                Log.i(getClass().getName(), "audio  — play");
+                Log.v(getClass().getName(), "audio  — play");
                 audiotrack.play();
                 isplaying = true;
             }
-            Log.i(getClass().getName(), "audio  — write");
+            Log.v(getClass().getName(), "audio  — write");
             audiotrack.write(data, 0, data.length);
         }
     }

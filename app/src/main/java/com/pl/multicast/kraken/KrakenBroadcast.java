@@ -4,13 +4,12 @@ import android.util.Log;
 
 /**
  * KrakenBroadcast handles the broadcast part of the application, that is to say:
- *
- *  - receiving data
- *  - sending data
- *  - forwarding data
- *  - caching received data
- *  - handling the audio player
- *
+ * <p/>
+ * - receiving data
+ * - sending data
+ * - forwarding data
+ * - caching received data
+ * - handling the audio player
  */
 public class KrakenBroadcast {
 
@@ -57,9 +56,7 @@ public class KrakenBroadcast {
         if (kbuffer.isFull()) {
 
             byte[] by = kbuffer.readAll();
-            Log.i(getClass().getName(), "kraken broadcast  — cache");
             audio.streamData(by);
-            /// TODO forward to UDPSender
             sender.putData(by);
         }
     }

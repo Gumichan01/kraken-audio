@@ -53,6 +53,15 @@ public class UDPReceiver {
             private volatile long nbytes;
             private long t;
 
+            private void rate()
+            {
+                if ((System.currentTimeMillis() - t) > 1000) {
+                    Log.i(getClass().getName(), "recv — " + nbytes + " bytes/s");
+                    t = System.currentTimeMillis();
+                    nbytes = 0;
+                }
+            }
+
             @Override
             public void run() {
                 DatagramSocket udpsock = null;
@@ -80,35 +89,20 @@ public class UDPReceiver {
                         try {
                             udpsock.receive(p);
 
-                            Log.i(this.getClass().getName(), "UDP receiver - (packet) length: " + p.getLength());
+                            // Log.i(this.getClass().getName(), "UDP receiver - (packet) length: " + p.getLength());
                             byte[] b = p.getData();
 
                             if (b == null)
-                                Log.i(this.getClass().getName(), "UDP receiver - null bytes");
+                                Log.v(this.getClass().getName(), "UDP receiver - null bytes");
                             else {
 
                                 nbytes += p.getLength();
+                                rate();
                                 kbroad.putInCacheMemory(p.getData(), p.getLength());
-
-                                /// DEBUG display
-                                /*final String rstring = new String(b);
-
-                                graph.runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        graph.receiveText(rstring);
-                                    }
-                                });*/
-                            }
-
-                            if ((System.currentTimeMillis() - t) > 1000) {
-                                Log.i(getClass().getName(), "recv — " + nbytes + " bytes/s");
-                                t = System.currentTimeMillis();
-                                nbytes = 0;
                             }
 
                         } catch (IOException e) {
-                            Log.v(this.getClass().getName(), "UDP receiver - " + e.getMessage());
+                            //Log.v(this.getClass().getName(), "UDP receiver - " + e.getMessage());
                         }
 
                         if (Thread.currentThread().isInterrupted()) {

@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
-import android.os.Message;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,7 +13,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -22,7 +20,6 @@ import com.pl.multicast.kraken.common.KrakenMisc;
 import com.pl.multicast.kraken.common.NotifyTask;
 import com.pl.multicast.kraken.datum.DeviceData;
 
-import java.lang.reflect.GenericArrayType;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -34,6 +31,8 @@ public class GraphActivity extends Activity
     private static ArrayList<String> ltext = new ArrayList<>();
     // Communication point
     //private AsyncGraphTask hack;
+    // Broadcast
+    KrakenBroadcast kbroadcast;
     /**
      * Fragment managing the behaviours, interactions and presentation of the navigation drawer.
      */
@@ -43,22 +42,17 @@ public class GraphActivity extends Activity
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private String mTitle;
-
     private String username;
     private String gname;
     private DeviceData d;
-
     /**
      * Used to store the device display lists
      */
     private String[] bdnames;      // list of the broadcaster devices displayed on the screen
     private String[] rdnames;      // list of the receiver devices displayed on the screen
-
     // Thread
     private Thread bserviceth;      // broadcast service thread
     private BroadcastService bs;
-    // Broadcast
-    KrakenBroadcast kbroadcast;
     // Data
     private BroadcastData std;      // Data broadcasting information
 
@@ -405,7 +399,7 @@ public class GraphActivity extends Activity
 
         } else if (id == R.id.action_graph) {
 
-            AsyncGraphTask async = new AsyncGraphTask(d,gname);
+            AsyncGraphTask async = new AsyncGraphTask(d, gname);
             async.execute(Hackojo.GRAPH_GET_OP);
         }
 
@@ -415,6 +409,16 @@ public class GraphActivity extends Activity
     ///
     /// Inner classes
     ///
+
+    public DeviceData getDevData() {
+
+        return d;
+    }
+
+    public String getGroupName() {
+
+        return gname;
+    }
 
     /**
      * A placeholder fragment containing a simple view.
@@ -454,17 +458,6 @@ public class GraphActivity extends Activity
             ((GraphActivity) activity).onSectionAttached(
                     getArguments().getInt(ARG_SECTION_NUMBER));
         }
-    }
-
-
-    public DeviceData getDevData() {
-
-        return d;
-    }
-
-    public String getGroupName() {
-
-        return gname;
     }
 
     /**
@@ -510,10 +503,10 @@ public class GraphActivity extends Activity
                     Log.i(this.getClass().getName(), "post execute - notify the devices (quit)");
                     notifyQuitDevices(username, std.getSenders().iterator());
                     notifyQuitDevices(username, std.getListeners().iterator());
-                } else if(op == GRAPH_GET_OP) {
+                } else if (op == GRAPH_GET_OP) {
 
                     String s = "";
-                    for(ArrayList<String> ar: paths)
+                    for (ArrayList<String> ar : paths)
                         s += ar.toString() + "\n";
 
                     Toast.makeText(GraphActivity.this, s, Toast.LENGTH_LONG).show();

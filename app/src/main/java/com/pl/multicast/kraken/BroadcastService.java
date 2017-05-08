@@ -1,6 +1,5 @@
 package com.pl.multicast.kraken;
 
-import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -84,10 +83,9 @@ public class BroadcastService implements Runnable {
                     break;
                 }
 
-                if (sock == null)
-                {
+                if (sock == null) {
                     // Notitifier IAMH in a separate thread
-                    new Hackojo(d,"").execute(Hackojo.IAM_HERE_OP);
+                    new Hackojo(d, "").execute(Hackojo.IAM_HERE_OP);
                     continue;
                 }
 

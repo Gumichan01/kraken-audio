@@ -49,36 +49,17 @@ public class UDPSender {
     }
 
     /**
-     * @deprecated
-     */
-    void send() {
-
-        stop = !stop;
-        Log.v(this.getClass().getName(), "SEND byte array");
-
-        while (!stop) {
-
-            try {
-                Thread.sleep(6);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-            Log.v(this.getClass().getName(), "sender - loop");
-            new AsyncUDPSenderRoutine().execute(toObjects(b));
-        }
-    }
-
-    /**
      * Put a block of bytes into the waiting list in attempt to send data via the background task
      */
     void putData(byte[] data) {
 
-        Log.v(this.getClass().getName(), "sender — put block of data, length: " + data.length);
+        //Log.v(this.getClass().getName(), "sender — put block of data, length: " + data.length);
+        long t = System.currentTimeMillis();
         kbuffer.write(data, data.length);
+        Log.v(getClass().getName(), "sender 1  — TIME: " + (System.currentTimeMillis() - t) + " ms");
 
         if (kbuffer.isFull()) {
-            Log.v(this.getClass().getName(), "sender — cache");
+            //Log.v(this.getClass().getName(), "sender — cache");
             byte[] bytes = kbuffer.readAll();
             new AsyncUDPSenderRoutine().execute(toObjects(bytes));
         }

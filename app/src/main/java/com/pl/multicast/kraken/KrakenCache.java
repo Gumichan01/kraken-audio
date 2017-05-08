@@ -57,12 +57,8 @@ public class KrakenCache {
     }
 
 
-    public byte [] readAll() {
+    public byte[] readAll() {
         return read(buffer.size());
-    }
-
-    public boolean isEmpty() {
-        return buffer.size() == 0;
     }
 
     public boolean isFull() {
@@ -87,16 +83,4 @@ public class KrakenCache {
 
         return bytes;
     }
-
-    // Byte[] to byte[]
-    private byte[] toPrimitives(Byte[] oBytes) {
-        byte[] bytes = new byte[oBytes.length];
-
-        for (int i = 0; i < oBytes.length; i++) {
-            bytes[i] = oBytes[i];
-        }
-
-        return bytes;
-    }
-
 }
