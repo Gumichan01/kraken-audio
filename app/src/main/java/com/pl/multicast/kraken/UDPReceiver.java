@@ -28,15 +28,17 @@ public class UDPReceiver {
 
     private BroadcastData std;
     private GraphActivity graph;
+    private KrakenBroadcast kbroad;
     private boolean launched;
     private Thread thread;
 
-    public UDPReceiver(GraphActivity g, BroadcastData b) {
+    public UDPReceiver(GraphActivity g, BroadcastData b, KrakenBroadcast k) {
 
         std = b;
-        launched = false;
         graph = g;
+        kbroad = k;
         thread = null;
+        launched = false;
     }
 
     public void launch() {
@@ -54,6 +56,9 @@ public class UDPReceiver {
             @Override
             public void run() {
                 DatagramSocket udpsock = null;
+                Log.i(this.getClass().getName(), "UDP receiver - launch");
+
+                kbroad.setAudioConfig(8000, false, 10); /** debug only */
 
                 try {
                     udpsock = new DatagramSocket(KrakenMisc.BROADCAST_PORT);
@@ -82,7 +87,8 @@ public class UDPReceiver {
                                 Log.i(this.getClass().getName(), "UDP receiver - null bytes");
                             else {
 
-                                nbytes += b.length;
+                                nbytes += p.getLength();
+                                kbroad.putInCacheMemory(p.getData(), p.getLength());
 
                                 /// DEBUG display
                                 /*final String rstring = new String(b);
@@ -95,7 +101,7 @@ public class UDPReceiver {
                                 });*/
                             }
 
-                            if((System.currentTimeMillis() - t) > 1000) {
+                            if ((System.currentTimeMillis() - t) > 1000) {
                                 Log.i(getClass().getName(), "recv — " + nbytes + " bytes/s");
                                 t = System.currentTimeMillis();
                                 nbytes = 0;
