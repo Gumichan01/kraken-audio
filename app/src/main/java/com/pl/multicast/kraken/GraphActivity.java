@@ -28,6 +28,7 @@ import java.util.List;
 public class GraphActivity extends Activity
         implements NavDrawer.NavigationDrawerCallbacks {
 
+    public static String username;
     private static ArrayList<String> ltext = new ArrayList<>();
     // Broadcast
     KrakenBroadcast kbroadcast;
@@ -40,7 +41,6 @@ public class GraphActivity extends Activity
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private String mTitle;
-    public static String username;
     private String gname;
     private DeviceData d;
     /**
@@ -178,25 +178,24 @@ public class GraphActivity extends Activity
         //bs.sendData();
     }
 
-    public void receiveByte(byte b) {
+    public void switchForwardOption(View v) {
 
-        ListView lstv = (ListView) findViewById(R.id.txtrecv);
-        String text = new Byte(b).toString();
-        Log.i(this.getLocalClassName(), "byte received — " + b);
-        ltext.add(text);
-        lstv.setAdapter(new ArrayAdapter<>(getApplicationContext(), R.layout.text_recv, ltext));
-        lstv.setVisibility(View.VISIBLE);
-        Log.i(this.getLocalClassName(), "List updated. Added the following text: " + text);
+        /// TODO switch forward option
+        Log.i(this.getLocalClassName(), "activate forward");
+        //kbroadcast.setForward();
     }
 
-    // Update the list view @deprecated
-    public void receiveText(String text) {
+    public void switchListenOption(View v) {
 
-        ListView lstv = (ListView) findViewById(R.id.txtrecv);
-        ltext.add(text);
-        lstv.setAdapter(new ArrayAdapter<>(getApplicationContext(), R.layout.text_recv, ltext));
-        lstv.setVisibility(View.VISIBLE);
-        Log.i(this.getLocalClassName(), "List updated. Added the following text: " + text);
+        /// TODO switch switch option
+        Log.i(this.getLocalClassName(), "activate forward");
+        //kbroadcast.setListen();
+    }
+
+    public void displayRate(int nbytes) {
+
+        /// TODO display the rate ( XXXX bytes/s)
+        Log.i(this.getLocalClassName(), "rate");
     }
 
     // Notify devices - a new device joined the group
