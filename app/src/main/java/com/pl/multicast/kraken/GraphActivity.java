@@ -12,8 +12,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.pl.multicast.kraken.common.KrakenMisc;
@@ -171,30 +169,36 @@ public class GraphActivity extends Activity
         }
     }
 
-    // Broadcast the text
-    public void broadcastText(View v) {
+    public void configureAudio(View v) {
 
-        Log.i(this.getLocalClassName(), "send data");
-        //bs.sendData();
+        /// TODO configure the audio playing
+        //kbroadcast.setAudioConfig(samplerate, stereo, duration);
     }
 
+
+    /**
+     * Switch the option that lets you activate or unactivate the data forward
+     */
     public void switchForwardOption(View v) {
 
-        /// TODO switch forward option
+        /// TODO switch forward option (check)
         Log.i(this.getLocalClassName(), "activate forward");
-        //kbroadcast.setForward();
+        kbroadcast.setForwardOption(!kbroadcast.getForwardOption());
     }
 
+    /**
+     * Switch the option that lets you activate or unactivate audio playing
+     */
     public void switchListenOption(View v) {
 
-        /// TODO switch switch option
+        /// TODO switch switch option (check)
         Log.i(this.getLocalClassName(), "activate forward");
-        //kbroadcast.setListen();
+        kbroadcast.setListenOption(!kbroadcast.getListenOption());
     }
 
     public void displayRate(int nbytes) {
 
-        /// TODO display the rate ( XXXX bytes/s)
+        /// TODO display the rate — XXXX bytes/s
         Log.i(this.getLocalClassName(), "rate");
     }
 

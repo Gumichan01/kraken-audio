@@ -19,30 +19,10 @@
             android:gravity="bottom"
             android:orientation="vertical">
 
-            <ListView
-                android:id="@+id/txtrecv"
-                android:layout_width="match_parent"
-                android:layout_height="256dp">
-
-            </ListView>
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
-
-                <!--<EditText
-                    android:id="@+id/txtsend"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="24sp" />-->
-
-                <Button
-                    android:id="@+id/bsend"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:onClick="broadcastText"
-                    android:text="Send" />
 
             </LinearLayout>
         </LinearLayout>
