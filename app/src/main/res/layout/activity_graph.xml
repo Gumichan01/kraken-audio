@@ -29,6 +29,7 @@
                 android:layout_marginTop="4dp"
                 android:orientation="vertical">
 
+                <!-- Sample rate -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -48,6 +49,7 @@
 
                 </LinearLayout>
 
+                <!-- Frequency -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -67,6 +69,7 @@
 
                 </LinearLayout>
 
+                <!-- Duration -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -101,6 +104,7 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical">
 
+                    <!-- Stereo -->
                     <CheckBox
                         android:id="@+id/box_stereo"
                         android:layout_width="wrap_content"
@@ -109,24 +113,27 @@
                         android:text="Stereo"
                         android:textSize="16dp" />
 
+                    <!-- Configuration -->
+                    <Button
+                        android:id="@+id/button_config"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Set config"
+                        android:textSize="12dp" />
+
                     <Switch
                         android:id="@+id/switch_broad"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:onClick="switchBroadcastOption"
                         android:text="Broadcast"
-                        android:textSize="16dp" />
-
-                    <Switch
-                        android:id="@+id/switch_recv"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Receive"
                         android:textSize="16dp" />
 
                     <Switch
                         android:id="@+id/switch_listen"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:onClick="switchListenOption"
                         android:text="Listen"
                         android:textSize="16dp" />
 
