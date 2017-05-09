@@ -177,13 +177,21 @@ public class GraphActivity extends Activity
 
 
     /**
-     * Switch the option that lets you activate or unactivate the data forward
+     * Switch the option that lets you broadcast data or not
      */
-    public void switchForwardOption(View v) {
+    public void switchBroadcastOption(View v) {
 
-        /// TODO switch forward option (check)
-        Log.i(this.getLocalClassName(), "activate forward");
-        kbroadcast.setForwardOption(!kbroadcast.getForwardOption());
+        /// TODO switch broadcast option (check)
+        /*
+        * recupérer l'objet associé au switch selon son id (voir activity_graph.xml)
+        * */
+        Log.i(this.getLocalClassName(), "activate broadcast option");
+
+        // pour recupérer l'ancienne valeur de l'option
+        //kbroadcast.getBroadcastOption()
+
+        // pour mettre la nouvelle valeur de l'option
+        //kbroadcast.setBroadcastOption(boolean);
     }
 
     /**
@@ -192,8 +200,15 @@ public class GraphActivity extends Activity
     public void switchListenOption(View v) {
 
         /// TODO switch switch option (check)
-        Log.i(this.getLocalClassName(), "activate forward");
-        kbroadcast.setListenOption(!kbroadcast.getListenOption());
+        /*
+         * id: switch_listen
+         */
+        Log.i(this.getLocalClassName(), "activate listen option");
+        // pour recupérer l'ancienne valeur de l'option
+        //kbroadcast.getListenOption()
+
+        // pour mettre la nouvelle valeur de l'option
+        //kbroadcast.setListenOption(boolean);
     }
 
     public void displayRate(int nbytes) {
