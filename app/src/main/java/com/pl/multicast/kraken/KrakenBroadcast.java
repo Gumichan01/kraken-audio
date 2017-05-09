@@ -17,8 +17,8 @@ public class KrakenBroadcast {
     private UDPReceiver receiver;
     private KrakenAudio audio;
     private KrakenCache kbuffer;
-    private boolean forward;
-    private boolean listen;
+    private boolean broad_opt;
+    private boolean listen_opt;
 
     public KrakenBroadcast(GraphActivity g, BroadcastData bd) {
 
@@ -26,8 +26,8 @@ public class KrakenBroadcast {
         receiver = new UDPReceiver(g, bd, this);
         audio = new KrakenAudio();
         kbuffer = new KrakenCache();
-        forward = true;
-        listen = true;
+        broad_opt = true;
+        listen_opt = true;
     }
 
     public void launch() {
@@ -52,14 +52,6 @@ public class KrakenBroadcast {
         audio.configure(samplerate, stereo, duration);
     }
 
-    public void setForwardOption(boolean forward1) {
-        forward = forward1;
-    }
-
-    public void setListenOption(boolean listen1) {
-        listen = listen1;
-    }
-
     public void putInCacheMemory(byte[] arr, int len) {
 
         // write into the cache memory
@@ -69,21 +61,28 @@ public class KrakenBroadcast {
 
             byte[] by = kbuffer.readAll();
 
-            if (listen)
+            if (listen_opt)
                 audio.streamData(by);
 
-            if (forward)
+            if (broad_opt)
                 sender.putData(by);
         }
     }
 
+    public boolean getBroadcastOption() {
+        return broad_opt;
+    }
 
-    public boolean getForwardOption() {
-        return forward;
+    public void setBroadcastOption(boolean broadcast) {
+        broad_opt = broadcast;
     }
 
     public boolean getListenOption() {
-        return listen;
+        return listen_opt;
+    }
+
+    public void setListenOption(boolean listen) {
+        listen_opt = listen;
     }
 
     public UDPReceiver getReceiver() {
