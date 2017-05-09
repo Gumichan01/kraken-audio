@@ -10,8 +10,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.pl.multicast.kraken.common.KrakenMisc;
@@ -192,6 +194,15 @@ public class GraphActivity extends Activity
 
         // pour mettre la nouvelle valeur de l'option
         //kbroadcast.setBroadcastOption(boolean);
+
+        if(v.getId() == R.id.switch_broad){
+            Switch sw = (Switch) v;
+            if(sw.getTextOff().equals(v))
+                kbroadcast.setBroadcastOption(false);
+            else if(sw.getTextOn().equals(v))
+                kbroadcast.setBroadcastOption(true);
+
+        }
     }
 
     /**
@@ -209,6 +220,13 @@ public class GraphActivity extends Activity
 
         // pour mettre la nouvelle valeur de l'option
         //kbroadcast.setListenOption(boolean);
+        if(v.getId() == R.id.switch_listen) {
+            Switch sw = (Switch) v;
+            if (sw.getTextOff().equals(v))
+                kbroadcast.setListenOption(false);
+            else if (sw.getTextOn().equals(v))
+                kbroadcast.setListenOption(true);
+        }
     }
 
     public void displayRate(int nbytes) {
