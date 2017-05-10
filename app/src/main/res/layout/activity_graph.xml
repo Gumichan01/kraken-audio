@@ -42,6 +42,7 @@
                         android:textSize="16dp" />
 
                     <EditText
+                        android:id="@+id/edit_rate"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="8000"
@@ -62,6 +63,7 @@
                         android:textSize="16dp" />
 
                     <EditText
+                        android:id="@+id/edit_freq"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="440"
@@ -82,6 +84,7 @@
                         android:textSize="16dp" />
 
                     <EditText
+                        android:id="@+id/edit_duration"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="10"
@@ -118,6 +121,7 @@
                         android:id="@+id/button_config"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:onClick="configureAudio"
                         android:text="Set config"
                         android:textSize="12dp" />
 

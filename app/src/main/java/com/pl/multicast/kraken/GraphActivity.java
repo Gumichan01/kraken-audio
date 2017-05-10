@@ -12,6 +12,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.pl.multicast.kraken.common.KrakenMisc;
@@ -172,7 +174,40 @@ public class GraphActivity extends Activity
     public void configureAudio(View v) {
 
         /// TODO configure the audio playing
-        //kbroadcast.setAudioConfig(samplerate, stereo, duration);
+        if (v.getId() == R.id.button_config) {
+
+            EditText rate_edit = (EditText) findViewById(R.id.edit_rate);
+            EditText freq_edit = (EditText) findViewById(R.id.edit_freq);
+            EditText duration_edit = (EditText) findViewById(R.id.edit_duration);
+            CheckBox stereo_box = (CheckBox) findViewById(R.id.box_stereo);
+
+            boolean stereo;
+            int samplerate;
+            int frequency;
+            int duration;
+
+            if (rate_edit.getText().toString().isEmpty())
+                samplerate = Integer.parseInt(rate_edit.getHint().toString());
+            else
+                samplerate = Integer.parseInt(rate_edit.getText().toString());
+
+            if (freq_edit.getText().toString().isEmpty())
+                frequency = Integer.parseInt(freq_edit.getHint().toString());
+            else
+                frequency = Integer.parseInt(freq_edit.getText().toString());
+
+            if (duration_edit.getText().toString().isEmpty())
+                duration = Integer.parseInt(duration_edit.getHint().toString());
+            else
+                duration = Integer.parseInt(duration_edit.getText().toString());
+
+            stereo = stereo_box.isChecked();
+
+            kbroadcast.setAudioConfig(samplerate, frequency, stereo, duration);
+            Log.i(this.getLocalClassName(), "" + samplerate + "/" + frequency + "/" + duration + ":" + stereo);
+
+        } else
+            Log.e(this.getLocalClassName(), "Invalid button");
     }
 
 
