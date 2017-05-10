@@ -66,8 +66,6 @@ public class UDPReceiver {
                 DatagramSocket udpsock = null;
                 Log.i(this.getClass().getName(), "UDP receiver - launch");
 
-                kbroad.setAudioConfig(8000, false, 10); /** debug only */
-
                 try {
                     udpsock = new DatagramSocket(KrakenMisc.BROADCAST_PORT);
                     udpsock.setSoTimeout(RECV_TIMEOUT);

@@ -88,4 +88,8 @@ public class KrakenBroadcast {
     public UDPReceiver getReceiver() {
         return receiver;
     }
+
+    public KrakenAudio getAudioPlayer() {
+        return audio;
+    }
 }
