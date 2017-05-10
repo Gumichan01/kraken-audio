@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.pl.multicast.kraken.common.KrakenMisc;
@@ -69,7 +70,6 @@ public class GraphActivity extends Activity
 
         /** Load the broadcast data and the communication point */
         std = new BroadcastData();
-        //hack = new AsyncGraphTask(d, gname);
 
         /** Service server */
         bs = new BroadcastService(this, std);
@@ -81,6 +81,10 @@ public class GraphActivity extends Activity
         kbroadcast.setAudioConfig(KrakenAudio.DEFAULT_SAMPLERATE, KrakenAudio.DEFAULT_FREQUENCY,
                 false, KrakenAudio.DEFAULT_DURATION);
         kbroadcast.launch();
+
+        /** Display */
+        TextView txv = (TextView) findViewById(R.id.text_rate);
+        txv.setText("Rate: 0 bytes/s");
 
         /** Fragment creation */
         navigationSenders = (NavDrawer)
@@ -264,10 +268,14 @@ public class GraphActivity extends Activity
         //kbroadcast.setListenOption(boolean);
     }
 
-    public void displayRate(int nbytes) {
+    public void displayRate(long nbytes) {
 
         /// TODO display the rate — XXXX bytes/s
-        Log.i(this.getLocalClassName(), "rate");
+        TextView txv = (TextView) findViewById(R.id.text_rate);
+        StringBuilder stbuild = new StringBuilder("Rate: ");
+        stbuild.append(nbytes).append(" bytes/s");
+        txv.setText(stbuild.toString());
+        txv.setVisibility(View.VISIBLE);
     }
 
     // Notify devices - a new device joined the group

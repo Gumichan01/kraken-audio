@@ -55,6 +55,13 @@ public class UDPReceiver {
 
             private void rate() {
                 if ((System.currentTimeMillis() - t) > 1000) {
+
+                    graph.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            graph.displayRate(nbytes);
+                        }
+                    });
                     Log.i(getClass().getName(), "recv — " + nbytes + " bytes/s");
                     t = System.currentTimeMillis();
                     nbytes = 0;
