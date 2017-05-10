@@ -53,14 +53,19 @@ public class KrakenAudio {
     public void stop() {
 
         Log.i(getClass().getName(), "audio  — stop");
-        audiotrack.stop();
-        isplaying = false;
+        if (audiotrack.getState() == AudioTrack.STATE_INITIALIZED
+                && audiotrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
+            audiotrack.stop();
+            isplaying = false;
+        }
     }
 
     public void clearAudio() {
 
         Log.i(getClass().getName(), "audio  — release");
-        audiotrack.pause();
-        audiotrack.flush();
+
+        if (audiotrack.getState() == AudioTrack.STATE_INITIALIZED) {
+            audiotrack.release();
+        }
     }
 }
