@@ -78,6 +78,8 @@ public class GraphActivity extends Activity
 
         /** Broadcast */
         kbroadcast = new KrakenBroadcast(this, std);
+        kbroadcast.setAudioConfig(KrakenAudio.DEFAULT_SAMPLERATE, KrakenAudio.DEFAULT_FREQUENCY,
+                false, KrakenAudio.DEFAULT_DURATION);
         kbroadcast.launch();
 
         /** Fragment creation */
@@ -173,7 +175,6 @@ public class GraphActivity extends Activity
 
     public void configureAudio(View v) {
 
-        /// TODO configure the audio playing
         if (v.getId() == R.id.button_config) {
 
             EditText rate_edit = (EditText) findViewById(R.id.edit_rate);
@@ -208,6 +209,23 @@ public class GraphActivity extends Activity
 
         } else
             Log.e(this.getLocalClassName(), "Invalid button");
+    }
+
+    /**
+     * Generate and play sound
+     */
+    public void play(View v) {
+
+        if (v.getId() == R.id.button_gp) {
+
+            Log.i(this.getLocalClassName(), "generate and play sound");
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    kbroadcast.getAudioPlayer().playGeneratedSound();
+                }
+            }).start();
+        }
     }
 
 
