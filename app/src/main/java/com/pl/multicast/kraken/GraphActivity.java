@@ -236,6 +236,8 @@ public class GraphActivity extends Activity
 
     /**
      * Switch the option that lets you broadcast data or not
+     *
+     * @deprecated
      */
     public void switchBroadcastOption(View v) {
 
@@ -244,17 +246,18 @@ public class GraphActivity extends Activity
         if (v.getId() == R.id.switch_broad) {
 
             Switch sw = (Switch) v;
-            if (sw.getTextOff().equals(sw.getText().toString()))
+
+            if (sw.getTextOff().toString().equals(sw.getText().toString()))
                 kbroadcast.setBroadcastOption(false);
             else
                 kbroadcast.setBroadcastOption(true);
         }
-
-        Toast.makeText(this, "Broadcast option " + (kbroadcast.getBroadcastOption() ? "activated" : "unactivated"), Toast.LENGTH_SHORT).show();
     }
 
     /**
      * Switch the option that lets you activate or unactivate audio playing
+     *
+     * @deprecated
      */
     public void switchListenOption(View v) {
 
@@ -264,13 +267,11 @@ public class GraphActivity extends Activity
 
             Switch sw = (Switch) v;
 
-            if (sw.getTextOff().equals(sw.getText().toString()))
+            if (sw.getTextOff().toString().equals(sw.getText().toString()))
                 kbroadcast.setListenOption(false);
             else
                 kbroadcast.setListenOption(true);
         }
-
-        Toast.makeText(this, "Listen option " + (kbroadcast.getListenOption() ? "activated" : "unactivated"), Toast.LENGTH_SHORT).show();
     }
 
     public void displayRate(long nbytes) {
