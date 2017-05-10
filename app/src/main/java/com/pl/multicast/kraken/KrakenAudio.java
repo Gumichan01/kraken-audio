@@ -14,7 +14,6 @@ public class KrakenAudio {
     public static final int DEFAULT_FREQUENCY = 440;
     public static final int DEFAULT_DURATION = 10;
     private static AudioTrack audiotrack;
-    //private KrakenCache kbuffer;
     private boolean isplaying;
     private int numsamples;
     private int frequency;
@@ -22,7 +21,6 @@ public class KrakenAudio {
     public KrakenAudio() {
         audiotrack = null;
         isplaying = false;
-        //kbuffer = new KrakenCache();
         frequency = DEFAULT_FREQUENCY;
     }
 
