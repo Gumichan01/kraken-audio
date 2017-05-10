@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -238,26 +239,18 @@ public class GraphActivity extends Activity
      */
     public void switchBroadcastOption(View v) {
 
-        /// TODO switch broadcast option (check)
-        /*
-        * recupérer l'objet associé au switch selon son id (voir activity_graph.xml)
-        * */
         Log.i(this.getLocalClassName(), "activate broadcast option");
 
-        // pour recupérer l'ancienne valeur de l'option
-        //kbroadcast.getBroadcastOption()
+        if (v.getId() == R.id.switch_broad) {
 
-        // pour mettre la nouvelle valeur de l'option
-        //kbroadcast.setBroadcastOption(boolean);
-
-        if(v.getId() == R.id.switch_broad){
             Switch sw = (Switch) v;
-            if(sw.getTextOff().equals(v))
+            if (sw.getTextOff().equals(sw.getText().toString()))
                 kbroadcast.setBroadcastOption(false);
-            else if(sw.getTextOn().equals(v))
+            else
                 kbroadcast.setBroadcastOption(true);
-
         }
+
+        Toast.makeText(this, "Broadcast option " + (kbroadcast.getBroadcastOption() ? "activated" : "unactivated"), Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -265,30 +258,26 @@ public class GraphActivity extends Activity
      */
     public void switchListenOption(View v) {
 
-        /// TODO switch switch option (check)
-        /*
-         * id: switch_listen
-         */
         Log.i(this.getLocalClassName(), "activate listen option");
-        // pour recupérer l'ancienne valeur de l'option
-        //kbroadcast.getListenOption()
 
-        // pour mettre la nouvelle valeur de l'option
-        //kbroadcast.setListenOption(boolean);
-        if(v.getId() == R.id.switch_listen) {
+        if (v.getId() == R.id.switch_listen) {
+
             Switch sw = (Switch) v;
-            if (sw.getTextOff().equals(v))
+
+            if (sw.getTextOff().equals(sw.getText().toString()))
                 kbroadcast.setListenOption(false);
-            else if (sw.getTextOn().equals(v))
+            else
                 kbroadcast.setListenOption(true);
         }
+
+        Toast.makeText(this, "Listen option " + (kbroadcast.getListenOption() ? "activated" : "unactivated"), Toast.LENGTH_SHORT).show();
     }
 
     public void displayRate(long nbytes) {
 
-        /// TODO display the rate — XXXX bytes/s
         TextView txv = (TextView) findViewById(R.id.text_rate);
         StringBuilder stbuild = new StringBuilder("Rate: ");
+
         stbuild.append(nbytes).append(" bytes/s");
         txv.setText(stbuild.toString());
         txv.setVisibility(View.VISIBLE);
