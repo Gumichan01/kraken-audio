@@ -26,8 +26,8 @@ public class KrakenBroadcast {
         receiver = new UDPReceiver(g, bd, this);
         audio = new KrakenAudio();
         kbuffer = new KrakenCache();
-        broad_opt = false;
-        listen_opt = false;
+        broad_opt = true;
+        listen_opt = true;
     }
 
     public void launch() {
