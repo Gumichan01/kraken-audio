@@ -46,9 +46,9 @@ public class KrakenBroadcast {
         kbuffer.clear();
     }
 
-    public void setAudioConfig(int samplerate, boolean stereo, int duration) {
+    public void setAudioConfig(int samplerate, int frequency, boolean stereo, int duration) {
 
-        Log.i(getClass().getName(), "kraken audio  — rate/stereo/duration: " + samplerate + "/" + stereo + "/" + duration);
+        audio.setFrequency(frequency);
         audio.configure(samplerate, stereo, duration);
     }
 

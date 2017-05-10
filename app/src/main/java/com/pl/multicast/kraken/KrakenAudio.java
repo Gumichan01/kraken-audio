@@ -10,14 +10,22 @@ import android.util.Log;
  */
 public class KrakenAudio {
 
+    private static final int DEFAULT_FREQUENCY = 440;
     private static AudioTrack audiotrack;
     private KrakenCache kbuffer;
     private boolean isplaying;
+    private int frequency;
 
     public KrakenAudio() {
         audiotrack = null;
         isplaying = false;
         kbuffer = new KrakenCache();
+        frequency = DEFAULT_FREQUENCY;
+    }
+
+    public void setFrequency(int freq) {
+
+        frequency = freq;
     }
 
     public void configure(int samplerate, boolean stereo, int duration) {
