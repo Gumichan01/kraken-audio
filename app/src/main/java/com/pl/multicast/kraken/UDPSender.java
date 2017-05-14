@@ -22,16 +22,12 @@ public class UDPSender {
     private static final int CACHE_SZ = 1024;
     private byte[] b;
     private DatagramSocket broadcastsock;
-    private KrakenCache kbuffer;
     private BroadcastData std;
-    private volatile boolean stop;
 
     public UDPSender(BroadcastData s) {
 
         std = s;
-        stop = true;
         broadcastsock = null;
-        kbuffer = new KrakenCache(CACHE_SZ);
 
         try {
             broadcastsock = new DatagramSocket();
@@ -42,29 +38,15 @@ public class UDPSender {
 
     public void close() {
 
-        stop = true;
-        kbuffer.clear();
         if (broadcastsock != null)
             broadcastsock.close();
     }
 
     /**
-     * Put a block of bytes into the waiting list in attempt to send data via the background task
+     * Send data
      */
     void putData(byte[] data) {
-
-        //Log.v(this.getClass().getName(), "sender — put block of data, length: " + data.length);
-        long t = System.currentTimeMillis();
-        kbuffer.write(data, data.length);
-        Log.v(getClass().getName(), "sender 1  — TIME: " + (System.currentTimeMillis() - t) + " ms");
-
-        if (kbuffer.isFull()) {
-            //Log.v(this.getClass().getName(), "sender — cache");
-            byte[] bytes = kbuffer.readAll();
-            new AsyncUDPSenderRoutine().execute(toObjects(bytes));
-        }
-
-
+        new AsyncUDPSenderRoutine().execute(toObjects(data));
     }
 
     // byte[] to Byte[]

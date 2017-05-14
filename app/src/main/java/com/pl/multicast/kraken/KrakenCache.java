@@ -22,7 +22,7 @@ public class KrakenCache {
 
     public KrakenCache(int size) {
 
-        buffer = Collections.synchronizedList(new LinkedList<Byte>());
+        buffer = new LinkedList<>();
         mcsize = size;
     }
 
