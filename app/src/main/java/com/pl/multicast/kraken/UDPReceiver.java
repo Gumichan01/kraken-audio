@@ -25,6 +25,7 @@ public class UDPReceiver {
 
     private static final int DATAPCK_SIZE = 1024;
     private static final int RECV_TIMEOUT = 1000;
+    private static final int TIME_UPDATE = 1000;
 
     private BroadcastData std;
     private GraphActivity graph;
@@ -54,7 +55,7 @@ public class UDPReceiver {
             private long t;
 
             private void rate() {
-                if ((System.currentTimeMillis() - t) > 1000) {
+                if ((System.currentTimeMillis() - t) > TIME_UPDATE) {
 
                     graph.runOnUiThread(new Runnable() {
                         @Override
