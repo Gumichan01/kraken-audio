@@ -129,6 +129,7 @@
                         android:id="@+id/switch_broad"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:onClick="switchBroadcastOption"
                         android:text="Broadcast"
                         android:textSize="16dp" />
 
@@ -136,6 +137,7 @@
                         android:id="@+id/switch_listen"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:onClick="switchListenOption"
                         android:text="Listen"
                         android:textSize="16dp" />
 

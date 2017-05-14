@@ -227,7 +227,7 @@ public class GraphActivity extends Activity
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    kbroadcast.getAudioPlayer().playGeneratedSound();
+                    kbroadcast.playGeneratedSound();
                 }
             }).start();
         }
@@ -236,8 +236,6 @@ public class GraphActivity extends Activity
 
     /**
      * Switch the option that lets you broadcast data or not
-     *
-     * @deprecated
      */
     public void switchBroadcastOption(View v) {
 
@@ -247,17 +245,20 @@ public class GraphActivity extends Activity
 
             Switch sw = (Switch) v;
 
-            if (sw.getTextOff().toString().equals(sw.getText().toString()))
-                kbroadcast.setBroadcastOption(false);
-            else
+            if(sw.isChecked()) {
+
                 kbroadcast.setBroadcastOption(true);
+                Toast.makeText(this, "Broadcast enabled", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                kbroadcast.setBroadcastOption(false);
+                Toast.makeText(this, "Broadcast disabled", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
     /**
      * Switch the option that lets you activate or unactivate audio playing
-     *
-     * @deprecated
      */
     public void switchListenOption(View v) {
 
@@ -267,10 +268,15 @@ public class GraphActivity extends Activity
 
             Switch sw = (Switch) v;
 
-            if (sw.getTextOff().toString().equals(sw.getText().toString()))
-                kbroadcast.setListenOption(false);
-            else
+            if(sw.isChecked()) {
+
                 kbroadcast.setListenOption(true);
+                Toast.makeText(this, "Listen enabled", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                kbroadcast.setListenOption(false);
+                Toast.makeText(this, "Listen disabled", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 

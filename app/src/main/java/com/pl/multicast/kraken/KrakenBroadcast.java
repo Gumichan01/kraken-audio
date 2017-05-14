@@ -69,6 +69,14 @@ public class KrakenBroadcast {
         }
     }
 
+    public void playGeneratedSound() {
+
+        byte [] by = audio.playGeneratedSound();
+
+        if (broad_opt)
+            sender.putData(by);
+    }
+
     public boolean getBroadcastOption() {
         return broad_opt;
     }
