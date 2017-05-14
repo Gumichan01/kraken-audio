@@ -62,7 +62,6 @@ public class UDPReceiver {
                             graph.displayRate(nbytes);
                         }
                     });
-                    Log.i(getClass().getName(), "recv — " + nbytes + " bytes/s");
                     t = System.currentTimeMillis();
                     nbytes = 0;
                 }

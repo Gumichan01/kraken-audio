@@ -89,6 +89,7 @@ public class UDPSender {
             int i = 0;
             while (i < bytes.length) {
 
+                // TODO remove it?
                 try {
                     Thread.sleep(6);
                 } catch (InterruptedException e) {
@@ -135,8 +136,8 @@ public class UDPSender {
                     if (dev.getName().equals(GraphActivity.username))
                         continue;
 
-                    Log.v(this.getClass().getName(), "SEND data — " + params[0] + " — to " + dev.getName() +
-                            " " + dev.getAddr() + ":" + dev.getBroadcastPort());
+                    /*Log.v(this.getClass().getName(), "SEND data — " + params[0] + " — to " + dev.getName() +
+                            " " + dev.getAddr() + ":" + dev.getBroadcastPort());*/
                     try {
                         sendPacket(dev, toPrimitives(bdata));
 
@@ -144,7 +145,7 @@ public class UDPSender {
                         Log.e(this.getClass().getName(), e.getMessage());
                     }
                 }
-                Log.v(this.getClass().getName(), "DONE");
+                //Log.v(this.getClass().getName(), "DONE");
 
             } catch (SecurityException | NullPointerException se) {
 
