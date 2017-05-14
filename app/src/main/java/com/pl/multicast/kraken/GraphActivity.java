@@ -87,6 +87,12 @@ public class GraphActivity extends Activity
         TextView txv = (TextView) findViewById(R.id.text_rate);
         txv.setText("Rate: 0 bytes/s");
 
+        Switch bswitch = (Switch) findViewById(R.id.switch_broad);
+        Switch lswitch = (Switch) findViewById(R.id.switch_listen);
+
+        bswitch.setChecked(kbroadcast.getBroadcastOption());
+        lswitch.setChecked(kbroadcast.getListenOption());
+
         /** Fragment creation */
         navigationSenders = (NavDrawer)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
@@ -107,7 +113,6 @@ public class GraphActivity extends Activity
 
         /** Update the broadcast devices */
         update(true);
-        //notifyDevices();
     }
 
     @Override
