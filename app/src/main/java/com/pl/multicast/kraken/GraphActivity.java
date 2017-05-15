@@ -250,12 +250,11 @@ public class GraphActivity extends Activity
 
             Switch sw = (Switch) v;
 
-            if(sw.isChecked()) {
+            if (sw.isChecked()) {
 
                 kbroadcast.setBroadcastOption(true);
                 Toast.makeText(this, "Broadcast enabled", Toast.LENGTH_SHORT).show();
-            }
-            else {
+            } else {
                 kbroadcast.setBroadcastOption(false);
                 Toast.makeText(this, "Broadcast disabled", Toast.LENGTH_SHORT).show();
             }
@@ -273,12 +272,11 @@ public class GraphActivity extends Activity
 
             Switch sw = (Switch) v;
 
-            if(sw.isChecked()) {
+            if (sw.isChecked()) {
 
                 kbroadcast.setListenOption(true);
                 Toast.makeText(this, "Listen enabled", Toast.LENGTH_SHORT).show();
-            }
-            else {
+            } else {
                 kbroadcast.setListenOption(false);
                 Toast.makeText(this, "Listen disabled", Toast.LENGTH_SHORT).show();
             }

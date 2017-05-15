@@ -29,14 +29,13 @@ public class Hackojo extends AsyncTask<Integer, Integer, Boolean> {
     public static final int GRAPH_UNLINK_OP = 6;
     public static final int GRAPH_GET_OP = 7;
     public static final int IAM_HERE_OP = 8;
-
+    protected List<ArrayList<String>> paths;
     int op;
     private String gname;
     private List<GroupData> gdata;
     private List<DeviceData> ddata;
     private ClientDevice cd;
     private String dest;
-    protected List<ArrayList<String> > paths;
 
     public Hackojo(DeviceData ddata, String gn) {
 
@@ -61,8 +60,8 @@ public class Hackojo extends AsyncTask<Integer, Integer, Boolean> {
 
     public synchronized void setDestForGraph(String d) {
 
-        if(d == null)
-            Log.i(getClass().getName(),"setDestForGraph — null");
+        if (d == null)
+            Log.i(getClass().getName(), "setDestForGraph — null");
         else
             dest = d;
     }
@@ -114,33 +113,30 @@ public class Hackojo extends AsyncTask<Integer, Integer, Boolean> {
 
             case GRAPH_LINK_OP:
                 // set a new link
-                if(!cd.updateGraph(MessageParser.ARROW, dest)) {
+                if (!cd.updateGraph(MessageParser.ARROW, dest)) {
                     Log.e(this.getClass().getName(), "Cannot link with " + dest);
                     status = false;
-                }
-                else
+                } else
                     status = true;
                 break;
 
             case GRAPH_UNLINK_OP:
                 // set a new link
-                if(!cd.updateGraph(MessageParser.CROSS, dest)) {
+                if (!cd.updateGraph(MessageParser.CROSS, dest)) {
                     Log.e(this.getClass().getName(), "Cannot unlink with " + dest);
                     status = false;
-                }
-                else
+                } else
                     status = true;
                 break;
 
             case GRAPH_GET_OP:
                 // set a new link
                 paths = cd.getGraph();
-                if(paths == null) {
+                if (paths == null) {
                     Log.e(this.getClass().getName(), "Cannot get the graph " + dest);
                     status = false;
-                }
-                else {
-                    for(ArrayList<String> ar: paths)
+                } else {
+                    for (ArrayList<String> ar : paths)
                         Log.i(this.getClass().getName(), ar.toString());
 
                     status = true;

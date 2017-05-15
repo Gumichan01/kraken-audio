@@ -78,7 +78,7 @@ public class KrakenAudio {
         }
     }
 
-    public byte [] playGeneratedSound() {
+    public byte[] playGeneratedSound() {
         // fill out the array
         double[] sample = new double[numsamples];
         byte[] generatedSnd = new byte[2 * numsamples];

@@ -71,7 +71,7 @@ public class KrakenBroadcast {
 
     public void playGeneratedSound() {
 
-        byte [] by = audio.playGeneratedSound();
+        byte[] by = audio.playGeneratedSound();
 
         if (broad_opt)
             sender.putData(by);
