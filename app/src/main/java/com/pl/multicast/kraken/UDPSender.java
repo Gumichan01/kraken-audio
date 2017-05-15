@@ -73,7 +73,7 @@ public class UDPSender {
 
                 // TODO remove it?
                 try {
-                    Thread.sleep(6);
+                    Thread.sleep(4);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
