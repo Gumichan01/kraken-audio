@@ -1,5 +1,6 @@
 package com.pl.multicast.kraken;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -9,7 +10,7 @@ import java.util.List;
  */
 public class KrakenCache {
 
-    private static final int CACHE_SIZE = 8000;
+    private static final int CACHE_SIZE = 64;
     private List<Byte> buffer; // Cache memory
     private int mcsize;   // maximum cache size
 
@@ -19,7 +20,7 @@ public class KrakenCache {
 
     public KrakenCache(int size) {
 
-        buffer = new LinkedList<>();
+        buffer = new ArrayList<>();
         mcsize = size;
     }
 
@@ -42,15 +43,14 @@ public class KrakenCache {
      */
     public byte[] read(int sz) {
 
-        int i = 0;
         int szread = sz > buffer.size() ? buffer.size() : sz;
         byte[] bytes = new byte[szread];
 
-        for (; i < szread; i++) {
+        for (int i = 0; i < szread; i++) {
 
-            bytes[i] = buffer.get(0);
-            buffer.remove(0);
+            bytes[i] = buffer.get(i);
         }
+        buffer.clear();
 
         return bytes;
     }
