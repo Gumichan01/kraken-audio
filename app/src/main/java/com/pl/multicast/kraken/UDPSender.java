@@ -79,7 +79,7 @@ public class UDPSender {
                 }
 
                 int len = (bytes.length - i) > CACHE_SZ ? CACHE_SZ : bytes.length - i;
-                Log.v(this.getClass().getName(), "SEND data size — " + len);
+                //Log.v(this.getClass().getName(), "SEND data size — " + len);
 
                 byte[] data = Arrays.copyOfRange(bytes, i, i + len);
                 DatagramPacket p = new DatagramPacket(data, data.length,

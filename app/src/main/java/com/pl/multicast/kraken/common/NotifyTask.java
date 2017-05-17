@@ -44,18 +44,18 @@ public class NotifyTask extends AsyncTask<Iterator<DeviceData>, Integer, Void> {
 
             try {
 
-                Log.i(this.getClass().getName(), "Notify - " + d.getName() + " " + d.getAddr() + ":" + d.getPort());
+                //Log.i(this.getClass().getName(), "Notify - " + d.getName() + " " + d.getAddr() + ":" + d.getPort());
                 Socket s = new Socket(d.getAddr(), d.getPort());
                 s.setSoTimeout(1000);
 
                 PrintWriter writer = new PrintWriter(new OutputStreamWriter(s.getOutputStream()));
                 BufferedReader reader = new BufferedReader(new InputStreamReader(s.getInputStream()));
-                Log.i(this.getClass().getName(), "Notify - msg sent: " + hreq + " " + uname + MessageParser.EOL);
+                //Log.i(this.getClass().getName(), "Notify - msg sent: " + hreq + " " + uname + MessageParser.EOL);
                 writer.write(hreq + " " + uname + MessageParser.EOL);
                 writer.flush();
 
                 String rstring = reader.readLine();
-                Log.i(this.getClass().getName(), "Notify - msg received: " + rstring);
+                //Log.i(this.getClass().getName(), "Notify - msg received: " + rstring);
                 s.close();
 
             } catch (IOException e) {

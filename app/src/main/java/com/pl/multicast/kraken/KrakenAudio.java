@@ -31,7 +31,7 @@ public class KrakenAudio {
 
     public void configure(int samplerate, boolean stereo, int duration) {
 
-        Log.i(getClass().getName(), "audio  — create");
+        //Log.i(getClass().getName(), "audio  — create");
 
         if (audiotrack != null) {
             stop();
@@ -46,22 +46,22 @@ public class KrakenAudio {
 
     public void streamData(byte[] data) {
 
-        Log.v(getClass().getName(), "audio  — stream");
+        //Log.v(getClass().getName(), "audio  — stream");
         if (audiotrack != null) {
 
             if (!isplaying) {
-                Log.v(getClass().getName(), "audio  — play");
+                //Log.v(getClass().getName(), "audio  — play");
                 audiotrack.play();
                 isplaying = true;
             }
-            Log.v(getClass().getName(), "audio  — write");
+            //Log.v(getClass().getName(), "audio  — write");
             audiotrack.write(data, 0, data.length);
         }
     }
 
     public void stop() {
 
-        Log.i(getClass().getName(), "audio  — stop");
+        //Log.i(getClass().getName(), "audio  — stop");
         if (audiotrack.getState() == AudioTrack.STATE_INITIALIZED
                 && audiotrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
             audiotrack.stop();
@@ -71,7 +71,7 @@ public class KrakenAudio {
 
     public void clearAudio() {
 
-        Log.i(getClass().getName(), "audio  — release");
+        //Log.i(getClass().getName(), "audio  — release");
 
         if (audiotrack.getState() == AudioTrack.STATE_INITIALIZED) {
             audiotrack.release();

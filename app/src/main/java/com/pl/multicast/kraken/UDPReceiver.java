@@ -174,7 +174,8 @@ public class UDPReceiver {
         protected Boolean doInBackground(Void... params) {
 
             try {
-                Log.i(this.getClass().getName(), "UDP receiver - connection to " + dev.getAddr() + ":" + dev.getPort());
+                Log.i(this.getClass().getName(), "UDP receiver - connection to " + dev.getName());
+                Log.i(this.getClass().getName(), "UDP receiver - information - " + dev.getAddr() + ":" + dev.getPort());
                 Socket s = new Socket(dev.getAddr(), dev.getPort());
 
                 PrintWriter writer = new PrintWriter(new OutputStreamWriter(s.getOutputStream()));
@@ -183,7 +184,7 @@ public class UDPReceiver {
                 writer.flush();
 
                 String rstring = reader.readLine();
-                Log.i(this.getClass().getName(), "UDP receiver - msg: " + rstring);
+                //Log.i(this.getClass().getName(), "UDP receiver - msg: " + rstring);
                 s.close();
                 return rstring.contains(BroadcastService.ACK);
 

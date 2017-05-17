@@ -61,7 +61,7 @@ public class Hackojo extends AsyncTask<Integer, Integer, Boolean> {
     public synchronized void setDestForGraph(String d) {
 
         if (d == null)
-            Log.i(getClass().getName(), "setDestForGraph — null");
+            Log.e(getClass().getName(), "setDestForGraph — null");
         else
             dest = d;
     }
@@ -146,7 +146,7 @@ public class Hackojo extends AsyncTask<Integer, Integer, Boolean> {
             case IAM_HERE_OP:
                 // set a new link
                 status = cd.iamHere();
-                Log.v(this.getClass().getName(), "I am here: " + status);
+                //Log.v(this.getClass().getName(), "I am here: " + status);
                 break;
 
             default:

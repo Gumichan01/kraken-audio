@@ -59,9 +59,7 @@ public class KrakenBroadcast {
 
         if (kbuffer.isFull()) {
 
-            long t = System.currentTimeMillis();
             byte[] by = kbuffer.readAll();
-            Log.v(getClass().getName(), "TIME read cache - " + (System.currentTimeMillis() - t) + " ms");
 
             if (listen_opt)
                 audio.streamData(by);
