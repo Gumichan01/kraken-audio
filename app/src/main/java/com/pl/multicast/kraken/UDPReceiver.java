@@ -80,6 +80,7 @@ public class UDPReceiver {
 
                     byte[] data = new byte[DATAPCK_SIZE];
                     DatagramPacket p = new DatagramPacket(data, data.length);
+                    t = System.currentTimeMillis();
 
                     while (true) {
 
