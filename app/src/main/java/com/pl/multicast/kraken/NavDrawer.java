@@ -10,6 +10,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -216,6 +217,12 @@ public class NavDrawer extends Fragment {
             mDrawerLayout.closeDrawer(mFragmentContainerView);
         }
         if (mCallbacks != null) {
+
+            if(mCallbacks instanceof GraphActivity) {
+                Log.i(getClass().getName(),"instanceof OK");
+                ((GraphActivity) mCallbacks).setIDNavSelected(getId());
+            }
+
             mCallbacks.onNavigationDrawerItemSelected(position);
         }
     }

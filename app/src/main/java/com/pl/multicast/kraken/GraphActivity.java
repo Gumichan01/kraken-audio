@@ -45,6 +45,9 @@ public class GraphActivity extends Activity
     private String mTitle;
     private String gname;
     private DeviceData d;
+    private int idnav_left;
+    private int idnav_right;
+    private int idnav_selected;
     /**
      * Used to store the device display lists
      */
@@ -62,6 +65,7 @@ public class GraphActivity extends Activity
         setContentView(R.layout.activity_graph);
 
         /** Retrieve data from the main activity */
+        idnav_selected = 0;
         d = getIntent().getParcelableExtra(MainActivity.DEVICEDATA);
         gname = getIntent().getStringExtra(MainActivity.GRPNAME);
         username = d.getName();
@@ -110,6 +114,9 @@ public class GraphActivity extends Activity
 
         navigationSenders.updateContent(new String[]{username});
         navigationReceivers.updateContent(new String[]{username});
+
+        idnav_left = navigationSenders.getId();
+        idnav_right = navigationReceivers.getId();
 
         /** Update the broadcast devices */
         update(true);
@@ -168,9 +175,18 @@ public class GraphActivity extends Activity
 
     public void onSectionAttached(int number) {
 
-        // TODO: 07/03/2017 Get the view where the item is linked to
         List<DeviceData> ld = std.getSenders();
-        Log.i(this.getLocalClassName(), "onSectionAttached - " + number);
+        Log.i(this.getLocalClassName(), "onSectionAttached - id navigation left: " + idnav_left);
+        Log.i(this.getLocalClassName(), "onSectionAttached - id navigation right: " + idnav_right);
+        Log.i(this.getLocalClassName(), "onSectionAttached - id navigation selected: " + idnav_selected);
+
+        if(idnav_selected == idnav_left) {
+            ld = std.getSenders();
+        } else if(idnav_selected == idnav_right) {
+            ld = std.getListeners();
+        } else {
+            Log.wtf(getLocalClassName(), "Unknown value. It should NEVER happen!");
+        }
 
         switch (number) {
             case 1:
@@ -181,6 +197,11 @@ public class GraphActivity extends Activity
                 mTitle = ld.get(number - 1).getName();
                 break;
         }
+    }
+
+    public void setIDNavSelected(int id) {
+
+        idnav_selected = id;
     }
 
     public void configureAudio(View v) {
