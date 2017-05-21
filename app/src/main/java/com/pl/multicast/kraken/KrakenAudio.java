@@ -15,12 +15,14 @@ public class KrakenAudio {
     public static final int DEFAULT_DURATION = 10;
     private static AudioTrack audiotrack;
     private boolean isplaying;
+    private boolean isstereo;
     private int numsamples;
     private int frequency;
 
     public KrakenAudio() {
         audiotrack = null;
         isplaying = false;
+        isstereo = false;
         frequency = DEFAULT_FREQUENCY;
     }
 
@@ -38,13 +40,14 @@ public class KrakenAudio {
             clearAudio();
         }
 
-        numsamples = duration * samplerate;
+        isstereo = stereo;
+        numsamples = duration * samplerate * (stereo ? 2 : 1);
         audiotrack = new AudioTrack(AudioManager.STREAM_MUSIC,
                 samplerate, (stereo ? AudioFormat.CHANNEL_OUT_STEREO : AudioFormat.CHANNEL_OUT_MONO),
                 AudioFormat.ENCODING_PCM_16BIT, numsamples, AudioTrack.MODE_STREAM);
     }
 
-    public void streamData(byte[] data) {
+    public synchronized void streamData(byte[] data) {
 
         //Log.v(getClass().getName(), "audio  — stream");
         if (audiotrack != null) {
