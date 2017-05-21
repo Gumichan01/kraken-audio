@@ -83,8 +83,6 @@ public class GraphActivity extends Activity
 
         /** Broadcast */
         kbroadcast = new KrakenBroadcast(this, std);
-        kbroadcast.setAudioConfig(KrakenAudio.DEFAULT_SAMPLERATE, KrakenAudio.DEFAULT_FREQUENCY,
-                false, KrakenAudio.DEFAULT_DURATION);
         kbroadcast.launch();
 
         /** Display */

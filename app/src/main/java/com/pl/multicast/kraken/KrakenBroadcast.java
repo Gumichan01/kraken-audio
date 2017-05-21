@@ -71,10 +71,12 @@ public class KrakenBroadcast {
 
     public void playGeneratedSound() {
 
-        byte[] by = audio.playGeneratedSound();
-
-        if (broad_opt)
-            sender.putData(by);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                audio.playGeneratedSound(sender, broad_opt);
+            }
+        }).start();
     }
 
     public boolean getBroadcastOption() {
@@ -97,7 +99,4 @@ public class KrakenBroadcast {
         return receiver;
     }
 
-    public KrakenAudio getAudioPlayer() {
-        return audio;
-    }
 }

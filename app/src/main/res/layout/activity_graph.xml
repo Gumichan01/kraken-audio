@@ -122,7 +122,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:onClick="configureAudio"
-                        android:text="Set config"
+                        android:text="Generate sound"
                         android:textSize="12dp" />
 
                     <Switch
@@ -154,7 +154,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:onClick="play"
-                        android:text="Generate/Play sound"
+                        android:text="Play sound"
                         android:textSize="12dp" />
 
                     <Button

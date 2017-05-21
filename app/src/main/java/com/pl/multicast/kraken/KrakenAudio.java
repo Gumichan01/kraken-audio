@@ -5,22 +5,24 @@ import android.media.AudioManager;
 import android.media.AudioTrack;
 import android.util.Log;
 
+import java.util.ArrayList;
+
 /**
- * Created by Luxon on 08/05/2017.
+ * KrakenAudio handles audio playing
  */
 public class KrakenAudio {
 
-    public static final int DEFAULT_SAMPLERATE = 8000;
     public static final int DEFAULT_FREQUENCY = 440;
-    public static final int DEFAULT_DURATION = 10;
     private static AudioTrack audiotrack;
+    private ArrayList<KrakenSample> samples;
+
     private boolean isplaying;
     private boolean isstereo;
-    private int numsamples;
     private int frequency;
 
     public KrakenAudio() {
         audiotrack = null;
+        samples = new ArrayList<>();
         isplaying = false;
         isstereo = false;
         frequency = DEFAULT_FREQUENCY;
@@ -41,10 +43,12 @@ public class KrakenAudio {
         }
 
         isstereo = stereo;
-        numsamples = duration * samplerate * (stereo ? 2 : 1);
+        int numsamples = samplerate * (stereo ? 2 : 1);
         audiotrack = new AudioTrack(AudioManager.STREAM_MUSIC,
                 samplerate, (stereo ? AudioFormat.CHANNEL_OUT_STEREO : AudioFormat.CHANNEL_OUT_MONO),
                 AudioFormat.ENCODING_PCM_16BIT, numsamples, AudioTrack.MODE_STREAM);
+
+        generateSound(numsamples, duration);
     }
 
     public synchronized void streamData(byte[] data) {
@@ -81,8 +85,9 @@ public class KrakenAudio {
         }
     }
 
-    public byte[] playGeneratedSound() {
-        // fill out the array
+    public void generateSound(int numsamples, int duration) {
+
+        numsamples *= duration;
         double[] sample = new double[numsamples];
         byte[] generatedSnd = new byte[2 * numsamples];
 
@@ -101,7 +106,32 @@ public class KrakenAudio {
             generatedSnd[idx++] = (byte) ((val & 0xff00) >>> 8);
         }
 
-        streamData(generatedSnd);
-        return generatedSnd;
+        samples.add(new KrakenSample(generatedSnd, duration));
+        Log.i(getClass().getName(), "audio  — sound generated");
+    }
+
+    public void playGeneratedSound(UDPSender sender, boolean broadcast) {
+
+        int t = 0;
+        ArrayList<KrakenSample> l = samples;
+        Log.i(getClass().getName(), "audio  — play generated sound");
+        for (KrakenSample ks : l) {
+
+            /*if (t > 0) {
+                try {
+                    Thread.sleep(ks.getDuration() * SECOND);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }*/
+
+            streamData(ks.getData());
+            t = ks.getDuration();
+
+            if (broadcast)
+                sender.putData(ks.getData());
+
+        }
+        Log.i(getClass().getName(), "audio  — play OK");
     }
 }
