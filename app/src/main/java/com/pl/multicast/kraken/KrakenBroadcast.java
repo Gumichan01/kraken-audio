@@ -60,7 +60,7 @@ public class KrakenBroadcast {
 
     /**
      * Put data in cache memory
-     * */
+     */
     public void putInCacheMemory(byte[] arr, int len) {
 
         // write into the cache memory
@@ -70,7 +70,7 @@ public class KrakenBroadcast {
 
     /**
      * Handle data from the cache memory
-     * */
+     */
     private void handleCacheMemory() {
 
         if (kbuffer.isFull()) {
