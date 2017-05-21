@@ -58,20 +58,35 @@ public class KrakenBroadcast {
         audio.generateSound(samplerate, stereo, duration);
     }
 
+    /**
+     * Put data in cache memory
+     * */
     public void putInCacheMemory(byte[] arr, int len) {
 
         // write into the cache memory
         kbuffer.write(arr, len);
+        handleCacheMemory();
+    }
+
+    /**
+     * Handle data from the cache memory
+     * */
+    private void handleCacheMemory() {
 
         if (kbuffer.isFull()) {
 
-            byte[] by = kbuffer.readAll();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    byte[] by = kbuffer.readAll();
 
-            if (listen_opt)
-                audio.streamData(by);
+                    if (listen_opt)
+                        audio.streamData(by);
 
-            if (broad_opt)
-                sender.putData(by);
+                    if (broad_opt)
+                        sender.putData(by);
+                }
+            }).start();
         }
     }
 

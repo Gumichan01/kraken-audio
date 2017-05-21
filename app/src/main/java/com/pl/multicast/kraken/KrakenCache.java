@@ -30,7 +30,7 @@ public class KrakenCache {
      * @param array bloc to write
      * @param len   size of the bloc
      */
-    public void write(byte[] array, int len) {
+    public synchronized void write(byte[] array, int len) {
 
         Byte[] arr = toObjects(Arrays.copyOfRange(array, 0, len));
         buffer.addAll(Arrays.asList(arr));
@@ -41,7 +41,7 @@ public class KrakenCache {
      *
      * @param sz maximum size of the bloc
      */
-    public byte[] read(int sz) {
+    private byte[] read(int sz) {
 
         int szread = sz > buffer.size() ? buffer.size() : sz;
         byte[] bytes = new byte[szread];
@@ -56,11 +56,11 @@ public class KrakenCache {
     }
 
 
-    public byte[] readAll() {
+    public synchronized byte[] readAll() {
         return read(buffer.size());
     }
 
-    public boolean isFull() {
+    public synchronized boolean isFull() {
         return buffer.size() >= CACHE_SIZE;
     }
 
