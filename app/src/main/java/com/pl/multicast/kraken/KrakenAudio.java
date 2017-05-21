@@ -58,8 +58,15 @@ public class KrakenAudio {
 
             if (!isplaying) {
 
-                audiotrack.play();
-                isplaying = true;
+                try {
+
+                    audiotrack.play();
+                    isplaying = true;
+
+                } catch (Exception e) {
+                    Log.wtf(getClass().getName(), "error — " + e.getMessage());
+                }
+
             }
             audiotrack.write(data, 0, data.length);
         }
@@ -114,26 +121,15 @@ public class KrakenAudio {
      */
     public void playGeneratedSound(UDPSender sender, boolean broadcast) {
 
-        int t = 0;
         ArrayList<KrakenSample> l = samples;
-        Log.i(getClass().getName(), "audio  — play generated sound");
+        // Log.i(getClass().getName(), "audio  — play generated sound");
         for (KrakenSample ks : l) {
 
-            /*if (t > 0) {
-                try {
-                    Thread.sleep(ks.getDuration() * SECOND);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }*/
-
             streamData(ks.getData());
-            t = ks.getDuration();
 
             if (broadcast)
                 sender.putData(ks.getData());
-
         }
-        Log.i(getClass().getName(), "audio  — play OK");
+        // Log.i(getClass().getName(), "audio  — play OK");
     }
 }
