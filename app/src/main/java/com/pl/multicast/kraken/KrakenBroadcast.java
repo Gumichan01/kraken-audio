@@ -92,12 +92,14 @@ public class KrakenBroadcast {
 
     public void playGeneratedSound() {
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                audio.playGeneratedSound(sender, broad_opt);
-            }
-        }).start();
+        if (listen_opt) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    audio.playGeneratedSound(sender, broad_opt);
+                }
+            }).start();
+        }
     }
 
     public boolean getBroadcastOption() {
