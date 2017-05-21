@@ -81,4 +81,22 @@ public class KrakenMisc {
         ld.add(0, new DeviceData(username, "", 0, 0));
         return ld;
     }
+
+    // Remove a name that matches with username and put it at the beginning of the list
+    public static List<String> adaptStringList(List<String> ls, String username) {
+
+        /*Iterator<String> it = ls.iterator();
+        String s = null;
+
+        while (it.hasNext()) {
+            DeviceData dd = it.next();
+            Log.i(KRAKEN_MISC, dd.toString());
+            if (dd.getName().equals(username)) dev = dd;
+        }
+
+        if (s != null) ls.remove(dev);*/
+        ls.remove(username);
+        ls.add(0, username);
+        return ls;
+    }
 }

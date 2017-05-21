@@ -21,10 +21,18 @@ import android.widget.Toast;
 import com.pl.multicast.kraken.common.KrakenMisc;
 import com.pl.multicast.kraken.common.NotifyTask;
 import com.pl.multicast.kraken.datum.DeviceData;
+import com.pl.multicast.kraken.parser.MessageParser;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Pattern;
 
 
 public class GraphActivity extends Activity
@@ -174,17 +182,15 @@ public class GraphActivity extends Activity
 
     public void onSectionAttached(int number) {
 
-        List<DeviceData> ld = std.getSenders();
-        Log.i(this.getLocalClassName(), "onSectionAttached - id navigation left: " + idnav_left);
-        Log.i(this.getLocalClassName(), "onSectionAttached - id navigation right: " + idnav_right);
-        Log.i(this.getLocalClassName(), "onSectionAttached - id navigation selected: " + idnav_selected);
+        List<DeviceData> ld;
 
-        if(idnav_selected == idnav_left) {
+        if (idnav_selected == idnav_left) {
             ld = std.getSenders();
-        } else if(idnav_selected == idnav_right) {
+        } else if (idnav_selected == idnav_right) {
             ld = std.getListeners();
         } else {
             Log.wtf(getLocalClassName(), "Unknown value. It should NEVER happen!");
+            return;
         }
 
         switch (number) {
@@ -196,6 +202,104 @@ public class GraphActivity extends Activity
                 mTitle = ld.get(number - 1).getName();
                 break;
         }
+
+        if (mTitle.equals(username)) {
+
+            bdnames = generateDisplayList(std.getSenders());
+            rdnames = generateDisplayList(std.getListeners());
+            navigationSenders.updateContent(bdnames);
+            navigationReceivers.updateContent(rdnames);
+
+        } else
+            updateSection();
+    }
+
+    private void updateSection() {
+
+        new Thread(new Runnable() {
+
+            private DeviceData devd;
+            private ArrayList<String> sbroadcasts = new ArrayList<>();
+            private ArrayList<String> slisteners = new ArrayList<>();
+
+            private void requestDevice(String hreq) {
+
+                String line;
+                StringBuilder stbuild = new StringBuilder("");
+
+                try {
+                    Socket s = new Socket(devd.getAddr(), devd.getPort());
+                    s.setSoTimeout(1000);
+
+                    PrintWriter writer = new PrintWriter(new OutputStreamWriter(s.getOutputStream()));
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(s.getInputStream()));
+
+                    writer.write(hreq + " " + mTitle + MessageParser.EOL);
+                    writer.flush();
+
+                    while ((line = reader.readLine()) != null) {
+                        stbuild.append(line).append(MessageParser.EOL);
+                    }
+
+                    Pattern p = Pattern.compile(MessageParser.EOL);
+                    String[] tokens = p.split(stbuild.toString());
+
+                    for (String str : tokens) {
+
+                        MessageParser parser = new MessageParser(str);
+
+                        if (parser.isWellParsed()) {
+
+                            if (parser.getHeader().contains(MessageParser.SRV_DDAT)) {
+
+                                if (hreq.equals(BroadcastService.LISTB))
+                                    sbroadcasts.add(parser.getDevice());
+                                else if (hreq.equals(BroadcastService.LISTB))
+                                    slisteners.add(parser.getDevice());
+
+                            } else if (parser.getHeader().contains(MessageParser.SRV_EOTR))
+                                break;
+                            else
+                                continue;
+                        }
+                    }
+
+                    s.close();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void run() {
+
+                devd = std.getBroadcasterOf(mTitle);
+
+                if (devd == null) { // It is not in the broadcasters
+                    d = std.getListenerOf(mTitle);
+
+                    if (devd == null) { // It is not in the broadcasters
+                        Log.e(getClass().getName(), mTitle + " is not a broadcaster or a listener");
+                        return;
+                    }
+                }
+
+                requestDevice(BroadcastService.LISTB);
+                requestDevice(BroadcastService.LISTL);
+
+                bdnames = generateStringList(sbroadcasts);
+                rdnames = generateStringList(slisteners);
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        navigationSenders.updateContent(bdnames);
+                        navigationReceivers.updateContent(rdnames);
+                    }
+                });
+            }
+        }).start();
     }
 
     public void setIDNavSelected(int id) {
@@ -432,6 +536,23 @@ public class GraphActivity extends Activity
     }
 
     /**
+     * Generate the list of the strings that will be displayed in the navigation drawers
+     */
+    private String[] generateStringList(List<String> ls) {
+
+        List<String> slist = KrakenMisc.adaptStringList(ls, username);
+        String[] snames = new String[slist.size()];
+
+        slist.toArray(snames);
+
+        Log.i(this.getLocalClassName(), "display list ↓");
+        for (String s : snames) Log.i(this.getLocalClassName(), s + " ");
+        Log.i(this.getLocalClassName(), "display list ↑");
+
+        return snames;
+    }
+
+    /**
      * Prepare the request getting the device data to listen
      */
     private DeviceData prepareRequest() {
@@ -480,14 +601,14 @@ public class GraphActivity extends Activity
 
         if (id == R.id.action_listen) {
 
-            Log.i(this.getLocalClassName(), "listen action");
+            // Log.i(this.getLocalClassName(), "listen action");
 
             if (!mTitle.equals(username)) {
 
                 DeviceData d = prepareRequest();
                 recv.listenRequest(d, username);
 
-                Log.i(this.getLocalClassName(), "listening to " + d.getName());
+                // Log.i(this.getLocalClassName(), "listening to " + d.getName());
                 Toast.makeText(getApplicationContext(), "You are listening to '" + d.getName() + "'",
                         Toast.LENGTH_LONG).show();
 
@@ -500,7 +621,7 @@ public class GraphActivity extends Activity
 
         } else if (id == R.id.action_stop) {
 
-            Log.i(this.getLocalClassName(), "stop action");
+            // Log.i(this.getLocalClassName(), "stop action");
 
             if (!mTitle.equals(username)) {
                 recv.stopRequest(prepareRequest(), username);
@@ -603,7 +724,7 @@ public class GraphActivity extends Activity
 
                 if (op == DEVICE_OP) {
                     std.clearBroadcasters();
-                    Log.i(this.getClass().getName(), "post execute -  devl update");
+                    // Log.i(this.getClass().getName(), "post execute -  devl update");
                     updateGroupContent(this, first_update);
 
                     if (first_update)
@@ -611,8 +732,8 @@ public class GraphActivity extends Activity
 
                 } else if (op == QUIT_GROUP_OP) {
 
-                    Log.i(this.getClass().getName(), "post execute - quit the group");
-                    Log.i(this.getClass().getName(), "post execute - notify the devices (quit)");
+                    // Log.i(this.getClass().getName(), "post execute - quit the group");
+                    // Log.i(this.getClass().getName(), "post execute - notify the devices (quit)");
                     notifyQuitDevices(username, std.getSenders().iterator());
                     notifyQuitDevices(username, std.getListeners().iterator());
                 } else if (op == GRAPH_GET_OP) {

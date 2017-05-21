@@ -34,8 +34,8 @@ public class BroadcastService implements Runnable {
     public static final String ACK_RES = "ACK\r\n";
     public static final String BADR_RES = "BADR\r\n";
     public static final String FAIL_RES = "FAIL\r\n";
-    private static final String LISTB = "LISTB";
-    private static final String LISTL = "LISTL";
+    public static final String LISTB = "LISTB";
+    public static final String LISTL = "LISTL";
     // Separator
     private static final String SPACE = " ";
 

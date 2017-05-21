@@ -74,6 +74,17 @@ public class BroadcastData {
         return null;
     }
 
+    public synchronized DeviceData getListenerOf(String s) {
+
+        for (DeviceData d : listeners) {
+
+            if (d.getName().equals(s))
+                return d;
+        }
+
+        return null;
+    }
+
     public synchronized void addRealBroadcaster(String realbroadcaster) {
         Log.i(this.getClass().getName(), "Sync - added the real broadcaster: " + realbroadcaster);
 
