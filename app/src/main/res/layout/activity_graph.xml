@@ -121,7 +121,7 @@
                         android:id="@+id/button_config"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:onClick="configureAudio"
+                        android:onClick="generateSound"
                         android:text="Generate sound"
                         android:textSize="12dp" />
 

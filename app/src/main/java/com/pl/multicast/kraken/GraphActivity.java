@@ -83,6 +83,7 @@ public class GraphActivity extends Activity
 
         /** Broadcast */
         kbroadcast = new KrakenBroadcast(this, std);
+        kbroadcast.setAudioConfig(KrakenAudio.DEFAULT_SAMPLERATE, false);
         kbroadcast.launch();
 
         /** Display */
@@ -202,7 +203,7 @@ public class GraphActivity extends Activity
         idnav_selected = id;
     }
 
-    public void configureAudio(View v) {
+    public void generateSound(View v) {
 
         if (v.getId() == R.id.button_config) {
 
@@ -233,7 +234,7 @@ public class GraphActivity extends Activity
 
             stereo = stereo_box.isChecked();
 
-            kbroadcast.setAudioConfig(samplerate, frequency, stereo, duration);
+            kbroadcast.generateSound(samplerate, frequency, stereo, duration);
             Log.i(this.getLocalClassName(), "" + samplerate + "/" + frequency + "/" + duration + ":" + stereo);
 
         } else

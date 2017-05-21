@@ -46,10 +46,16 @@ public class KrakenBroadcast {
         kbuffer.clear();
     }
 
-    public void setAudioConfig(int samplerate, int frequency, boolean stereo, int duration) {
+    public void setAudioConfig(int samplerate, boolean stereo) {
+
+        int numsamples = samplerate * (stereo ? 2 : 1);
+        audio.configAudioTrack(samplerate, stereo, numsamples);
+    }
+
+    public void generateSound(int samplerate, int frequency, boolean stereo, int duration) {
 
         audio.setFrequency(frequency);
-        audio.configure(samplerate, stereo, duration);
+        audio.generateSound(samplerate, stereo, duration);
     }
 
     public void putInCacheMemory(byte[] arr, int len) {

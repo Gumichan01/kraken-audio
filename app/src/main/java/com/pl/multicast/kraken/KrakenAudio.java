@@ -13,6 +13,7 @@ import java.util.ArrayList;
 public class KrakenAudio {
 
     public static final int DEFAULT_FREQUENCY = 440;
+    public static final int DEFAULT_SAMPLERATE = 8000;
     private static AudioTrack audiotrack;
     private ArrayList<KrakenSample> samples;
 
@@ -33,42 +34,39 @@ public class KrakenAudio {
         frequency = freq;
     }
 
-    public void configure(int samplerate, boolean stereo, int duration) {
+    public void generateSound(int samplerate, boolean stereo, int duration) {
 
-        //Log.i(getClass().getName(), "audio  — create");
+        int numsamples = samplerate * (stereo ? 2 : 1);
+        generateSample(numsamples, duration);
+    }
+
+    public void configAudioTrack(int samplerate, boolean stereo, int numsamples) {
 
         if (audiotrack != null) {
             stop();
             clearAudio();
         }
 
-        isstereo = stereo;
-        int numsamples = samplerate * (stereo ? 2 : 1);
         audiotrack = new AudioTrack(AudioManager.STREAM_MUSIC,
                 samplerate, (stereo ? AudioFormat.CHANNEL_OUT_STEREO : AudioFormat.CHANNEL_OUT_MONO),
                 AudioFormat.ENCODING_PCM_16BIT, numsamples, AudioTrack.MODE_STREAM);
-
-        generateSound(numsamples, duration);
     }
 
     public synchronized void streamData(byte[] data) {
 
-        //Log.v(getClass().getName(), "audio  — stream");
         if (audiotrack != null) {
 
             if (!isplaying) {
-                //Log.v(getClass().getName(), "audio  — play");
+
                 audiotrack.play();
                 isplaying = true;
             }
-            //Log.v(getClass().getName(), "audio  — write");
             audiotrack.write(data, 0, data.length);
         }
     }
 
     public void stop() {
 
-        //Log.i(getClass().getName(), "audio  — stop");
         if (audiotrack.getState() == AudioTrack.STATE_INITIALIZED
                 && audiotrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
             audiotrack.stop();
@@ -78,14 +76,15 @@ public class KrakenAudio {
 
     public void clearAudio() {
 
-        //Log.i(getClass().getName(), "audio  — release");
-
         if (audiotrack.getState() == AudioTrack.STATE_INITIALIZED) {
             audiotrack.release();
         }
     }
 
-    public void generateSound(int numsamples, int duration) {
+    /**
+     * Generate a new sample (sound) and store it in the list of samples
+     */
+    private void generateSample(int numsamples, int duration) {
 
         numsamples *= duration;
         double[] sample = new double[numsamples];
@@ -110,6 +109,9 @@ public class KrakenAudio {
         Log.i(getClass().getName(), "audio  — sound generated");
     }
 
+    /**
+     * Play all of the samples of the list
+     */
     public void playGeneratedSound(UDPSender sender, boolean broadcast) {
 
         int t = 0;
