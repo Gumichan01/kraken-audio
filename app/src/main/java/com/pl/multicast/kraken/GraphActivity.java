@@ -264,6 +264,7 @@ public class GraphActivity extends Activity
 
             kbroadcast.generateSound(samplerate, frequency, stereo, duration);
             Log.i(this.getLocalClassName(), "" + samplerate + "/" + frequency + "/" + duration + ":" + stereo);
+            Toast.makeText(getApplicationContext(), "Sound generated and registered", Toast.LENGTH_LONG).show();
 
         } else
             Log.e(this.getLocalClassName(), "Invalid button");
@@ -290,9 +291,16 @@ public class GraphActivity extends Activity
 
         if(v.getId() == R.id.button_playlist) {
 
-            Intent intent = new Intent(this, SampleActivity.class);
-            intent.putParcelableArrayListExtra(SAMPLE_TAG, kbroadcast.getAudio().getSamples());
-            startActivity(intent);
+            ArrayList<KrakenSample> ks = kbroadcast.getAudio().getSamples();
+
+            if(ks == null || ks.isEmpty())
+                Toast.makeText(getApplicationContext(), "No samples registered", Toast.LENGTH_LONG).show();
+            else {
+
+                Intent intent = new Intent(this, SampleActivity.class);
+                intent.putParcelableArrayListExtra(SAMPLE_TAG, ks);
+                startActivity(intent);
+            }
         }
     }
 
