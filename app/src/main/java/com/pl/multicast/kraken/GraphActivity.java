@@ -52,7 +52,7 @@ public class GraphActivity extends Activity
      */
     private String mTitle;
     private String gname;
-    private DeviceData d;
+    private DeviceData device;
     private int idnav_left;
     private int idnav_right;
     private int idnav_selected;
@@ -74,9 +74,9 @@ public class GraphActivity extends Activity
 
         /** Retrieve data from the main activity */
         idnav_selected = 0;
-        d = getIntent().getParcelableExtra(MainActivity.DEVICEDATA);
+        device = getIntent().getParcelableExtra(MainActivity.DEVICEDATA);
         gname = getIntent().getStringExtra(MainActivity.GRPNAME);
-        username = d.getName();
+        username = device.getName();
         mTitle = username;
         bdnames = null;
         rdnames = null;
@@ -166,7 +166,7 @@ public class GraphActivity extends Activity
         kbroadcast.stop();
 
         if (KrakenMisc.isNetworkAvailable(getApplicationContext()))
-            new AsyncGraphTask(d, gname).execute(Hackojo.QUIT_GROUP_OP);
+            new AsyncGraphTask(device, gname).execute(Hackojo.QUIT_GROUP_OP);
         else
             Log.e(this.getLocalClassName(), "Cannot quit the group - network unavailable");
     }
@@ -277,7 +277,7 @@ public class GraphActivity extends Activity
                 devd = std.getBroadcasterOf(mTitle);
 
                 if (devd == null) { // It is not in the broadcasters
-                    d = std.getListenerOf(mTitle);
+                    devd = std.getListenerOf(mTitle);
 
                     if (devd == null) { // It is not in the broadcasters
                         Log.e(getClass().getName(), mTitle + " is not a broadcaster or a listener");
@@ -288,12 +288,12 @@ public class GraphActivity extends Activity
                 requestDevice(BroadcastService.LISTB);
                 requestDevice(BroadcastService.LISTL);
 
-                bdnames = generateStringList(sbroadcasts);
-                rdnames = generateStringList(slisteners);
-
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+
+                        bdnames = generateStringList(sbroadcasts);
+                        rdnames = generateStringList(slisteners);
                         navigationSenders.updateContent(bdnames);
                         navigationReceivers.updateContent(rdnames);
                     }
@@ -450,7 +450,7 @@ public class GraphActivity extends Activity
 
         if (KrakenMisc.isNetworkAvailable(getApplicationContext())) {
 
-            AsyncGraphTask async = new AsyncGraphTask(d, gname);
+            AsyncGraphTask async = new AsyncGraphTask(device, gname);
             async.setFirstUpdate(first);
             async.execute(Hackojo.DEVICE_OP);
             Log.i(this.getLocalClassName(), "update devl");
@@ -632,26 +632,26 @@ public class GraphActivity extends Activity
 
         } else if (id == R.id.action_graph) {
 
-            AsyncGraphTask async = new AsyncGraphTask(d, gname);
+            AsyncGraphTask async = new AsyncGraphTask(device, gname);
             async.execute(Hackojo.GRAPH_GET_OP);
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    ///
-    /// Inner classes
-    ///
-
     public DeviceData getDevData() {
 
-        return d;
+        return device;
     }
 
     public String getGroupName() {
 
         return gname;
     }
+
+    ///
+    /// Inner classes
+    ///
 
     /**
      * A placeholder fragment containing a simple view.
