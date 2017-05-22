@@ -23,10 +23,6 @@ public class BroadcastData {
         listeners = new ArrayList<>();
     }
 
-    public synchronized ArrayList<DeviceData> getSenders() {
-
-        return broadcasters;
-    }
 
     public synchronized void addBroadcaster(DeviceData sender) {
 
@@ -46,9 +42,19 @@ public class BroadcastData {
         broadcasters.clear();
     }
 
+    public synchronized ArrayList<DeviceData> getSenders() {
+
+        return broadcasters;
+    }
+
     public synchronized ArrayList<DeviceData> getListeners() {
 
         return listeners;
+    }
+
+    public synchronized ArrayList<DeviceData> getRealBroadcasters() {
+
+        return broadcasters;
     }
 
     public synchronized void addListener(DeviceData listener) {
