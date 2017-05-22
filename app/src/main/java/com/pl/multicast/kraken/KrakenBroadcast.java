@@ -120,4 +120,9 @@ public class KrakenBroadcast {
         return receiver;
     }
 
+    public KrakenAudio getAudio() {
+
+        return audio;
+    }
+
 }

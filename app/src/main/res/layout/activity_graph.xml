@@ -146,10 +146,11 @@
                             android:textSize="12dp" />
 
                         <Button
-                            android:id="@+id/button_plib"
+                            android:id="@+id/button_playlist"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="List of samples"
+                            android:onClick="displaylistOfSamples"
                             android:textSize="12dp" />
 
                     </LinearLayout>

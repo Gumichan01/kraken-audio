@@ -21,4 +21,6 @@
     <string name="action_graph">Path</string>
 
     <string name="gunetwork">Cannot update the group content - network unavailable</string>
+    <string name="title_activity_sample">SampleActivity</string>
+
 </resources>

@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
@@ -38,8 +39,10 @@ import java.util.regex.Pattern;
 public class GraphActivity extends Activity
         implements NavDrawer.NavigationDrawerCallbacks {
 
+    public static final String SAMPLE_TAG = "SAMPLE";
+
     public static String username;
-    private static ArrayList<String> ltext = new ArrayList<>();
+    //private static ArrayList<String> ltext = new ArrayList<>();
     // Broadcast
     KrakenBroadcast kbroadcast;
     /**
@@ -225,6 +228,9 @@ public class GraphActivity extends Activity
         idnav_selected = id;
     }
 
+    /**
+     * Generate sound
+     */
     public void generateSound(View v) {
 
         if (v.getId() == R.id.button_config) {
@@ -264,7 +270,7 @@ public class GraphActivity extends Activity
     }
 
     /**
-     * Generate and play sound
+     * Play sound
      */
     public void play(View v) {
 
@@ -280,6 +286,15 @@ public class GraphActivity extends Activity
         }
     }
 
+    public void displaylistOfSamples(View v) {
+
+        if(v.getId() == R.id.button_playlist) {
+
+            Intent intent = new Intent(this, SampleActivity.class);
+            intent.putParcelableArrayListExtra(SAMPLE_TAG, kbroadcast.getAudio().getSamples());
+            startActivity(intent);
+        }
+    }
 
     /**
      * Switch the option that lets you broadcast data or not

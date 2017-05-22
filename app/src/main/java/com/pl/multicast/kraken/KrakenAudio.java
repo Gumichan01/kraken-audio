@@ -131,4 +131,10 @@ public class KrakenAudio {
                 sender.putData(ks.getData());
         }
     }
+
+
+    public ArrayList<KrakenSample> getSamples() {
+
+        return samples;
+    }
 }
