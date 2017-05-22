@@ -119,17 +119,16 @@ public class KrakenAudio {
     /**
      * Play all of the samples of the list
      */
-    public void playGeneratedSound(UDPSender sender, boolean broadcast) {
+    public void playGeneratedSound(UDPSender sender, boolean listen, boolean broadcast) {
 
         ArrayList<KrakenSample> l = samples;
-        // Log.i(getClass().getName(), "audio  — play generated sound");
         for (KrakenSample ks : l) {
 
-            streamData(ks.getData());
+            if (listen)
+                streamData(ks.getData());
 
             if (broadcast)
                 sender.putData(ks.getData());
         }
-        // Log.i(getClass().getName(), "audio  — play OK");
     }
 }

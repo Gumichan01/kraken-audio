@@ -17,8 +17,8 @@ public class KrakenBroadcast {
     private UDPReceiver receiver;
     private KrakenAudio audio;
     private KrakenCache kbuffer;
-    private boolean broad_opt;
-    private boolean listen_opt;
+    private volatile boolean broad_opt;
+    private volatile boolean listen_opt;
 
     public KrakenBroadcast(GraphActivity g, BroadcastData bd) {
 
@@ -92,14 +92,12 @@ public class KrakenBroadcast {
 
     public void playGeneratedSound() {
 
-        if (listen_opt) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    audio.playGeneratedSound(sender, broad_opt);
-                }
-            }).start();
-        }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                audio.playGeneratedSound(sender, listen_opt, broad_opt);
+            }
+        }).start();
     }
 
     public boolean getBroadcastOption() {
