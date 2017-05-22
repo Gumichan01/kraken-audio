@@ -36,6 +36,7 @@ public class BroadcastService implements Runnable {
     public static final String FAIL_RES = "FAIL\r\n";
     public static final String LISTB = "LISTB";
     public static final String LISTL = "LISTL";
+    public static final String LISTR = "LISTR";
     // Separator
     private static final String SPACE = " ";
 
@@ -114,6 +115,11 @@ public class BroadcastService implements Runnable {
 
                     Log.i(this.getClass().getName(), LISTL);
                     w.write(listOfListener());
+                    toupdate = true;
+                } else if (rstring.contains(LISTR)) {
+
+                    Log.i(this.getClass().getName(), LISTR);
+                    w.write(listOfRealBroadcaster());
                     toupdate = true;
                 } else
                     Log.i(this.getClass().getName(), "error");
@@ -274,6 +280,11 @@ public class BroadcastService implements Runnable {
     private String listOfListener() {
 
         return listOfDevice(bdata.getListeners().iterator());
+    }
+
+    private String listOfRealBroadcaster() {
+
+        return listOfDevice(bdata.getRealBroadcasters().iterator());
     }
 
     private String listOfDevice(Iterator<DeviceData> it) {
