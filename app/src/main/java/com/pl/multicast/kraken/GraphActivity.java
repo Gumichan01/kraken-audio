@@ -446,10 +446,6 @@ public class GraphActivity extends Activity
                 dnames[i] += "#";
         }
 
-        Log.i(this.getLocalClassName(), "display list ↓");
-        for (String s : dnames) Log.i(this.getLocalClassName(), s + " ");
-        Log.i(this.getLocalClassName(), "display list ↑");
-
         return dnames;
     }
 
@@ -460,13 +456,7 @@ public class GraphActivity extends Activity
 
         List<String> slist = KrakenMisc.adaptStringList(ls, username);
         String[] snames = new String[slist.size()];
-
         slist.toArray(snames);
-
-        Log.i(this.getLocalClassName(), "display list ↓");
-        for (String s : snames) Log.i(this.getLocalClassName(), s + " ");
-        Log.i(this.getLocalClassName(), "display list ↑");
-
         return snames;
     }
 
