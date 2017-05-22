@@ -216,90 +216,8 @@ public class GraphActivity extends Activity
 
     private void updateSection() {
 
-        new Thread(new Runnable() {
-
-            private DeviceData devd;
-            private ArrayList<String> sbroadcasts = new ArrayList<>();
-            private ArrayList<String> slisteners = new ArrayList<>();
-
-            private void requestDevice(String hreq) {
-
-                String line;
-                StringBuilder stbuild = new StringBuilder("");
-
-                try {
-                    Socket s = new Socket(devd.getAddr(), devd.getPort());
-                    s.setSoTimeout(1000);
-
-                    PrintWriter writer = new PrintWriter(new OutputStreamWriter(s.getOutputStream()));
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(s.getInputStream()));
-
-                    writer.write(hreq + " " + mTitle + MessageParser.EOL);
-                    writer.flush();
-
-                    while ((line = reader.readLine()) != null) {
-                        stbuild.append(line).append(MessageParser.EOL);
-                    }
-
-                    Pattern p = Pattern.compile(MessageParser.EOL);
-                    String[] tokens = p.split(stbuild.toString());
-
-                    for (String str : tokens) {
-
-                        MessageParser parser = new MessageParser(str);
-
-                        if (parser.isWellParsed()) {
-
-                            if (parser.getHeader().contains(MessageParser.SRV_DDAT)) {
-
-                                if (hreq.equals(BroadcastService.LISTB))
-                                    sbroadcasts.add(parser.getDevice());
-                                else if (hreq.equals(BroadcastService.LISTB))
-                                    slisteners.add(parser.getDevice());
-
-                            } else if (parser.getHeader().contains(MessageParser.SRV_EOTR))
-                                break;
-                            else
-                                continue;
-                        }
-                    }
-
-                    s.close();
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void run() {
-
-                devd = std.getBroadcasterOf(mTitle);
-
-                if (devd == null) { // It is not in the broadcasters
-                    devd = std.getListenerOf(mTitle);
-
-                    if (devd == null) { // It is not in the broadcasters
-                        Log.e(getClass().getName(), mTitle + " is not a broadcaster or a listener");
-                        return;
-                    }
-                }
-
-                requestDevice(BroadcastService.LISTB);
-                requestDevice(BroadcastService.LISTL);
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        bdnames = generateStringList(sbroadcasts);
-                        rdnames = generateStringList(slisteners);
-                        navigationSenders.updateContent(bdnames);
-                        navigationReceivers.updateContent(rdnames);
-                    }
-                });
-            }
-        }).start();
+        new SectionUpdateThread(new SectionUpdateRunnable()).start();
+        ;
     }
 
     public void setIDNavSelected(int id) {
@@ -692,6 +610,110 @@ public class GraphActivity extends Activity
                     getArguments().getInt(ARG_SECTION_NUMBER));
         }
     }
+
+    private class SectionUpdateThread extends Thread {
+
+        public SectionUpdateThread(Runnable runnable) {
+            super(runnable);
+        }
+    }
+
+    private class SectionUpdateRunnable implements Runnable {
+
+        private static final int SOCKET_WAIT = 1000;
+
+        private DeviceData devd;
+        private ArrayList<String> sbroadcasts;
+        private ArrayList<String> slisteners;
+
+        public SectionUpdateRunnable() {
+
+            devd = null;
+            sbroadcasts = new ArrayList<>();
+            slisteners = new ArrayList<>();
+        }
+
+        private void requestDevice(String hreq) {
+
+            String line;
+            StringBuilder stbuild = new StringBuilder("");
+
+            try {
+                Socket s = new Socket(devd.getAddr(), devd.getPort());
+                s.setSoTimeout(SOCKET_WAIT);
+
+                PrintWriter writer = new PrintWriter(new OutputStreamWriter(s.getOutputStream()));
+                BufferedReader reader = new BufferedReader(new InputStreamReader(s.getInputStream()));
+
+                writer.write(hreq + " " + mTitle + MessageParser.EOL);
+                writer.flush();
+
+                while ((line = reader.readLine()) != null) {
+                    stbuild.append(line).append(MessageParser.EOL);
+                }
+
+                Pattern p = Pattern.compile(MessageParser.EOL);
+                String[] tokens = p.split(stbuild.toString());
+
+                for (String str : tokens) {
+
+                    MessageParser parser = new MessageParser(str);
+
+                    if (parser.isWellParsed()) {
+
+                        if (parser.getHeader().contains(MessageParser.SRV_DDAT)) {
+
+                            if (hreq.equals(BroadcastService.LISTB))
+                                sbroadcasts.add(parser.getDevice());
+                            else if (hreq.equals(BroadcastService.LISTB))
+                                slisteners.add(parser.getDevice());
+
+                        } else if (parser.getHeader().contains(MessageParser.SRV_EOTR))
+                            break;
+                        else
+                            continue;
+                    }
+                }
+
+                s.close();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public void run() {
+
+            devd = std.getBroadcasterOf(mTitle);
+
+            if (devd == null) { // It is not in the broadcasters
+                devd = std.getListenerOf(mTitle);
+
+                if (devd == null) { // It is not in the broadcasters
+                    Log.e(getClass().getName(), mTitle + " is not a broadcaster or a listener");
+                    return;
+                }
+            }
+
+            // Get the two lists
+            requestDevice(BroadcastService.LISTB);
+            requestDevice(BroadcastService.LISTL);
+
+            // Update the navigation drawers
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+
+                    bdnames = generateStringList(sbroadcasts);
+                    rdnames = generateStringList(slisteners);
+                    navigationSenders.updateContent(bdnames);
+                    navigationReceivers.updateContent(rdnames);
+                }
+            });
+        }
+    }
+
 
     /**
      * AsyncGraphTask is a specialized Hackojo class (asynchronous task in the graph activity)
