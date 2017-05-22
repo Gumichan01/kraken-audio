@@ -109,18 +109,18 @@ public class BroadcastService implements Runnable {
 
                     Log.i(this.getClass().getName(), LISTB);
                     w.write(listOfBroadcaster());
-                    toupdate = true;
+                    toupdate = false;
 
                 } else if (rstring.contains(LISTL)) {
 
                     Log.i(this.getClass().getName(), LISTL);
                     w.write(listOfListener());
-                    toupdate = true;
+                    toupdate = false;
                 } else if (rstring.contains(LISTR)) {
 
                     Log.i(this.getClass().getName(), LISTR);
                     w.write(listOfRealBroadcaster());
-                    toupdate = true;
+                    toupdate = false;
                 } else
                     Log.i(this.getClass().getName(), "error");
 
