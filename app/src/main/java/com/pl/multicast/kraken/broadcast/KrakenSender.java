@@ -19,14 +19,14 @@ import java.util.Arrays;
 /**
  * This class is reponsible of sending message using UDP
  */
-public class UDPSender {
+public class KrakenSender {
 
     private static final int CACHE_SZ = 1024;
     private byte[] b;
     private DatagramSocket broadcastsock;
     private KrakenBroadcastData std;
 
-    public UDPSender(KrakenBroadcastData s) {
+    public KrakenSender(KrakenBroadcastData s) {
 
         std = s;
         broadcastsock = null;

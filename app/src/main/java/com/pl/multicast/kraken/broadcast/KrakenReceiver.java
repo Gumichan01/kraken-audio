@@ -24,7 +24,7 @@ import java.net.SocketException;
 /**
  * Created by kenny on 24/01/17.
  */
-public class UDPReceiver {
+public class KrakenReceiver {
 
     private static final int DATAPCK_SIZE = 1024;
     private static final int RECV_TIMEOUT = 1000;
@@ -36,7 +36,7 @@ public class UDPReceiver {
     private boolean launched;
     private Thread thread;
 
-    public UDPReceiver(MixActivity g, KrakenBroadcastData b, KrakenBroadcast k) {
+    public KrakenReceiver(MixActivity g, KrakenBroadcastData b, KrakenBroadcast k) {
 
         std = b;
         graph = g;
@@ -204,11 +204,11 @@ public class UDPReceiver {
                 Log.i(this.getClass().getName(), "post execute - " + request + " - SUCCESS");
 
                 if (request.contains(KrakenService.LISTEN)) {
-                    UDPReceiver.this.std.addRealBroadcaster(dev.getName());
+                    KrakenReceiver.this.std.addRealBroadcaster(dev.getName());
                     updateGraphActivity();
 
                 } else if (request.contains(KrakenService.STOP)) {
-                    UDPReceiver.this.std.rmRealBroadcaster(dev.getName());
+                    KrakenReceiver.this.std.rmRealBroadcaster(dev.getName());
                     updateGraphActivity();
                 }
 

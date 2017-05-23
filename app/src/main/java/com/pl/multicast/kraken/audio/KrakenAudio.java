@@ -5,7 +5,7 @@ import android.media.AudioManager;
 import android.media.AudioTrack;
 import android.util.Log;
 
-import com.pl.multicast.kraken.broadcast.UDPSender;
+import com.pl.multicast.kraken.broadcast.KrakenSender;
 
 import java.util.ArrayList;
 
@@ -121,7 +121,7 @@ public class KrakenAudio {
     /**
      * Play all of the samples of the list
      */
-    public void playGeneratedSound(UDPSender sender, boolean listen, boolean broadcast) {
+    public void playGeneratedSound(KrakenSender sender, boolean listen, boolean broadcast) {
 
         ArrayList<KrakenSample> l = samples;
         for (KrakenSample ks : l) {

@@ -22,7 +22,7 @@ import android.widget.Toast;
 import com.pl.multicast.kraken.audio.KrakenAudio;
 import com.pl.multicast.kraken.audio.KrakenSample;
 import com.pl.multicast.kraken.broadcast.KrakenBroadcast;
-import com.pl.multicast.kraken.broadcast.UDPReceiver;
+import com.pl.multicast.kraken.broadcast.KrakenReceiver;
 import com.pl.multicast.kraken.common.Hackojo;
 import com.pl.multicast.kraken.common.KrakenMisc;
 import com.pl.multicast.kraken.common.NotifyTask;
@@ -191,8 +191,8 @@ public class MixActivity extends Activity
     }
 
     public void onSectionAttached(int number) {
-        
-        String [] ld;
+
+        String[] ld;
 
         if (idnav_selected == idnav_left)
             ld = bdnames;
@@ -211,7 +211,7 @@ public class MixActivity extends Activity
             default:
                 String name = ld[number - 1];
                 if (name.charAt(name.length() - 1) == SHARP)
-                    name = name.substring(0, name.length() -1);
+                    name = name.substring(0, name.length() - 1);
 
                 mTitle = name;
                 break;
@@ -548,7 +548,7 @@ public class MixActivity extends Activity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        UDPReceiver recv = kbroadcast.getReceiver();
+        KrakenReceiver recv = kbroadcast.getReceiver();
 
         if (id == R.id.action_listen) {
 

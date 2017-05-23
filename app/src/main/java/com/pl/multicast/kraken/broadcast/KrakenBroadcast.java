@@ -17,8 +17,8 @@ import com.pl.multicast.kraken.service.KrakenBroadcastData;
  */
 public class KrakenBroadcast {
 
-    private UDPSender sender;
-    private UDPReceiver receiver;
+    private KrakenSender sender;
+    private KrakenReceiver receiver;
     private KrakenAudio audio;
     private KrakenCache kbuffer;
     private volatile boolean broad_opt;
@@ -26,8 +26,8 @@ public class KrakenBroadcast {
 
     public KrakenBroadcast(MixActivity g, KrakenBroadcastData bd) {
 
-        sender = new UDPSender(bd);
-        receiver = new UDPReceiver(g, bd, this);
+        sender = new KrakenSender(bd);
+        receiver = new KrakenReceiver(g, bd, this);
         audio = new KrakenAudio();
         kbuffer = new KrakenCache();
         broad_opt = true;
@@ -120,7 +120,7 @@ public class KrakenBroadcast {
         listen_opt = listen;
     }
 
-    public UDPReceiver getReceiver() {
+    public KrakenReceiver getReceiver() {
         return receiver;
     }
 
