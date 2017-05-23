@@ -29,7 +29,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".GraphActivity"
+            android:name=".MixActivity"
             android:label="@string/title_activity_graph"
             android:screenOrientation="portrait" />
         <activity

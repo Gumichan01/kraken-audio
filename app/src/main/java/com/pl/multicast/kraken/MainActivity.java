@@ -97,7 +97,7 @@ public class MainActivity extends Activity implements JoinGroupDialogFragment.Jo
                         String gname = gtv.getText().toString();
                         DeviceData dd = new DeviceData(susr, ipaddr, KrakenMisc.SERVICE_PORT,
                                 KrakenMisc.BROADCAST_PORT);
-                        Intent intent = new Intent(this, GraphActivity.class);
+                        Intent intent = new Intent(this, MixActivity.class);
 
                         Log.i(this.getLocalClassName(), "group name: " + gname);
                         Log.i(this.getLocalClassName(), "device: " + dd.toString());
@@ -109,7 +109,7 @@ public class MainActivity extends Activity implements JoinGroupDialogFragment.Jo
 
                 } else if (id == R.id.jgrp) {
 
-                    usrname = susr;     // Save the name for the next activity instance (GraphActivity)
+                    usrname = susr;     // Save the name for the next activity instance (MixActivity)
                     Log.i(this.getLocalClassName(), "Connection to the directory server ...");
                     Log.i(this.getLocalClassName(), "Generate the list of groups");
                     new AsyncMainTask(new DeviceData(), null).execute(Hackojo.GROUP_OP);
@@ -156,7 +156,7 @@ public class MainActivity extends Activity implements JoinGroupDialogFragment.Jo
             DeviceData d = new DeviceData(usrname, KrakenMisc.getIPAddress(), KrakenMisc.SERVICE_PORT,
                     KrakenMisc.BROADCAST_PORT);
 
-            Intent intent = new Intent(this, GraphActivity.class);
+            Intent intent = new Intent(this, MixActivity.class);
             new AsyncMainTask(d, gname).execute(Hackojo.JOIN_GROUP_OP);
             intent.putExtra(GRPNAME, gname);
             intent.putExtra(DEVICEDATA, d);

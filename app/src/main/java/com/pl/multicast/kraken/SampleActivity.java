@@ -24,7 +24,7 @@ public class SampleActivity extends Activity {
         setContentView(R.layout.activity_sample);
 
         tlist = new ArrayList<>();
-        slist = getIntent().getParcelableArrayListExtra(GraphActivity.SAMPLE_TAG);
+        slist = getIntent().getParcelableArrayListExtra(MixActivity.SAMPLE_TAG);
 
         if (slist == null || slist.isEmpty())
             Log.v(getLocalClassName(), "empty list");

@@ -3,7 +3,7 @@ package com.pl.multicast.kraken.service;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.pl.multicast.kraken.GraphActivity;
+import com.pl.multicast.kraken.MixActivity;
 import com.pl.multicast.kraken.common.Hackojo;
 import com.pl.multicast.kraken.common.KrakenMisc;
 import com.pl.multicast.kraken.datum.DeviceData;
@@ -46,11 +46,11 @@ public class BroadcastService implements Runnable {
     private static final int SRV_DELAY = 8000;
 
     private DeviceData d;
-    private GraphActivity gactivity;
+    private MixActivity gactivity;
     private BroadcastData bdata;
 
 
-    public BroadcastService(GraphActivity g, BroadcastData dd) {
+    public BroadcastService(MixActivity g, BroadcastData dd) {
         super();
         gactivity = g;
         d = g.getDevData();

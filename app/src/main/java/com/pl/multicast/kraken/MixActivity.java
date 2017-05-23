@@ -43,7 +43,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 
-public class GraphActivity extends Activity
+public class MixActivity extends Activity
         implements NavDrawer.NavigationDrawerCallbacks {
 
     public static final String SAMPLE_TAG = "SAMPLE";
@@ -80,7 +80,7 @@ public class GraphActivity extends Activity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_graph);
+        setContentView(R.layout.activity_mix);
 
         /** Retrieve data from the main activity */
         idnav_selected = 0;
@@ -628,14 +628,14 @@ public class GraphActivity extends Activity
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_graph, container, false);
+            View rootView = inflater.inflate(R.layout.fragment_mix, container, false);
             return rootView;
         }
 
         @Override
         public void onAttach(Activity activity) {
             super.onAttach(activity);
-            ((GraphActivity) activity).onSectionAttached(
+            ((MixActivity) activity).onSectionAttached(
                     getArguments().getInt(ARG_SECTION_NUMBER));
         }
     }
@@ -793,7 +793,7 @@ public class GraphActivity extends Activity
                     for (ArrayList<String> ar : paths)
                         s += ar.toString() + "\n";
 
-                    Toast.makeText(GraphActivity.this, s, Toast.LENGTH_LONG).show();
+                    Toast.makeText(MixActivity.this, s, Toast.LENGTH_LONG).show();
                 }
 
             } else

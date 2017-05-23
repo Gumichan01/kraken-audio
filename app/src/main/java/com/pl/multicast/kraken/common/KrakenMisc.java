@@ -65,7 +65,7 @@ public class KrakenMisc {
         return networkInfo != null && networkInfo.isConnected();
     }
 
-    // Function used in GraphActivity
+    // Function used in MixActivity
     public static List<DeviceData> adaptList(List<DeviceData> ld, String username) {
 
         Iterator<DeviceData> it = ld.iterator();

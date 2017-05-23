@@ -2,7 +2,7 @@ package com.pl.multicast.kraken.broadcast;
 
 import android.util.Log;
 
-import com.pl.multicast.kraken.GraphActivity;
+import com.pl.multicast.kraken.MixActivity;
 import com.pl.multicast.kraken.audio.KrakenAudio;
 import com.pl.multicast.kraken.service.BroadcastData;
 
@@ -24,7 +24,7 @@ public class KrakenBroadcast {
     private volatile boolean broad_opt;
     private volatile boolean listen_opt;
 
-    public KrakenBroadcast(GraphActivity g, BroadcastData bd) {
+    public KrakenBroadcast(MixActivity g, BroadcastData bd) {
 
         sender = new UDPSender(bd);
         receiver = new UDPReceiver(g, bd, this);

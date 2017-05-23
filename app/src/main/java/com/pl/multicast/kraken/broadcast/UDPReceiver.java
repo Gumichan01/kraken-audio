@@ -3,7 +3,7 @@ package com.pl.multicast.kraken.broadcast;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.pl.multicast.kraken.GraphActivity;
+import com.pl.multicast.kraken.MixActivity;
 import com.pl.multicast.kraken.common.KrakenMisc;
 import com.pl.multicast.kraken.datum.DeviceData;
 import com.pl.multicast.kraken.parser.MessageParser;
@@ -31,12 +31,12 @@ public class UDPReceiver {
     private static final int TIME_UPDATE = 1000;
 
     private BroadcastData std;
-    private GraphActivity graph;
+    private MixActivity graph;
     private KrakenBroadcast kbroad;
     private boolean launched;
     private Thread thread;
 
-    public UDPReceiver(GraphActivity g, BroadcastData b, KrakenBroadcast k) {
+    public UDPReceiver(MixActivity g, BroadcastData b, KrakenBroadcast k) {
 
         std = b;
         graph = g;

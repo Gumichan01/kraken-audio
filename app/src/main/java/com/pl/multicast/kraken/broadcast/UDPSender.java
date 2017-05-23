@@ -3,7 +3,7 @@ package com.pl.multicast.kraken.broadcast;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.pl.multicast.kraken.GraphActivity;
+import com.pl.multicast.kraken.MixActivity;
 import com.pl.multicast.kraken.datum.DeviceData;
 import com.pl.multicast.kraken.service.BroadcastData;
 
@@ -117,7 +117,7 @@ public class UDPSender {
                 ArrayList<DeviceData> listeners = std.getListeners();
                 for (DeviceData dev : listeners) {
 
-                    if (dev.getName().equals(GraphActivity.username))
+                    if (dev.getName().equals(MixActivity.username))
                         continue;
 
                     /*Log.v(this.getClass().getName(), "SEND data — " + params[0] + " — to " + dev.getName() +
