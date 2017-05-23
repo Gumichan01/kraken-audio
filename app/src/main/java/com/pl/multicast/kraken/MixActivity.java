@@ -21,7 +21,6 @@ import android.widget.Toast;
 
 import com.pl.multicast.kraken.audio.KrakenAudio;
 import com.pl.multicast.kraken.audio.KrakenSample;
-import com.pl.multicast.kraken.service.KrakenBroadcastData;
 import com.pl.multicast.kraken.broadcast.KrakenBroadcast;
 import com.pl.multicast.kraken.broadcast.UDPReceiver;
 import com.pl.multicast.kraken.common.Hackojo;
@@ -29,6 +28,7 @@ import com.pl.multicast.kraken.common.KrakenMisc;
 import com.pl.multicast.kraken.common.NotifyTask;
 import com.pl.multicast.kraken.datum.DeviceData;
 import com.pl.multicast.kraken.parser.MessageParser;
+import com.pl.multicast.kraken.service.KrakenBroadcastData;
 import com.pl.multicast.kraken.service.KrakenService;
 
 import java.io.BufferedReader;
@@ -47,6 +47,7 @@ public class MixActivity extends Activity
         implements NavDrawer.NavigationDrawerCallbacks {
 
     public static final String SAMPLE_TAG = "SAMPLE";
+    private static final char SHARP = '#';
 
     public static String username;
     // Broadcast
@@ -191,12 +192,15 @@ public class MixActivity extends Activity
 
     public void onSectionAttached(int number) {
 
-        List<DeviceData> ld;
+        //List<DeviceData> ld;
+        String [] ld;
 
         if (idnav_selected == idnav_left) {
-            ld = kbdata.getSenders();
+            //ld = kbdata.getSenders();
+            ld = bdnames;
         } else if (idnav_selected == idnav_right) {
-            ld = kbdata.getListeners();
+            //ld = kbdata.getListeners();
+            ld = rdnames;
         } else {
             Log.wtf(getLocalClassName(), "Unknown value. It should NEVER happen!");
             return;
@@ -208,7 +212,12 @@ public class MixActivity extends Activity
                 break;
 
             default:
-                mTitle = ld.get(number - 1).getName();
+                //String name = ld.get(number - 1).getName();
+                String name = ld[number - 1];
+                if (name.charAt(name.length() - 1) == SHARP)
+                    name = name.substring(0, name.length());
+
+                mTitle = name;
                 break;
         }
 
@@ -481,7 +490,7 @@ public class MixActivity extends Activity
 
             dnames[i] = dlist.get(i).getName();
             if (kbdata.isRealBroadcaster(dnames[i]))
-                dnames[i] += "#";
+                dnames[i] += SHARP;
         }
 
         return dnames;
