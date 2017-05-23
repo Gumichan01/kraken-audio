@@ -12,18 +12,21 @@ public class KrakenSample implements Parcelable {
     private String name;
     private byte[] data;
     private int duration;
+    private int frequency;
 
-    public KrakenSample(byte[] bytes, int duration) {
+    public KrakenSample(byte[] bytes, int duration, int freq) {
 
         name = "sample #" + (id++);
         data = bytes;
         this.duration = duration;
+        frequency = freq;
     }
 
     protected KrakenSample(Parcel in) {
         name = in.readString();
         data = in.createByteArray();
         duration = in.readInt();
+        frequency = in.readInt();
     }
 
     public static final Creator<KrakenSample> CREATOR = new Creator<KrakenSample>() {
@@ -38,6 +41,11 @@ public class KrakenSample implements Parcelable {
         }
     };
 
+    public String getName() {
+
+        return name;
+    }
+
     public byte[] getData() {
 
         return data;
@@ -50,7 +58,7 @@ public class KrakenSample implements Parcelable {
 
     public String toString() {
 
-        return name;
+        return name + " - " +  duration + " s " + "@" + frequency + "Hz";
     }
 
     @Override
@@ -64,5 +72,6 @@ public class KrakenSample implements Parcelable {
         dest.writeString(name);
         dest.writeByteArray(data);
         dest.writeInt(duration);
+        dest.writeInt(frequency);
     }
 }

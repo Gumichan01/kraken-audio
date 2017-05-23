@@ -112,7 +112,7 @@ public class KrakenAudio {
             generatedSnd[idx++] = (byte) ((val & 0xff00) >>> 8);
         }
 
-        samples.add(new KrakenSample(generatedSnd, duration));
+        samples.add(new KrakenSample(generatedSnd, duration, frequency));
         Log.i(getClass().getName(), "audio  — sound generated");
     }
 
