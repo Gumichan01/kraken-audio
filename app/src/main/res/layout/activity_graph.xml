@@ -135,11 +135,11 @@
                             android:layout_height="wrap_content"
                             android:onClick="generateSound"
                             android:text="Generate sound"
-                            android:textSize="12dp" />
+                            android:textSize="10dp" />
 
                         <Button
                             android:id="@+id/button_gp"
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:onClick="play"
                             android:text="Play sound"
@@ -147,11 +147,20 @@
 
                         <Button
                             android:id="@+id/button_playlist"
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="List of samples"
                             android:onClick="displaylistOfSamples"
-                            android:textSize="12dp" />
+                            android:textSize="10dp" />
+
+                        <Button
+                            android:id="@+id/button_clear"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Clear"
+                            android:onClick="clearSamples"
+                            android:textSize="10dp" />
+
 
                     </LinearLayout>
 

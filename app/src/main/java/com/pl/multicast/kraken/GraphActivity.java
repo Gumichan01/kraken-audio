@@ -304,6 +304,15 @@ public class GraphActivity extends Activity
         }
     }
 
+    public void clearSamples(View v) {
+
+        if(v.getId() == R.id.button_clear) {
+
+            kbroadcast.getAudio().getSamples().clear();
+            Toast.makeText(getApplicationContext(), "Cleared the samples", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     /**
      * Switch the option that lets you broadcast data or not
      */
