@@ -19,14 +19,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="12dp"
-            android:text="Name: "
+            android:text="@string/main_name"
             android:textSize="18dp" />
 
         <EditText
             android:id="@+id/usr"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Name"
+            android:hint="@string/main_editname"
             android:imeOptions="actionNext"
             android:inputType="text"
             android:lines="1" />
@@ -41,14 +41,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="12dp"
-            android:text="Group name(optional): "
+            android:text="@string/main_grp"
             android:textSize="18dp" />
 
         <EditText
             android:id="@+id/grp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Group name (for creating a new group)"
+            android:hint="@string/main_editgrp"
             android:imeOptions="actionNext"
             android:inputType="text"
             android:lines="1" />

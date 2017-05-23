@@ -23,4 +23,21 @@
     <string name="gunetwork">Cannot update the group content - network unavailable</string>
     <string name="title_activity_sample">SampleActivity</string>
 
+    <!-- Main Activity -->
+    <string name="main_name">Name: </string>
+    <string name="main_editname">Name</string>
+    <string name="main_grp">Group: </string>
+    <string name="main_editgrp">Group to create</string>
+    <string name="main_play">Play Sound</string>
+
+    <!-- Mix Activity -->
+    <string name="mix_stereo">Stereo</string>
+    <string name="mix_gen">Generate Sound</string>
+    <string name="mix_play">Play Sound</string>
+    <string name="mix_list">List of samples</string>
+    <string name="mix_clear">Clear</string>
+    <string name="mix_broad">Broadcast</string>
+    <string name="mix_listen">Listen</string>
+    <string name="mix_rate">Rate: 0 bytes/s</string>
+
 </resources>
