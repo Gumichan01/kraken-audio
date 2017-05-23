@@ -49,7 +49,6 @@ public class MixActivity extends Activity
     public static final String SAMPLE_TAG = "SAMPLE";
 
     public static String username;
-    //private static ArrayList<String> ltext = new ArrayList<>();
     // Broadcast
     KrakenBroadcast kbroadcast;
     /**
@@ -75,7 +74,7 @@ public class MixActivity extends Activity
     private Thread bserviceth;      // broadcast service thread
     private KrakenService bs;
     // Data
-    private KrakenBroadcastData std;      // Data broadcasting information
+    private KrakenBroadcastData kbdata;      // Data broadcasting information
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,15 +91,15 @@ public class MixActivity extends Activity
         rdnames = null;
 
         /** Load the broadcast data and the communication point */
-        std = new KrakenBroadcastData();
+        kbdata = new KrakenBroadcastData();
 
         /** Service server */
-        bs = new KrakenService(this, std);
+        bs = new KrakenService(this, kbdata);
         bserviceth = new Thread(bs);
         bserviceth.start();
 
         /** Broadcast */
-        kbroadcast = new KrakenBroadcast(this, std);
+        kbroadcast = new KrakenBroadcast(this, kbdata);
         kbroadcast.setAudioConfig(KrakenAudio.DEFAULT_SAMPLERATE, false);
         kbroadcast.launch();
 
@@ -195,9 +194,9 @@ public class MixActivity extends Activity
         List<DeviceData> ld;
 
         if (idnav_selected == idnav_left) {
-            ld = std.getSenders();
+            ld = kbdata.getSenders();
         } else if (idnav_selected == idnav_right) {
-            ld = std.getListeners();
+            ld = kbdata.getListeners();
         } else {
             Log.wtf(getLocalClassName(), "Unknown value. It should NEVER happen!");
             return;
@@ -215,8 +214,8 @@ public class MixActivity extends Activity
 
         if (mTitle.equals(username)) {
 
-            bdnames = generateDisplayList(std.getSenders());
-            rdnames = generateDisplayList(std.getListeners());
+            bdnames = generateDisplayList(kbdata.getSenders());
+            rdnames = generateDisplayList(kbdata.getListeners());
             navigationSenders.updateContent(bdnames);
             navigationReceivers.updateContent(rdnames);
 
@@ -378,8 +377,8 @@ public class MixActivity extends Activity
     public void notifyDevices() {
 
         List<DeviceData> l = new ArrayList<>();
-        l.addAll(std.getSenders());
-        l.addAll(std.getListeners());
+        l.addAll(kbdata.getSenders());
+        l.addAll(kbdata.getListeners());
 
         Log.i(this.getLocalClassName(), "Notify every devices by " + username);
         notifyUpdateDevices(username, l.iterator());
@@ -420,8 +419,8 @@ public class MixActivity extends Activity
     private void updateGroupContent(Hackojo hack, boolean first) {
 
         List<DeviceData> br = hack.getDevices();
-        List<DeviceData> ltl = std.getListeners();
-        List<DeviceData> lts = std.getSenders();
+        List<DeviceData> ltl = kbdata.getListeners();
+        List<DeviceData> lts = kbdata.getSenders();
 
         if (br == null) {
             Log.e(this.getLocalClassName(), "no device");
@@ -430,7 +429,7 @@ public class MixActivity extends Activity
 
         if (first) {
             for (DeviceData dev : br)
-                std.addBroadcaster(dev);
+                kbdata.addBroadcaster(dev);
         } else {
 
             // Remove the devices that are listeners
@@ -460,7 +459,7 @@ public class MixActivity extends Activity
                     }
                 }
 
-                if (!found) std.addBroadcaster(d);
+                if (!found) kbdata.addBroadcaster(d);
             }
         }
 
@@ -481,7 +480,7 @@ public class MixActivity extends Activity
         for (int i = 0; i < dnames.length; i++) {
 
             dnames[i] = dlist.get(i).getName();
-            if (std.isRealBroadcaster(dnames[i]))
+            if (kbdata.isRealBroadcaster(dnames[i]))
                 dnames[i] += "#";
         }
 
@@ -505,7 +504,7 @@ public class MixActivity extends Activity
     private DeviceData prepareRequest() {
 
         String slistener = mTitle;
-        DeviceData d = std.getBroadcasterOf(slistener);
+        DeviceData d = kbdata.getBroadcasterOf(slistener);
         mTitle = username;
         Log.i(this.getLocalClassName(), slistener + " | " + d.toString() + " | " + mTitle);
         return d;
@@ -714,10 +713,10 @@ public class MixActivity extends Activity
         @Override
         public void run() {
 
-            devd = std.getBroadcasterOf(mTitle);
+            devd = kbdata.getBroadcasterOf(mTitle);
 
             if (devd == null) { // It is not in the broadcasters
-                devd = std.getListenerOf(mTitle);
+                devd = kbdata.getListenerOf(mTitle);
 
                 if (devd == null) { // It is not in the broadcasters
                     Log.e(getClass().getName(), mTitle + " is not a broadcaster or a listener");
@@ -774,7 +773,7 @@ public class MixActivity extends Activity
                 Log.i(this.getClass().getName(), "post execute - " + op + ": SUCCESS");
 
                 if (op == DEVICE_OP) {
-                    std.clearBroadcasters();
+                    kbdata.clearBroadcasters();
                     // Log.i(this.getClass().getName(), "post execute -  devl update");
                     updateGroupContent(this, first_update);
 
@@ -785,8 +784,8 @@ public class MixActivity extends Activity
 
                     // Log.i(this.getClass().getName(), "post execute - quit the group");
                     // Log.i(this.getClass().getName(), "post execute - notify the devices (quit)");
-                    notifyQuitDevices(username, std.getSenders().iterator());
-                    notifyQuitDevices(username, std.getListeners().iterator());
+                    notifyQuitDevices(username, kbdata.getSenders().iterator());
+                    notifyQuitDevices(username, kbdata.getListeners().iterator());
                 } else if (op == GRAPH_GET_OP) {
 
                     String s = "";
