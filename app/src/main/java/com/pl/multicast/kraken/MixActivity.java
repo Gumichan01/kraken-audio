@@ -21,7 +21,7 @@ import android.widget.Toast;
 
 import com.pl.multicast.kraken.audio.KrakenAudio;
 import com.pl.multicast.kraken.audio.KrakenSample;
-import com.pl.multicast.kraken.service.BroadcastData;
+import com.pl.multicast.kraken.service.KrakenBroadcastData;
 import com.pl.multicast.kraken.broadcast.KrakenBroadcast;
 import com.pl.multicast.kraken.broadcast.UDPReceiver;
 import com.pl.multicast.kraken.common.Hackojo;
@@ -29,7 +29,7 @@ import com.pl.multicast.kraken.common.KrakenMisc;
 import com.pl.multicast.kraken.common.NotifyTask;
 import com.pl.multicast.kraken.datum.DeviceData;
 import com.pl.multicast.kraken.parser.MessageParser;
-import com.pl.multicast.kraken.service.BroadcastService;
+import com.pl.multicast.kraken.service.KrakenService;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -73,9 +73,9 @@ public class MixActivity extends Activity
     private String[] rdnames;      // list of the receiver devices displayed on the screen
     // Thread
     private Thread bserviceth;      // broadcast service thread
-    private BroadcastService bs;
+    private KrakenService bs;
     // Data
-    private BroadcastData std;      // Data broadcasting information
+    private KrakenBroadcastData std;      // Data broadcasting information
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,10 +92,10 @@ public class MixActivity extends Activity
         rdnames = null;
 
         /** Load the broadcast data and the communication point */
-        std = new BroadcastData();
+        std = new KrakenBroadcastData();
 
         /** Service server */
-        bs = new BroadcastService(this, std);
+        bs = new KrakenService(this, std);
         bserviceth = new Thread(bs);
         bserviceth.start();
 
@@ -387,12 +387,12 @@ public class MixActivity extends Activity
 
     private void notifyUpdateDevices(String username, Iterator<DeviceData> it) {
 
-        notifyDevices(BroadcastService.UPDATE, username, it);
+        notifyDevices(KrakenService.UPDATE, username, it);
     }
 
     private void notifyQuitDevices(String username, Iterator<DeviceData> it) {
 
-        notifyDevices(BroadcastService.QUIT, username, it);
+        notifyDevices(KrakenService.QUIT, username, it);
     }
 
 
@@ -692,9 +692,9 @@ public class MixActivity extends Activity
 
                         if (parser.getHeader().contains(MessageParser.SRV_DDAT)) {
 
-                            if (hreq.equals(BroadcastService.LISTB))
+                            if (hreq.equals(KrakenService.LISTB))
                                 sbroadcasts.add(parser.getDevice());
-                            else if (hreq.equals(BroadcastService.LISTB))
+                            else if (hreq.equals(KrakenService.LISTB))
                                 slisteners.add(parser.getDevice());
 
                         } else if (parser.getHeader().contains(MessageParser.SRV_EOTR))
@@ -726,8 +726,8 @@ public class MixActivity extends Activity
             }
 
             // Get the two lists
-            requestDevice(BroadcastService.LISTB);
-            requestDevice(BroadcastService.LISTL);
+            requestDevice(KrakenService.LISTB);
+            requestDevice(KrakenService.LISTL);
 
             // Update the navigation drawers
             runOnUiThread(new Runnable() {

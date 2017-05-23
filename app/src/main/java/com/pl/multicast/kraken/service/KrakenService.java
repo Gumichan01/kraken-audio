@@ -24,7 +24,7 @@ import java.util.regex.Pattern;
 /**
  * Created by Luxon on 19/01/2017.
  */
-public class BroadcastService implements Runnable {
+public class KrakenService implements Runnable {
 
     // Keyword
     public static final String LISTEN = "LISTEN";
@@ -47,10 +47,10 @@ public class BroadcastService implements Runnable {
 
     private DeviceData d;
     private MixActivity gactivity;
-    private BroadcastData bdata;
+    private KrakenBroadcastData bdata;
 
 
-    public BroadcastService(MixActivity g, BroadcastData dd) {
+    public KrakenService(MixActivity g, KrakenBroadcastData dd) {
         super();
         gactivity = g;
         d = g.getDevData();

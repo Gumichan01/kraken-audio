@@ -4,7 +4,7 @@ import android.util.Log;
 
 import com.pl.multicast.kraken.MixActivity;
 import com.pl.multicast.kraken.audio.KrakenAudio;
-import com.pl.multicast.kraken.service.BroadcastData;
+import com.pl.multicast.kraken.service.KrakenBroadcastData;
 
 /**
  * KrakenBroadcast handles the broadcast part of the application, that is to say:
@@ -24,7 +24,7 @@ public class KrakenBroadcast {
     private volatile boolean broad_opt;
     private volatile boolean listen_opt;
 
-    public KrakenBroadcast(MixActivity g, BroadcastData bd) {
+    public KrakenBroadcast(MixActivity g, KrakenBroadcastData bd) {
 
         sender = new UDPSender(bd);
         receiver = new UDPReceiver(g, bd, this);

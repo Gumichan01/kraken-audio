@@ -7,8 +7,8 @@ import com.pl.multicast.kraken.MixActivity;
 import com.pl.multicast.kraken.common.KrakenMisc;
 import com.pl.multicast.kraken.datum.DeviceData;
 import com.pl.multicast.kraken.parser.MessageParser;
-import com.pl.multicast.kraken.service.BroadcastData;
-import com.pl.multicast.kraken.service.BroadcastService;
+import com.pl.multicast.kraken.service.KrakenBroadcastData;
+import com.pl.multicast.kraken.service.KrakenService;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -30,13 +30,13 @@ public class UDPReceiver {
     private static final int RECV_TIMEOUT = 1000;
     private static final int TIME_UPDATE = 1000;
 
-    private BroadcastData std;
+    private KrakenBroadcastData std;
     private MixActivity graph;
     private KrakenBroadcast kbroad;
     private boolean launched;
     private Thread thread;
 
-    public UDPReceiver(MixActivity g, BroadcastData b, KrakenBroadcast k) {
+    public UDPReceiver(MixActivity g, KrakenBroadcastData b, KrakenBroadcast k) {
 
         std = b;
         graph = g;
@@ -145,13 +145,13 @@ public class UDPReceiver {
     public void listenRequest(final DeviceData d, final String usrname) {
         Log.i(this.getClass().getName(), "UDP receiver - listen request");
         Log.i(this.getClass().getName(), "UDP receiver - " + d.toString());
-        sendMessageRequest(d, BroadcastService.LISTEN + " " + usrname + MessageParser.EOL);
+        sendMessageRequest(d, KrakenService.LISTEN + " " + usrname + MessageParser.EOL);
     }
 
     public void stopRequest(final DeviceData d, final String usrname) {
 
         Log.i(this.getClass().getName(), "UDP receiver - stop request");
-        sendMessageRequest(d, BroadcastService.STOP + " " + usrname + MessageParser.EOL);
+        sendMessageRequest(d, KrakenService.STOP + " " + usrname + MessageParser.EOL);
     }
 
 
@@ -189,7 +189,7 @@ public class UDPReceiver {
                 String rstring = reader.readLine();
                 //Log.i(this.getClass().getName(), "UDP receiver - msg: " + rstring);
                 s.close();
-                return rstring.contains(BroadcastService.ACK);
+                return rstring.contains(KrakenService.ACK);
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -203,11 +203,11 @@ public class UDPReceiver {
             if (result) {
                 Log.i(this.getClass().getName(), "post execute - " + request + " - SUCCESS");
 
-                if (request.contains(BroadcastService.LISTEN)) {
+                if (request.contains(KrakenService.LISTEN)) {
                     UDPReceiver.this.std.addRealBroadcaster(dev.getName());
                     updateGraphActivity();
 
-                } else if (request.contains(BroadcastService.STOP)) {
+                } else if (request.contains(KrakenService.STOP)) {
                     UDPReceiver.this.std.rmRealBroadcaster(dev.getName());
                     updateGraphActivity();
                 }

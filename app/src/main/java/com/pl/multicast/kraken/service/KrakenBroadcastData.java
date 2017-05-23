@@ -10,13 +10,13 @@ import java.util.ArrayList;
 /**
  * Class that contains information about
  */
-public class BroadcastData {
+public class KrakenBroadcastData {
 
     private volatile ArrayList<DeviceData> broadcasters;
     private volatile ArrayList<String> rbroadcasters;
     private volatile ArrayList<DeviceData> listeners;
 
-    public BroadcastData() {
+    public KrakenBroadcastData() {
 
         broadcasters = new ArrayList<>();
         rbroadcasters = new ArrayList<>();

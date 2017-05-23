@@ -5,7 +5,7 @@ import android.util.Log;
 
 import com.pl.multicast.kraken.MixActivity;
 import com.pl.multicast.kraken.datum.DeviceData;
-import com.pl.multicast.kraken.service.BroadcastData;
+import com.pl.multicast.kraken.service.KrakenBroadcastData;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -24,9 +24,9 @@ public class UDPSender {
     private static final int CACHE_SZ = 1024;
     private byte[] b;
     private DatagramSocket broadcastsock;
-    private BroadcastData std;
+    private KrakenBroadcastData std;
 
-    public UDPSender(BroadcastData s) {
+    public UDPSender(KrakenBroadcastData s) {
 
         std = s;
         broadcastsock = null;
