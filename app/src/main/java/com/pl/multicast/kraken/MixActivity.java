@@ -191,17 +191,14 @@ public class MixActivity extends Activity
     }
 
     public void onSectionAttached(int number) {
-
-        //List<DeviceData> ld;
+        
         String [] ld;
 
-        if (idnav_selected == idnav_left) {
-            //ld = kbdata.getSenders();
+        if (idnav_selected == idnav_left)
             ld = bdnames;
-        } else if (idnav_selected == idnav_right) {
-            //ld = kbdata.getListeners();
+        else if (idnav_selected == idnav_right)
             ld = rdnames;
-        } else {
+        else {
             Log.wtf(getLocalClassName(), "Unknown value. It should NEVER happen!");
             return;
         }
@@ -212,10 +209,9 @@ public class MixActivity extends Activity
                 break;
 
             default:
-                //String name = ld.get(number - 1).getName();
                 String name = ld[number - 1];
                 if (name.charAt(name.length() - 1) == SHARP)
-                    name = name.substring(0, name.length());
+                    name = name.substring(0, name.length() -1);
 
                 mTitle = name;
                 break;
