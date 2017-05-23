@@ -1,4 +1,4 @@
-package com.pl.multicast.kraken;
+package com.pl.multicast.kraken.broadcast;
 
 import java.util.ArrayList;
 import java.util.Arrays;

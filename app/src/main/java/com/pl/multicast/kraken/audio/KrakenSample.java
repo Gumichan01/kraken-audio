@@ -1,4 +1,4 @@
-package com.pl.multicast.kraken;
+package com.pl.multicast.kraken.audio;
 
 import android.os.Parcel;
 import android.os.Parcelable;

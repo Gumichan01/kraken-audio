@@ -1,4 +1,4 @@
-package com.pl.multicast.kraken;
+package com.pl.multicast.kraken.service;
 
 import android.util.Log;
 

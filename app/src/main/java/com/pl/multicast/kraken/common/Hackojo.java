@@ -1,4 +1,4 @@
-package com.pl.multicast.kraken;
+package com.pl.multicast.kraken.common;
 
 
 import android.os.AsyncTask;
@@ -30,7 +30,7 @@ public class Hackojo extends AsyncTask<Integer, Integer, Boolean> {
     public static final int GRAPH_GET_OP = 7;
     public static final int IAM_HERE_OP = 8;
     protected List<ArrayList<String>> paths;
-    int op;
+    protected int op;
     private String gname;
     private List<GroupData> gdata;
     private List<DeviceData> ddata;

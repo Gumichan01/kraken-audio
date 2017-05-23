@@ -19,10 +19,17 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.pl.multicast.kraken.audio.KrakenAudio;
+import com.pl.multicast.kraken.audio.KrakenSample;
+import com.pl.multicast.kraken.service.BroadcastData;
+import com.pl.multicast.kraken.broadcast.KrakenBroadcast;
+import com.pl.multicast.kraken.broadcast.UDPReceiver;
+import com.pl.multicast.kraken.common.Hackojo;
 import com.pl.multicast.kraken.common.KrakenMisc;
 import com.pl.multicast.kraken.common.NotifyTask;
 import com.pl.multicast.kraken.datum.DeviceData;
 import com.pl.multicast.kraken.parser.MessageParser;
+import com.pl.multicast.kraken.service.BroadcastService;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -289,11 +296,11 @@ public class GraphActivity extends Activity
 
     public void displaylistOfSamples(View v) {
 
-        if(v.getId() == R.id.button_playlist) {
+        if (v.getId() == R.id.button_playlist) {
 
             ArrayList<KrakenSample> ks = kbroadcast.getAudio().getSamples();
 
-            if(ks == null || ks.isEmpty())
+            if (ks == null || ks.isEmpty())
                 Toast.makeText(getApplicationContext(), "No samples registered", Toast.LENGTH_LONG).show();
             else {
 
@@ -306,7 +313,7 @@ public class GraphActivity extends Activity
 
     public void clearSamples(View v) {
 
-        if(v.getId() == R.id.button_clear) {
+        if (v.getId() == R.id.button_clear) {
 
             kbroadcast.getAudio().getSamples().clear();
             Toast.makeText(getApplicationContext(), "Cleared the samples", Toast.LENGTH_SHORT).show();

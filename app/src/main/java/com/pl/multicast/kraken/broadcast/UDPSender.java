@@ -1,9 +1,11 @@
-package com.pl.multicast.kraken;
+package com.pl.multicast.kraken.broadcast;
 
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.pl.multicast.kraken.GraphActivity;
 import com.pl.multicast.kraken.datum.DeviceData;
+import com.pl.multicast.kraken.service.BroadcastData;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -45,7 +47,7 @@ public class UDPSender {
     /**
      * Send data
      */
-    void putData(byte[] data) {
+    public void putData(byte[] data) {
         new AsyncUDPSenderRoutine().execute(toObjects(data));
     }
 
