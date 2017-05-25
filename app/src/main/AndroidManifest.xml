@@ -36,6 +36,10 @@
             android:name=".SampleActivity"
             android:label="@string/title_activity_sample" >
         </activity>
+        <activity
+            android:name=".BroadcastGraphActivity"
+            android:label="@string/title_activity_broadcast_graph" >
+        </activity>
     </application>
 
 </manifest>
