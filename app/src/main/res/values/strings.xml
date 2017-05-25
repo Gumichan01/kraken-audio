@@ -1,7 +1,9 @@
 <resources>
     <string name="app_name">Kraken</string>
 
-    <string name="title_activity_graph">GraphActivity</string>
+    <string name="title_activity_mix">Mix</string>
+    <string name="title_activity_sample">List of samples</string>
+    <string name="title_activity_broadcast_graph">Broadcast graph</string>
 
     <!-- Join group -->
     <string name="avgrp">Available group(s)</string>
@@ -21,7 +23,6 @@
     <string name="action_graph">Path</string>
 
     <string name="gunetwork">Cannot update the group content - network unavailable</string>
-    <string name="title_activity_sample">SampleActivity</string>
 
     <!-- Main Activity -->
     <string name="main_name">Name: </string>

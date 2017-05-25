@@ -30,7 +30,7 @@
         </activity>
         <activity
             android:name=".MixActivity"
-            android:label="@string/title_activity_graph"
+            android:label="@string/title_activity_mix"
             android:screenOrientation="portrait" />
         <activity
             android:name=".SampleActivity"
