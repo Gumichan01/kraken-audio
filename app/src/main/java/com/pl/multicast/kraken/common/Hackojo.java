@@ -136,9 +136,6 @@ public class Hackojo extends AsyncTask<Integer, Integer, Boolean> {
                     Log.e(this.getClass().getName(), "Cannot get the graph " + dest);
                     status = false;
                 } else {
-                    for (ArrayList<String> ar : paths)
-                        Log.i(this.getClass().getName(), ar.toString());
-
                     status = true;
                 }
                 break;

@@ -47,6 +47,9 @@ public class MixActivity extends Activity
         implements NavDrawer.NavigationDrawerCallbacks {
 
     public static final String SAMPLE_TAG = "SAMPLE";
+    public static final String VERTEX_TAG = "VERTEX";
+    public static final String LINES_TAG = "LINES";
+    private static final int GRAPH_ARRAYLIST_SZ = 2;
     private static final char SHARP = '#';
 
     public static String username;
@@ -199,7 +202,6 @@ public class MixActivity extends Activity
         else if (idnav_selected == idnav_right)
             ld = rdnames;
         else {
-            Log.wtf(getLocalClassName(), "Unknown value. It should NEVER happen!");
             return;
         }
 
@@ -552,14 +554,11 @@ public class MixActivity extends Activity
 
         if (id == R.id.action_listen) {
 
-            // Log.i(this.getLocalClassName(), "listen action");
-
             if (!mTitle.equals(username)) {
 
                 DeviceData d = prepareRequest();
                 recv.listenRequest(d, username);
 
-                // Log.i(this.getLocalClassName(), "listening to " + d.getName());
                 Toast.makeText(getApplicationContext(), "You are listening to '" + d.getName() + "'",
                         Toast.LENGTH_LONG).show();
 
@@ -567,18 +566,16 @@ public class MixActivity extends Activity
                 Toast.makeText(getApplicationContext(), "You cannot listen to yourself, idiot!",
                         Toast.LENGTH_LONG).show();
 
-
             return true;
 
         } else if (id == R.id.action_stop) {
 
-            // Log.i(this.getLocalClassName(), "stop action");
-
-            if (!mTitle.equals(username)) {
+            if (!mTitle.equals(username))
                 recv.stopRequest(prepareRequest(), username);
-            } else
+            else
                 Toast.makeText(getApplicationContext(), "You cannot stop yourself, (o_O) idiot!",
                         Toast.LENGTH_LONG).show();
+
             return true;
 
         } else if (id == R.id.action_graph) {
@@ -588,6 +585,20 @@ public class MixActivity extends Activity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void displayBroadcastGraph(List<ArrayList<String>> graph) {
+
+        if(graph == null || graph.size() != GRAPH_ARRAYLIST_SZ) {
+
+            Log.wtf(getLocalClassName(), "Cannot display the graph. MUST NEVER HAPPEN !!!");
+            return;
+        }
+
+        Intent intent = new Intent(this, BroadcastGraphActivity.class);
+        intent.putStringArrayListExtra(VERTEX_TAG, graph.get(0));
+        intent.putStringArrayListExtra(LINES_TAG, graph.get(1));
+        startActivity(intent);
     }
 
     public DeviceData getDevData() {
@@ -791,13 +802,15 @@ public class MixActivity extends Activity
                     // Log.i(this.getClass().getName(), "post execute - notify the devices (quit)");
                     notifyQuitDevices(username, kbdata.getSenders().iterator());
                     notifyQuitDevices(username, kbdata.getListeners().iterator());
+
                 } else if (op == GRAPH_GET_OP) {
 
-                    String s = "";
-                    for (ArrayList<String> ar : paths)
-                        s += ar.toString() + "\n";
-
-                    Toast.makeText(MixActivity.this, s, Toast.LENGTH_LONG).show();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            displayBroadcastGraph(paths);
+                        }
+                    });
                 }
 
             } else
