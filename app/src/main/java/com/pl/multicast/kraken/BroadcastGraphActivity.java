@@ -2,7 +2,6 @@ package com.pl.multicast.kraken;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,8 +26,8 @@ public class BroadcastGraphActivity extends Activity {
         vertices_strlist = getIntent().getStringArrayListExtra(MixActivity.VERTEX_TAG);
         lines_strlist = getIntent().getStringArrayListExtra(MixActivity.LINES_TAG);
 
-        Log.i(getClass().getName(), vertices_strlist.toString());
-        Log.i(getClass().getName(), lines_strlist.toString());
+        // Log.i(getClass().getName(), vertices_strlist.toString());
+        // Log.i(getClass().getName(), lines_strlist.toString());
 
         ListView lvertexv = (ListView) findViewById(R.id.list_vertices);
         ListView llinesv = (ListView) findViewById(R.id.list_lines);

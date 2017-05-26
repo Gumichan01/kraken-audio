@@ -66,7 +66,7 @@ public class KrakenReceiver {
                             graph.displayRate(nbytes);
                         }
                     });
-                    Log.i(getClass().getName(), nbytes + " bytes/s");
+                    // Log.i(getClass().getName(), nbytes + " bytes/s");
                     t = System.currentTimeMillis();
                     nbytes = 0;
                 }
@@ -75,7 +75,7 @@ public class KrakenReceiver {
             @Override
             public void run() {
                 DatagramSocket udpsock = null;
-                Log.i(this.getClass().getName(), "UDP receiver - launch");
+                // Log.i(this.getClass().getName(), "UDP receiver - launch");
 
                 try {
                     udpsock = new DatagramSocket(KrakenMisc.BROADCAST_PORT);
@@ -111,21 +111,21 @@ public class KrakenReceiver {
                             }
 
                         } catch (IOException e) {
-                            //Log.v(this.getClass().getName(), "UDP receiver - " + e.getMessage());
+                            Log.v(this.getClass().getName(), "UDP receiver - " + e.getMessage());
                         }
 
                         if (Thread.currentThread().isInterrupted()) {
 
-                            Log.i(this.getClass().getName(), "UDP receiver - Interrupted");
+                            Log.e(this.getClass().getName(), "UDP receiver - Interrupted");
                             udpsock.close();
                             break;
                         }
                     }
 
-                    Log.i(this.getClass().getName(), "UDP receiver - End of thread");
+                    // Log.i(this.getClass().getName(), "UDP receiver - End of thread");
 
                 } catch (SocketException e) {
-                    Log.i(this.getClass().getName(), "UDP receiver - No UDP socket created");
+                    // Log.i(this.getClass().getName(), "UDP receiver - No UDP socket created");
                     Log.e(this.getClass().getName(), "UDP receiver - " + e.getMessage());
                 } finally {
 
@@ -143,14 +143,14 @@ public class KrakenReceiver {
     }
 
     public void listenRequest(final DeviceData d, final String usrname) {
-        Log.i(this.getClass().getName(), "UDP receiver - listen request");
-        Log.i(this.getClass().getName(), "UDP receiver - " + d.toString());
+        // Log.i(this.getClass().getName(), "UDP receiver - listen request");
+        // Log.i(this.getClass().getName(), "UDP receiver - " + d.toString());
         sendMessageRequest(d, KrakenService.LISTEN + " " + usrname + MessageParser.EOL);
     }
 
     public void stopRequest(final DeviceData d, final String usrname) {
 
-        Log.i(this.getClass().getName(), "UDP receiver - stop request");
+        // Log.i(this.getClass().getName(), "UDP receiver - stop request");
         sendMessageRequest(d, KrakenService.STOP + " " + usrname + MessageParser.EOL);
     }
 
@@ -177,10 +177,9 @@ public class KrakenReceiver {
         protected Boolean doInBackground(Void... params) {
 
             try {
-                Log.i(this.getClass().getName(), "UDP receiver - connection to " + dev.getName());
-                Log.i(this.getClass().getName(), "UDP receiver - information - " + dev.getAddr() + ":" + dev.getPort());
+                // Log.i(this.getClass().getName(), "UDP receiver - connection to " + dev.getName());
+                // Log.i(this.getClass().getName(), "UDP receiver - information - " + dev.getAddr() + ":" + dev.getPort());
                 Socket s = new Socket(dev.getAddr(), dev.getPort());
-
                 PrintWriter writer = new PrintWriter(new OutputStreamWriter(s.getOutputStream()));
                 BufferedReader reader = new BufferedReader(new InputStreamReader(s.getInputStream()));
                 writer.write(request);
@@ -201,7 +200,7 @@ public class KrakenReceiver {
         public void onPostExecute(Boolean result) {
 
             if (result) {
-                Log.i(this.getClass().getName(), "post execute - " + request + " - SUCCESS");
+                // Log.i(this.getClass().getName(), "post execute - " + request + " - SUCCESS");
 
                 if (request.contains(KrakenService.LISTEN)) {
                     KrakenReceiver.this.std.addRealBroadcaster(dev.getName());
@@ -212,8 +211,7 @@ public class KrakenReceiver {
                     updateGraphActivity();
                 }
 
-            } else
-                Log.e(this.getClass().getName(), "post execute - " + request + " - FAILURE");
+            }
         }
 
         private void updateGraphActivity() {

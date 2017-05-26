@@ -66,11 +66,12 @@ public class MainActivity extends Activity implements JoinGroupDialogFragment.Jo
 
         if (!KrakenMisc.isNetworkAvailable(getApplicationContext())) {
 
-            Log.e(this.getLocalClassName(), "No Internet connection");
+            // Log.e(this.getLocalClassName(), "No Internet connection");
             Toast.makeText(getApplicationContext(), "No Internet connection", Toast.LENGTH_SHORT).show();
             return;
         }
-        Log.i(this.getLocalClassName(), "Internet connection available");
+
+        // Log.i(this.getLocalClassName(), "Internet connection available");
 
         if (tv == null)
             Log.e(this.getLocalClassName(), "Internal error - usr: no edit text");
@@ -99,8 +100,8 @@ public class MainActivity extends Activity implements JoinGroupDialogFragment.Jo
                                 KrakenMisc.BROADCAST_PORT);
                         Intent intent = new Intent(this, MixActivity.class);
 
-                        Log.i(this.getLocalClassName(), "group name: " + gname);
-                        Log.i(this.getLocalClassName(), "device: " + dd.toString());
+                        // Log.i(this.getLocalClassName(), "group name: " + gname);
+                        // Log.i(this.getLocalClassName(), "device: " + dd.toString());
                         new AsyncMainTask(dd, gname).execute(Hackojo.CREATE_GROUP_OP);
                         intent.putExtra(GRPNAME, gname);
                         intent.putExtra(DEVICEDATA, dd);
@@ -110,12 +111,10 @@ public class MainActivity extends Activity implements JoinGroupDialogFragment.Jo
                 } else if (id == R.id.jgrp) {
 
                     usrname = susr;     // Save the name for the next activity instance (MixActivity)
-                    Log.i(this.getLocalClassName(), "Connection to the directory server ...");
-                    Log.i(this.getLocalClassName(), "Generate the list of groups");
+                    // Log.i(this.getLocalClassName(), "Connection to the directory server ...");
+                    // Log.i(this.getLocalClassName(), "Generate the list of groups");
                     new AsyncMainTask(new DeviceData(), null).execute(Hackojo.GROUP_OP);
 
-                } else {
-                    Log.i(this.getLocalClassName(), "Bad view");
                 }
             }
         }
@@ -136,8 +135,8 @@ public class MainActivity extends Activity implements JoinGroupDialogFragment.Jo
                     strings.add(gd.getName());
             }
 
-            Log.i(this.getLocalClassName(), "There is a set of " + groups.size() + " group data");
-            Log.i(this.getLocalClassName(), "There are " + strings.size() + " real groups");
+            // Log.i(this.getLocalClassName(), "There is a set of " + groups.size() + " group data");
+            // Log.i(this.getLocalClassName(), "There are " + strings.size() + " real groups");
             String[] sarray = new String[strings.size()];
             strings.toArray(sarray);
             fragment = JoinGroupDialogFragment.newInstance(sarray);
@@ -183,7 +182,7 @@ public class MainActivity extends Activity implements JoinGroupDialogFragment.Jo
         public void onPostExecute(Boolean result) {
 
             if (result) {
-                Log.i(this.getClass().getName(), "post execute - " + op + ": SUCCESS");
+                // Log.i(this.getClass().getName(), "post execute - " + op + ": SUCCESS");
 
                 if (op == GROUP_OP)
                     MainActivity.this.showDialog(getGroups());

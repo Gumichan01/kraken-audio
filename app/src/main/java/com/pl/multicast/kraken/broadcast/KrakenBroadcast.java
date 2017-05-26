@@ -1,7 +1,5 @@
 package com.pl.multicast.kraken.broadcast;
 
-import android.util.Log;
-
 import com.pl.multicast.kraken.MixActivity;
 import com.pl.multicast.kraken.audio.KrakenAudio;
 import com.pl.multicast.kraken.service.KrakenBroadcastData;
@@ -42,7 +40,7 @@ public class KrakenBroadcast {
 
     public void stop() {
 
-        Log.i(getClass().getName(), "kraken broadcast — stop");
+        // Log.i(getClass().getName(), "kraken broadcast — stop");
         sender.close();
         receiver.stop();
         audio.stop();

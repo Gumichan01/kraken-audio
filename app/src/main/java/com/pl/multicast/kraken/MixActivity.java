@@ -278,7 +278,7 @@ public class MixActivity extends Activity
             stereo = stereo_box.isChecked();
 
             kbroadcast.generateSound(samplerate, frequency, stereo, duration);
-            Log.i(this.getLocalClassName(), "" + samplerate + "/" + frequency + "/" + duration + ":" + stereo);
+            // Log.i(this.getLocalClassName(), "" + samplerate + "/" + frequency + "/" + duration + ":" + stereo);
             Toast.makeText(getApplicationContext(), "Sound generated and registered", Toast.LENGTH_LONG).show();
 
         } else
@@ -409,7 +409,7 @@ public class MixActivity extends Activity
         l.addAll(kbdata.getSenders());
         l.addAll(kbdata.getListeners());
 
-        Log.i(this.getLocalClassName(), "Notify every devices by " + username);
+        // Log.i(this.getLocalClassName(), "Notify every devices by " + username);
         notifyUpdateDevices(username, l.iterator());
     }
 
@@ -438,9 +438,9 @@ public class MixActivity extends Activity
             AsyncGraphTask async = new AsyncGraphTask(device, gname);
             async.setFirstUpdate(first);
             async.execute(Hackojo.DEVICE_OP);
-            Log.i(this.getLocalClassName(), "update devl");
+            // Log.i(this.getLocalClassName(), "update devl");
         } else {
-            Log.e(this.getLocalClassName(), "Cannot update the group content - network unavailable");
+            // Log.e(this.getLocalClassName(), "Cannot update the group content - network unavailable");
             Toast.makeText(getApplicationContext(), R.string.gunetwork, Toast.LENGTH_LONG).show();
         }
     }
@@ -535,7 +535,7 @@ public class MixActivity extends Activity
         String slistener = mTitle;
         DeviceData d = kbdata.getBroadcasterOf(slistener);
         mTitle = username;
-        Log.i(this.getLocalClassName(), slistener + " | " + d.toString() + " | " + mTitle);
+        // Log.i(this.getLocalClassName(), slistener + " | " + d.toString() + " | " + mTitle);
         return d;
     }
 
@@ -808,7 +808,7 @@ public class MixActivity extends Activity
         public void onPostExecute(Boolean result) {
 
             if (result) {
-                Log.i(this.getClass().getName(), "post execute - " + op + ": SUCCESS");
+                // Log.i(this.getClass().getName(), "post execute - " + op + ": SUCCESS");
 
                 if (op == DEVICE_OP) {
                     kbdata.clearBroadcasters();

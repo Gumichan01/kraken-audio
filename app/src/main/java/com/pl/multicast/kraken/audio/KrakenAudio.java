@@ -127,7 +127,7 @@ public class KrakenAudio {
         }
 
         samples.add(new KrakenSample(generatedSnd, duration, frequency));
-        Log.i(getClass().getName(), "audio  — sound generated");
+        // Log.i(getClass().getName(), "audio  — sound generated");
     }
 
     /**

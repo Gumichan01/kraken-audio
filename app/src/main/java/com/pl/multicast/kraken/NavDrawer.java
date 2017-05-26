@@ -219,7 +219,7 @@ public class NavDrawer extends Fragment {
         if (mCallbacks != null) {
 
             if(mCallbacks instanceof MixActivity) {
-                Log.i(getClass().getName(),"instanceof OK");
+                // Log.i(getClass().getName(),"instanceof OK");
                 ((MixActivity) mCallbacks).setIDNavSelected(getId());
             }
 

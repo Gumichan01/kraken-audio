@@ -32,7 +32,7 @@ public class NotifyTask extends AsyncTask<Iterator<DeviceData>, Integer, Void> {
     @Override
     protected Void doInBackground(Iterator<DeviceData>... params) {
 
-        Log.i(this.getClass().getName(), "Notify - background task - " + hreq);
+        // Log.i(this.getClass().getName(), "Notify - background task - " + hreq);
         Iterator<DeviceData> it = params[0];
 
         while (it.hasNext()) {
@@ -62,7 +62,7 @@ public class NotifyTask extends AsyncTask<Iterator<DeviceData>, Integer, Void> {
                 e.printStackTrace();
             }
         }
-        Log.i(this.getClass().getName(), "Notify - background task - " + hreq + " - #END");
+        // Log.i(this.getClass().getName(), "Notify - background task - " + hreq + " - #END");
 
         return null;
     }

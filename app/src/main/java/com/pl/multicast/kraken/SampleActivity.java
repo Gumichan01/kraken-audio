@@ -27,22 +27,22 @@ public class SampleActivity extends Activity {
         slist = getIntent().getParcelableArrayListExtra(MixActivity.SAMPLE_TAG);
 
         if (slist == null || slist.isEmpty())
-            Log.v(getLocalClassName(), "empty list");
+            Log.e(getLocalClassName(), "empty list");
         else {
 
             ListView lview = (ListView) findViewById(R.id.list_samples);
 
             if (lview == null) {
-                Log.e(getLocalClassName(), "empty view");
+                // Log.e(getLocalClassName(), "empty view");
                 return;
             }
 
-            Log.i(getLocalClassName(), "DISPLAY LIST");
+            // Log.i(getLocalClassName(), "DISPLAY LIST");
             for (KrakenSample ks : slist) {
-                Log.i(getLocalClassName(), ks.toString());
+                // Log.i(getLocalClassName(), ks.toString());
                 tlist.add(ks.toString());
             }
-            Log.i(getLocalClassName(), "DISPLAY LIST DONE");
+            // Log.i(getLocalClassName(), "DISPLAY LIST DONE");
 
             lview.setAdapter(new ArrayAdapter<>(getApplicationContext(), R.layout.sample_view, tlist));
             lview.setVisibility(View.VISIBLE);

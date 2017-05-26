@@ -65,7 +65,7 @@ public class KrakenService implements Runnable {
             ServerSocket s = new ServerSocket(KrakenMisc.SERVICE_PORT);
             s.setSoTimeout(SRV_DELAY);
 
-            Log.i(this.getClass().getName(), "Service - Server launched");
+            // Log.i(this.getClass().getName(), "Service - Server launched");
 
             while (true) {
 
@@ -92,13 +92,13 @@ public class KrakenService implements Runnable {
                     continue;
                 }
 
-                Log.i(this.getClass().getName(), "Service - Connection from @" + sock.getInetAddress().getHostAddress() + ":" + sock.getPort());
+                // Log.i(this.getClass().getName(), "Service - Connection from @" + sock.getInetAddress().getHostAddress() + ":" + sock.getPort());
                 PrintWriter w = new PrintWriter(new OutputStreamWriter(sock.getOutputStream()));
                 BufferedReader r = new BufferedReader(new InputStreamReader(sock.getInputStream()));
 
                 boolean toupdate = false;
                 String rstring = r.readLine();
-                Log.i(this.getClass().getName(), "Service - received this message: " + rstring);
+                // Log.i(this.getClass().getName(), "Service - received this message: " + rstring);
 
                 // Listen to the broadcaster OR stop listening (request)
                 if (rstring.contains(LISTEN) || rstring.contains(STOP) || rstring.contains(UPDATE)
@@ -109,32 +109,31 @@ public class KrakenService implements Runnable {
 
                 } else if (rstring.contains(LISTB)) {
 
-                    Log.i(this.getClass().getName(), LISTB);
+                    // Log.i(this.getClass().getName(), LISTB);
                     w.write(listOfBroadcaster());
                     toupdate = false;
 
                 } else if (rstring.contains(LISTL)) {
 
-                    Log.i(this.getClass().getName(), LISTL);
+                    // Log.i(this.getClass().getName(), LISTL);
                     w.write(listOfListener());
                     toupdate = false;
                 } else if (rstring.contains(LISTR)) {
 
-                    Log.i(this.getClass().getName(), LISTR);
+                    // Log.i(this.getClass().getName(), LISTR);
                     w.write(listOfRealBroadcaster());
                     toupdate = false;
-                } else
-                    Log.i(this.getClass().getName(), "error");
+                }
 
                 w.flush();
-                Log.i(this.getClass().getName(), "Service - Close the client socket");
+                // Log.i(this.getClass().getName(), "Service - Close the client socket");
                 sock.close();
 
                 if (toupdate)
                     uiUpdate();
             }
 
-            Log.i(this.getClass().getName(), "Service - Server down");
+            // Log.i(this.getClass().getName(), "Service - Server down");
 
         } catch (IOException e) {
 
@@ -168,7 +167,7 @@ public class KrakenService implements Runnable {
         gactivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Log.i(this.getClass().getName(), "Service - update");
+                // Log.i(this.getClass().getName(), "Service - update");
                 gactivity.update(false);
             }
         });
@@ -185,14 +184,14 @@ public class KrakenService implements Runnable {
 
         if (i < ld.size()) {
 
-            Log.i(this.getClass().getName(), ld.get(i).toString());
+            // Log.i(this.getClass().getName(), ld.get(i).toString());
             dev = ld.get(i);
         } else
             return false;
 
         bdata.rmBroadcaster(dev);
         bdata.addListener(dev);
-        Log.i(this.getClass().getName(), "Service - Register listener: ok");
+        // Log.i(this.getClass().getName(), "Service - Register listener: ok");
         gactivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -218,7 +217,7 @@ public class KrakenService implements Runnable {
 
         bdata.rmListener(dev);
         bdata.addBroadcaster(dev);
-        Log.i(this.getClass().getName(), "Service - Unregister register listener: ok");
+        // Log.i(this.getClass().getName(), "Service - Unregister register listener: ok");
 
         gactivity.runOnUiThread(new Runnable() {
             @Override

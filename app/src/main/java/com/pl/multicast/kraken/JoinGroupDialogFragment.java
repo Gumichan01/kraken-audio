@@ -6,7 +6,6 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
 
 /**
  * Created by Luxon on 06/02/2017.
@@ -41,12 +40,12 @@ public class JoinGroupDialogFragment extends DialogFragment {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
 
-                    Log.i(this.getClass().getName(), "Cancel the group");
+                    // Log.i(this.getClass().getName(), "Cancel the group");
                 }
             });
 
             builder.setMessage(R.string.nogrp);
-            Log.i(this.getClass().getName(), "No group");
+            // Log.i(this.getClass().getName(), "No group");
 
         } else {
 
@@ -55,7 +54,7 @@ public class JoinGroupDialogFragment extends DialogFragment {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
 
-                    Log.i(this.getClass().getName(), "Cancel the group");
+                    // Log.i(this.getClass().getName(), "Cancel the group");
                 }
             });
 
@@ -67,7 +66,7 @@ public class JoinGroupDialogFragment extends DialogFragment {
                 }
             });
 
-            Log.i(this.getClass().getName(), "There are " + items.length + "active groups");
+            // Log.i(this.getClass().getName(), "There are " + items.length + "active groups");
         }
 
         return builder.create();

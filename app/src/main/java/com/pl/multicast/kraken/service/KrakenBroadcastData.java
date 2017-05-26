@@ -1,7 +1,5 @@
 package com.pl.multicast.kraken.service;
 
-import android.util.Log;
-
 import com.pl.multicast.kraken.datum.DeviceData;
 
 import java.util.ArrayList;
@@ -26,19 +24,19 @@ public class KrakenBroadcastData {
 
     public synchronized void addBroadcaster(DeviceData sender) {
 
-        Log.i(this.getClass().getName(), "Sync - added the sender: " + sender.toString());
+        // Log.i(this.getClass().getName(), "Sync - added the sender: " + sender.toString());
         broadcasters.add(sender);
     }
 
     public synchronized void rmBroadcaster(DeviceData sender) {
 
-        Log.i(this.getClass().getName(), "Sync - remove the sender: " + sender.toString());
+        // Log.i(this.getClass().getName(), "Sync - remove the sender: " + sender.toString());
         broadcasters.remove(sender);
     }
 
     public synchronized void clearBroadcasters() {
 
-        Log.i(this.getClass().getName(), "Sync - clear broadcasters");
+        // Log.i(this.getClass().getName(), "Sync - clear broadcasters");
         broadcasters.clear();
     }
 
@@ -59,13 +57,13 @@ public class KrakenBroadcastData {
 
     public synchronized void addListener(DeviceData listener) {
 
-        Log.i(this.getClass().getName(), "Sync - added the listener: " + listener.toString());
+        // Log.i(this.getClass().getName(), "Sync - added the listener: " + listener.toString());
         listeners.add(listener);
     }
 
     public synchronized void rmListener(DeviceData listener) {
 
-        Log.i(this.getClass().getName(), "Sync - remove the listener: " + listener.toString());
+        // Log.i(this.getClass().getName(), "Sync - remove the listener: " + listener.toString());
         listeners.remove(listener);
     }
 
@@ -92,7 +90,7 @@ public class KrakenBroadcastData {
     }
 
     public synchronized void addRealBroadcaster(String realbroadcaster) {
-        Log.i(this.getClass().getName(), "Sync - added the real broadcaster: " + realbroadcaster);
+        // Log.i(this.getClass().getName(), "Sync - added the real broadcaster: " + realbroadcaster);
 
         if (!isRealBroadcaster(realbroadcaster))
             rbroadcasters.add(realbroadcaster);
@@ -100,7 +98,7 @@ public class KrakenBroadcastData {
     }
 
     public synchronized void rmRealBroadcaster(String realbroadcaster) {
-        Log.i(this.getClass().getName(), "Sync - removed the real broadcaster: " + realbroadcaster);
+        // Log.i(this.getClass().getName(), "Sync - removed the real broadcaster: " + realbroadcaster);
         rbroadcasters.remove(realbroadcaster);
     }
 
