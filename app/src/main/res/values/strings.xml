@@ -33,6 +33,7 @@
 
     <!-- Mix Activity -->
     <string name="mix_stereo">Stereo</string>
+    <string name="mix_reverb">| Reverb</string>
     <string name="mix_gen">Generate Sound</string>
     <string name="mix_play">Play Sound</string>
     <string name="mix_list">List of samples</string>

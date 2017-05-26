@@ -19,13 +19,6 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <!--<TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Mix"
-                android:textColor="#000000"
-                android:textSize="32dp"/>-->
-
             <!-- Text views, edit text -->
             <LinearLayout
                 android:layout_width="match_parent"
@@ -102,67 +95,78 @@
 
             <!-- Checboxes, switches and buttons -->
 
+            <!-- Checkbox and switches -->
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
-                <!-- Checkbox and switches -->
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="horizontal">
 
                     <!-- Stereo -->
                     <CheckBox
                         android:id="@+id/box_stereo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textStyle="bold"
+                        android:layout_marginRight="8dp"
                         android:checked="false"
                         android:text="@string/mix_stereo"
+                        android:textSize="12dp" />
+
+                    <!-- Button -->
+                    <Switch
+                        android:id="@+id/switch_reverb"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/mix_reverb"
+                        android:onClick="reverbEffect"
                         android:textSize="16dp" />
 
-                    <!-- Generate and Play sound -->
-                    <LinearLayout
+                </LinearLayout>
+
+                <!-- Generate and Play sound -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <!-- Buttons -->
+                    <Button
+                        android:id="@+id/button_config"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal">
+                        android:layout_height="wrap_content"
+                        android:onClick="generateSound"
+                        android:text="@string/mix_gen"
+                        android:textSize="10dp" />
 
-                        <!-- Buttons -->
-                        <Button
-                            android:id="@+id/button_config"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:onClick="generateSound"
-                            android:text="@string/mix_gen"
-                            android:textSize="10dp" />
+                    <Button
+                        android:id="@+id/button_gp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="play"
+                        android:text="@string/mix_play"
+                        android:textSize="12dp" />
 
-                        <Button
-                            android:id="@+id/button_gp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:onClick="play"
-                            android:text="@string/mix_play"
-                            android:textSize="12dp" />
+                    <Button
+                        android:id="@+id/button_playlist"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="displaylistOfSamples"
+                        android:text="@string/mix_list"
+                        android:textSize="10dp" />
 
-                        <Button
-                            android:id="@+id/button_playlist"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/mix_list"
-                            android:onClick="displaylistOfSamples"
-                            android:textSize="10dp" />
+                    <Button
+                        android:id="@+id/button_clear"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="clearSamples"
+                        android:text="@string/mix_clear"
+                        android:textSize="10dp" />
 
-                        <Button
-                            android:id="@+id/button_clear"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/mix_clear"
-                            android:onClick="clearSamples"
-                            android:textSize="10dp" />
-
-
-                    </LinearLayout>
 
                 </LinearLayout>
 

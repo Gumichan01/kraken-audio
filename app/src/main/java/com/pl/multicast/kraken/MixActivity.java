@@ -113,9 +113,11 @@ public class MixActivity extends Activity
 
         Switch bswitch = (Switch) findViewById(R.id.switch_broad);
         Switch lswitch = (Switch) findViewById(R.id.switch_listen);
+        Switch rswitch = (Switch) findViewById(R.id.switch_reverb);
 
         bswitch.setChecked(kbroadcast.getBroadcastOption());
         lswitch.setChecked(kbroadcast.getListenOption());
+        rswitch.setChecked(false);
 
         /** Fragment creation */
         navigationSenders = (NavDrawer)
@@ -233,12 +235,19 @@ public class MixActivity extends Activity
     private void updateSection() {
 
         new SectionUpdateThread(new SectionUpdateRunnable()).start();
-        ;
     }
 
     public void setIDNavSelected(int id) {
 
         idnav_selected = id;
+    }
+
+
+    public void reverbEffect(View v) {
+
+        if (v.getId() == R.id.switch_reverb) {
+
+        }
     }
 
     /**
