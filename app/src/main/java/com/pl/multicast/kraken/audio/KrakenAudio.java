@@ -3,6 +3,7 @@ package com.pl.multicast.kraken.audio;
 import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
+import android.media.audiofx.PresetReverb;
 import android.util.Log;
 
 import com.pl.multicast.kraken.broadcast.KrakenSender;
@@ -17,6 +18,7 @@ public class KrakenAudio {
     public static final int DEFAULT_FREQUENCY = 440;
     public static final int DEFAULT_SAMPLERATE = 8000;
     private static AudioTrack audiotrack;
+    private static PresetReverb reverb;
     private ArrayList<KrakenSample> samples;
 
     private boolean isplaying;
@@ -25,6 +27,7 @@ public class KrakenAudio {
 
     public KrakenAudio() {
         audiotrack = null;
+        reverb = null;
         samples = new ArrayList<>();
         isplaying = false;
         isstereo = false;
@@ -34,6 +37,11 @@ public class KrakenAudio {
     public void setFrequency(int freq) {
 
         frequency = freq;
+    }
+
+    public void setReverbEffect(boolean reverbEffect) {
+
+        reverb.setEnabled(reverbEffect);
     }
 
     public void generateSound(int samplerate, boolean stereo, int duration) {
@@ -52,6 +60,9 @@ public class KrakenAudio {
         audiotrack = new AudioTrack(AudioManager.STREAM_MUSIC,
                 samplerate, (stereo ? AudioFormat.CHANNEL_OUT_STEREO : AudioFormat.CHANNEL_OUT_MONO),
                 AudioFormat.ENCODING_PCM_16BIT, numsamples, AudioTrack.MODE_STREAM);
+
+        reverb = new PresetReverb(0, audiotrack.getAudioSessionId());
+        reverb.setPreset(PresetReverb.PRESET_LARGEROOM);
     }
 
     public synchronized void streamData(byte[] data) {
@@ -87,6 +98,7 @@ public class KrakenAudio {
 
         if (audiotrack.getState() == AudioTrack.STATE_INITIALIZED) {
             audiotrack.release();
+            reverb.release();
         }
     }
 

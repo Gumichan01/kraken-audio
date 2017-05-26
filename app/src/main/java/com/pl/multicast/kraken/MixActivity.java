@@ -243,13 +243,6 @@ public class MixActivity extends Activity
     }
 
 
-    public void reverbEffect(View v) {
-
-        if (v.getId() == R.id.switch_reverb) {
-
-        }
-    }
-
     /**
      * Generate sound
      */
@@ -332,6 +325,26 @@ public class MixActivity extends Activity
 
             kbroadcast.getAudio().getSamples().clear();
             Toast.makeText(getApplicationContext(), "Cleared the samples", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * Switch the reverberation effect
+     */
+    public void reverbEffect(View v) {
+
+        if (v.getId() == R.id.switch_reverb) {
+
+            Switch sw = (Switch) v;
+
+            if (sw.isChecked()) {
+
+                kbroadcast.getAudio().setReverbEffect(true);
+                Toast.makeText(this, "reverb enabled", Toast.LENGTH_SHORT).show();
+            } else {
+                kbroadcast.getAudio().setReverbEffect(false);
+                Toast.makeText(this, "reverb disabled", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
