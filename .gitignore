@@ -11,3 +11,4 @@ depot.iml
 srv-network/bin/
 srv-network/server.jar
 *.settings
+app/app-release.apk
